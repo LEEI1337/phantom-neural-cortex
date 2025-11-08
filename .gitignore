@@ -153,3 +153,19 @@ README.old.md
 # Keep structure, ignore personal data
 memory-bank/personalNotes.md
 memory-bank/*.local.md
+
+# ============ DEPRECATED DOCS (Too Verbose) ============
+# Use concise EN/DE versions instead
+docs/QUICK-START.md
+docs/FINAL-SETUP-SUMMARY.md
+docs/ULTIMATE-SETUP-COMPLETE.md
+docs/OPTIMIZATION-SUMMARY.md
+docs/setup/SETUP-GUIDE.md
+docs/setup/SETUP-VERIFICATION.md
+docs/setup/OPENHANDS-SETUP.md
+docs/architecture/ARCHITECTURE.md
+docs/architecture/AI-CAPABILITY-MATRIX.md
+docs/architecture/CLAUDE-VS-COPILOT.md
+docs/guides/ROVER-GUIDE.md
+docs/guides/ROVER-AI-SELECTOR.md
+docs/archive/
