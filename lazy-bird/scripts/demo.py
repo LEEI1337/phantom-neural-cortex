@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Lazy Bird Demo - Demonstrates the autonomous workflow
 
@@ -7,7 +8,13 @@ actual GitHub API access or Rover installation.
 """
 
 import sys
+import io
 import importlib.util
+
+# Set UTF-8 encoding for Windows console
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Import modules with hyphens in filenames
 def load_module(name, path):

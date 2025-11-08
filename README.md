@@ -107,22 +107,25 @@ rover ls -w
 
 ## 📊 System Architecture
 
-### The 4-Layer Stack (with Lazy Bird)
+### The 5-Layer Stack (0-4) with Hierarchical Guidelines ✨
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 4: LAZY BIRD (Automation) 🆕                     │
-│  • Watches GitHub issues automatically                  │
+│  • Auto project init (Projekt-A/B/C slots)              │
 │  • Intelligent AI agent routing                         │
-│  • Autonomous issue → PR workflow                       │
+│  • Autonomous GitHub Issue → PR workflow                │
 │  • Cost-optimized task distribution                     │
+│  📋 Guidelines: LAYER-4.md (inherits 0-3)               │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 3: ROVER (Orchestration)                         │
-│  • Manages parallel AI tasks                            │
+│  • Parallel AI task management                          │
 │  • Git worktree isolation                               │
 │  • Docker containerization                              │
+│  • Test validation & auto-merge                         │
+│  📋 Guidelines: LAYER-3.md (inherits 0-2)               │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -131,13 +134,33 @@ rover ls -w
 │  │ Claude   │ Gemini   │ Copilot  │                     │
 │  │ Expert   │ Worker   │Specialist│                     │
 │  └──────────┴──────────┴──────────┘                     │
+│  📋 Guidelines: LAYER-2.md + Agent-specific (inherits 0-1) │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
-│  LAYER 1: MCP SERVERS (Shared)                          │
-│  18 servers: filesystem, github, docs, sqlite, ...      │
+│  LAYER 1: MCP SERVERS (Tools & Data)                    │
+│  • 18 servers: filesystem, git, github, brave, etc.     │
+│  • Rate limiting & caching                              │
+│  • Unified tool interface                               │
+│  📋 Guidelines: LAYER-1.md (inherits 0)                 │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+┌─────────────────────────────────────────────────────────┐
+│  LAYER 0: UNIVERSAL STANDARDS (Basis) ⭐                │
+│  • Project structure (src/, tests/, docs/)              │
+│  • Naming conventions (Python, TypeScript, etc.)        │
+│  • Code quality & security basics                       │
+│  • Testing fundamentals                                 │
+│  📋 Guidelines: LAYER-0.md (applies to ALL)             │
 └─────────────────────────────────────────────────────────┘
 ```
+
+**🆕 Hierarchical Guideline System:**
+- Each layer inherits all guidelines from layers below
+- Layer 0 = Universal standards (applies to ALL agents)
+- Agent-specific guidelines at Layer 2
+- Zero duplication, intelligent inheritance
+- See: [LAYER-SYSTEM.md](lazy-bird/guidelines/LAYER-SYSTEM.md)
 
 ### AI Role Specialization
 

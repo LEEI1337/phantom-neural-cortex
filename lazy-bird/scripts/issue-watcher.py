@@ -24,6 +24,7 @@ from pathlib import Path
 from rover_adapter import RoverAdapter
 from agent_selector import AgentSelector
 from project_manager import ProjectManager
+from project_initializer import ProjectInitializer
 
 
 class IssueWatcher:
@@ -52,9 +53,10 @@ class IssueWatcher:
         
         # Initialize components
         self.project_manager = ProjectManager(config_path)
+        self.project_initializer = ProjectInitializer(config_path=config_path)
         self.rover_adapter = RoverAdapter()
         self.agent_selector = AgentSelector()
-        
+
         # Track processed issues to avoid duplicates
         self.processed_issues = set()
         self.active_tasks = {}  # issue_number → rover_task_id
@@ -162,7 +164,35 @@ class IssueWatcher:
         
         print(f"\n🎯 Processing Issue #{issue_number}: {issue_title}")
         print(f"   Labels: {', '.join(issue_labels)}")
-        
+
+        # Check if this is a new project request
+        # (project type is "placeholder" means slot is available)
+        if project.get("type") == "placeholder":
+            print(f"   📦 Detected new project - initializing...")
+
+            # Detect project type from labels or issue body
+            project_type = self._detect_project_type(issue_labels, issue.get("body", ""))
+            print(f"   🔍 Detected type: {project_type}")
+
+            # Initialize new project in this slot
+            new_project = self.project_initializer.initialize_project(
+                issue_title=issue_title,
+                issue_number=issue_number,
+                project_type=project_type,
+                repo_url=project.get("repo", ""),
+                agent=self._detect_preferred_agent(issue_labels)
+            )
+
+            if new_project:
+                # Use the newly created project config
+                project = new_project
+                # Reload project manager to get updated config
+                self.project_manager = ProjectManager(self.project_initializer.config_path)
+                print(f"   ✅ Project initialized in {project['id']}")
+            else:
+                print(f"   ❌ Failed to initialize project - no slots available")
+                return
+
         # Select appropriate AI agent
         agent = self.agent_selector.select_agent(
             issue_labels,
@@ -231,6 +261,72 @@ I'll update this issue with progress and create a PR when ready.
         except Exception as e:
             print(f"    ⚠️  Could not comment on issue: {e}")
     
+    def _detect_project_type(self, labels: List[str], body: str) -> str:
+        """
+        Detect project type from issue labels and body.
+
+        Args:
+            labels: Issue labels
+            body: Issue body text
+
+        Returns:
+            Project type (python, typescript, react, etc.)
+        """
+        # Check labels first
+        label_map = {
+            "python": "python",
+            "typescript": "typescript",
+            "javascript": "javascript",
+            "react": "react",
+            "nextjs": "nextjs",
+            "next.js": "nextjs",
+            "vue": "typescript",
+            "angular": "typescript",
+            "node": "javascript",
+            "nodejs": "javascript"
+        }
+
+        for label in labels:
+            label_lower = label.lower()
+            if label_lower in label_map:
+                return label_map[label_lower]
+
+        # Check body for keywords
+        body_lower = body.lower()
+        if "python" in body_lower or "django" in body_lower or "flask" in body_lower:
+            return "python"
+        if "typescript" in body_lower or "ts" in body_lower:
+            return "typescript"
+        if "react" in body_lower:
+            return "react"
+        if "next.js" in body_lower or "nextjs" in body_lower:
+            return "nextjs"
+        if "javascript" in body_lower or "node" in body_lower:
+            return "javascript"
+
+        # Default to python
+        return "python"
+
+    def _detect_preferred_agent(self, labels: List[str]) -> str:
+        """
+        Detect preferred AI agent from labels.
+
+        Args:
+            labels: Issue labels
+
+        Returns:
+            Preferred agent (claude, gemini, copilot)
+        """
+        label_lower = [l.lower() for l in labels]
+
+        if any(l in label_lower for l in ["security", "architecture", "complex"]):
+            return "claude"
+        if any(l in label_lower for l in ["github-workflow", "quick-fix", "ci-cd"]):
+            return "copilot"
+
+        # Default to gemini (free tier)
+        return "gemini"
+
     def _parse_repo_url(self, repo_url: str) -> tuple:
         """
         Parse GitHub repo URL to extract owner and repo name.
