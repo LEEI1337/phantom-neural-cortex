@@ -323,14 +323,34 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** - Autonomous AI development
 
 ### MCP Ecosystem
-- **[Model Context Protocol](https://modelcontextprotocol.io/)** - MCP specification
-- **[MCP Servers](https://github.com/modelcontextprotocol/servers)** - Official MCP server implementations
-- **[Brave Search](https://brave.com/search/api/)** - Web search MCP server
-- **[Playwright](https://playwright.dev/)** - Browser automation
-- **[Perplexity AI](https://www.perplexity.ai/)** - AI-powered search
+- **[Model Context Protocol](https://modelcontextprotocol.io/)** - MCP specification & foundation
+- **[MCP Servers](https://github.com/modelcontextprotocol/servers)** - Official server implementations
+  - `@modelcontextprotocol/server-filesystem` - File operations
+  - `@modelcontextprotocol/server-memory` - Knowledge persistence
+  - `@modelcontextprotocol/server-github` - GitHub integration
+  - `@modelcontextprotocol/server-brave-search` - Web search
+  - `@modelcontextprotocol/server-sequential-thinking` - Reflective reasoning
+  - `@modelcontextprotocol/server-puppeteer` - Browser automation
+  - `@modelcontextprotocol/server-sqlite` - SQLite database
+  - `@modelcontextprotocol/server-postgres` - PostgreSQL integration
+  - `@modelcontextprotocol/server-everything` - Testing framework
+  - `@modelcontextprotocol/inspector` - Live debugging
+
+### Community MCP Servers
+- **[@executeautomation](https://github.com/executeautomation/playwright-mcp-server)** - Playwright MCP server
+- **[@perplexity-ai](https://github.com/perplexity-ai/mcp-server)** - Perplexity AI search
+- **[gemini-mcp-tool](https://www.npmjs.com/package/gemini-mcp-tool)** - Gemini CLI integration
+- **[copilot-mcp-server](https://www.npmjs.com/package/copilot-mcp-server)** - Copilot CLI integration
+- **[docs-mcp-server](https://www.npmjs.com/package/docs-mcp-server)** - Documentation search
+- **[mcp-server-time](https://www.npmjs.com/package/mcp-server-time)** - Timezone handling
+- **[postmancer](https://www.npmjs.com/package/postmancer)** - API testing tool
+
+### Additional Tools
+- **[Brave Search API](https://brave.com/search/api/)** - Web search service
+- **[Playwright](https://playwright.dev/)** - Browser automation framework
 
 ### Community & Open Source
-Special thanks to all MCP server developers and the open source community!
+Special thanks to all MCP server developers, npm package maintainers, and the open source community for making this ecosystem possible!
 
 ---
 
