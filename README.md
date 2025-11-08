@@ -6,6 +6,10 @@ Transform your development workflow with 5 harmonized AI systems, 18 MCP servers
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub Issues](https://img.shields.io/github/issues/LEEI1337/ai-dev-orchestrator)](https://github.com/LEEI1337/ai-dev-orchestrator/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/LEEI1337/ai-dev-orchestrator?style=social)](https://github.com/LEEI1337/ai-dev-orchestrator/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/LEEI1337/ai-dev-orchestrator?style=social)](https://github.com/LEEI1337/ai-dev-orchestrator/network/members)
+[![Made in Austria](https://img.shields.io/badge/Made%20in-Austria%20🇦🇹-red)](https://github.com/LEEI1337/ai-dev-orchestrator)
 
 ---
 

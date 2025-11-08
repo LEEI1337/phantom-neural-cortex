@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/LEEI1337/ai-dev-orchestrator/discussions
+    about: Ask questions and discuss with the community
+  - name: 📚 Documentation
+    url: https://github.com/LEEI1337/ai-dev-orchestrator/tree/master/docs
+    about: Read the documentation
+  - name: 🔒 Security Issue
+    url: https://github.com/LEEI1337/ai-dev-orchestrator/security/advisories/new
+    about: Report a security vulnerability privately
