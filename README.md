@@ -316,11 +316,15 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 ## 🙏 Acknowledgments
 
 ### Core AI Systems
-- **[Anthropic](https://www.anthropic.com/)** - Claude Code & API
-- **[Google AI](https://ai.google.dev/)** - Gemini AI with 2M context
-- **[GitHub](https://github.com/)** - Copilot CLI
-- **[Endor Labs](https://www.endorlabs.com/)** - Rover orchestration
-- **[OpenHands](https://github.com/OpenHands/OpenHands)** - Autonomous AI development
+- **[Anthropic](https://www.anthropic.com/)** - Claude Code & API ([Documentation](https://docs.anthropic.com/))
+- **[Google AI](https://ai.google.dev/)** - Gemini AI with 2M context ([Gemini Docs](https://ai.google.dev/gemini-api/docs))
+- **[GitHub](https://github.com/)** - Copilot CLI ([Copilot Docs](https://docs.github.com/en/copilot))
+- **[Endor Labs](https://www.endorlabs.com/)** - Rover multi-agent orchestration
+  - **[Rover GitHub](https://github.com/endorhq/rover)** - Apache 2.0 license, npm package `@endorhq/rover`
+  - **[Rover Docs](https://endor.dev/rover)** - Official documentation
+- **[OpenHands](https://github.com/OpenHands/OpenHands)** - Autonomous AI software developer
+  - **[All-Hands-AI](https://github.com/All-Hands-AI)** - Organization behind OpenHands (64k+ stars)
+  - Formerly known as OpenDevin
 
 ### MCP Ecosystem
 - **[Model Context Protocol](https://modelcontextprotocol.io/)** - MCP specification & foundation
@@ -345,9 +349,12 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 - **[mcp-server-time](https://www.npmjs.com/package/mcp-server-time)** - Timezone handling
 - **[postmancer](https://www.npmjs.com/package/postmancer)** - API testing tool
 
-### Additional Tools
+### Additional Tools & Infrastructure
 - **[Brave Search API](https://brave.com/search/api/)** - Web search service
-- **[Playwright](https://playwright.dev/)** - Browser automation framework
+- **[Playwright](https://playwright.dev/)** - Browser automation framework by Microsoft
+- **[Docker](https://www.docker.com/)** - Containerization platform for Rover isolation
+- **[Node.js](https://nodejs.org/)** - JavaScript runtime for CLI tools
+- **[Git](https://git-scm.com/)** - Version control system for worktrees
 
 ### Community & Open Source
 Special thanks to all MCP server developers, npm package maintainers, and the open source community for making this ecosystem possible!
