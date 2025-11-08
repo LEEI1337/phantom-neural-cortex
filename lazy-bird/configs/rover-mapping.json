@@ -1,0 +1,36 @@
+{
+  "label_rules": [
+    {
+      "labels": ["security", "architecture", "complex"],
+      "agent": "claude",
+      "cost_level": "high",
+      "description": "Expert-level tasks requiring deep analysis and reasoning"
+    },
+    {
+      "labels": ["documentation", "bulk-refactor", "large-scale", "analysis"],
+      "agent": "gemini",
+      "cost_level": "free",
+      "description": "Bulk operations and large-scale analysis (1000 free/day)"
+    },
+    {
+      "labels": ["github-workflow", "quick-fix", "pr", "ci-cd"],
+      "agent": "copilot",
+      "cost_level": "free-low",
+      "description": "GitHub-specific tasks and workflow automation"
+    }
+  ],
+  "project_defaults": {
+    "ai-orchestrator": "gemini",
+    "security-audit-project": "claude"
+  },
+  "fallback_agent": "gemini",
+  "cost_optimization": {
+    "target_percentages": {
+      "gemini": 65,
+      "copilot": 25,
+      "claude": 10
+    },
+    "monthly_budget": 30,
+    "alert_threshold": 0.8
+  }
+}

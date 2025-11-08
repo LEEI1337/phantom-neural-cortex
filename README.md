@@ -107,9 +107,17 @@ rover ls -w
 
 ## 📊 System Architecture
 
-### The 3-Layer Stack
+### The 4-Layer Stack (with Lazy Bird)
 
 ```
+┌─────────────────────────────────────────────────────────┐
+│  LAYER 4: LAZY BIRD (Automation) 🆕                     │
+│  • Watches GitHub issues automatically                  │
+│  • Intelligent AI agent routing                         │
+│  • Autonomous issue → PR workflow                       │
+│  • Cost-optimized task distribution                     │
+└─────────────────────────────────────────────────────────┘
+                         ↓
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 3: ROVER (Orchestration)                         │
 │  • Manages parallel AI tasks                            │
@@ -140,6 +148,68 @@ rover ls -w
 | **Copilot** | GitHub Specialist | FREE or Pro $10/mo | PR, Issues, Quick fixes | Large analysis, Security |
 
 **📖 Full Details:** [EN](docs/ARCHITECTURE-EN.md) | [DE](docs/ARCHITECTURE-DE.md)
+
+---
+
+## 🤖 Lazy Bird Automation (NEW!)
+
+**Autonomous GitHub Issue → Implementation → PR** workflow powered by Layer 4 automation.
+
+### What is Lazy Bird?
+
+Lazy Bird adds a fully autonomous orchestration layer **above Rover**, enabling:
+
+- ✅ **Automatic Issue Processing** - Watches GitHub for labeled issues
+- ✅ **Intelligent AI Routing** - Chooses optimal agent (Claude/Gemini/Copilot) based on labels
+- ✅ **Zero-Touch Development** - Morning issue → Evening PR, no manual intervention
+- ✅ **Cost-Optimized** - 60-70% tasks run FREE (Gemini), stays within $20-30/month budget
+- ✅ **Test-Driven** - Validates with tests before creating PR
+- ✅ **Multi-Project** - Manages 2-20+ projects from single instance
+
+### Quick Example
+
+```bash
+# 1. Create GitHub Issue
+gh issue create \
+  --title "Add OAuth login" \
+  --body "Implement JWT-based authentication..." \
+  --label "lazy-bird,security"
+
+# 2. Lazy Bird automatically:
+#    ✅ Detects issue (60s polling)
+#    ✅ Selects Claude (security label)
+#    ✅ Creates Rover task
+#    ✅ Claude implements in isolated container
+#    ✅ Runs tests automatically
+#    ✅ Creates PR when tests pass
+
+# 3. You review and merge! 🎉
+```
+
+### Benefits
+
+- 💰 **Save 20-100 hours/month** on repetitive tasks
+- 🤖 **Work autonomously** while you're away
+- 🎯 **Smart agent selection** based on task complexity
+- 🔒 **Isolated execution** via Rover + Docker
+- 📊 **Cost tracking** and optimization suggestions
+
+### Documentation
+
+- **Setup Guide:** [EN](docs/LAZY-BIRD-SETUP-EN.md) | [DE](docs/LAZY-BIRD-SETUP-DE.md)
+- **Architecture:** [Technical Design](docs/LAZY-BIRD-ARCHITECTURE.md)
+- **Quick Start:** [lazy-bird/README.md](lazy-bird/README.md)
+
+### Agent Selection Strategy
+
+| Issue Labels | Agent | Cost | When to Use |
+|-------------|-------|------|-------------|
+| `security`, `architecture`, `complex` | **Claude** | $20/mo | Expert-level reasoning required |
+| `documentation`, `bulk-refactor`, `large-scale` | **Gemini** | **FREE** | Bulk work, 1000 free/day |
+| `github-workflow`, `quick-fix`, `pr` | **Copilot** | FREE/$10 | GitHub-specific operations |
+| *No specific label* | **Gemini** | **FREE** | Default cost-optimized choice |
+
+**Cost Target:** 60-70% Gemini (free), 20-30% Copilot (free/$10), 10-20% Claude ($20) = **$20-30/month total**
 
 ---
 
