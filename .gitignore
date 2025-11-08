@@ -1,15 +1,63 @@
-# Claude Code - Local Settings & Logs
+# ========================================
+# AI Development Orchestrator - .gitignore
+# ========================================
+
+# ============ CRITICAL: SECRETS ============
+# NEVER commit these files - they contain API keys!
+
+# Environment variables with API keys
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# API Keys and Tokens
+**/api-keys.json
+**/secrets.json
+**/credentials.json
+**/*token*.json
+**/*secret*.json
+**/*password*.json
+
+# OAuth credentials
+oauth_creds.json
+**/oauth*.json
+
+# ============ AI CLI CONFIGS (Sensitive) ============
+# Claude settings with local overrides
 .claude/settings.local.json
 .claude/mcp-logs/
 .claude/context.db
 .claude/.mcp-debug-tools/
 
-# Environment Variables (keep .env.example!)
-.env
-.env.local
-.env.*.local
+# Copilot with tokens
+.copilot/settings.local.json
 
-# Python
+# Gemini OAuth and personal data
+.gemini/oauth_creds.json
+.gemini/google_accounts.json
+.gemini/installation_id
+.gemini/trustedFolders.json
+.gemini/tmp/
+
+# OpenHands workspace and secrets
+.openhands/.env
+.openhands/workspace/
+.openhands/*.log
+
+# ============ NODE & NPM ============
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ============ PYTHON ============
 __pycache__/
 *.py[cod]
 *$py.class
@@ -18,6 +66,7 @@ __pycache__/
 venv/
 ENV/
 env/
+.venv
 build/
 develop-eggs/
 dist/
@@ -36,71 +85,71 @@ wheels/
 MANIFEST
 *.pyc
 
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.eslintcache
-package-lock.json
-yarn.lock
+# ============ DATABASES ============
+*.db
+*.sqlite
+*.sqlite3
+data.db
+*.db-journal
+*.db-shm
+*.db-wal
 
-# IDEs
-.vscode/
+# ============ ROVER ============
+.rover/
+**/worktrees/
+rover-*.log
+
+# ============ IDE & EDITORS ============
+.vscode/*
+!.vscode/settings.json.example
 .idea/
 *.swp
 *.swo
 *~
+.*.sw?
 
-# OS
+# ============ OS FILES ============
+# macOS
 .DS_Store
-.DS_Store?
+.AppleDouble
+.LSOverride
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
+
+# Windows
 Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
 
-# Logs
-*.log
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============ LOGS ============
 logs/
+*.log
 
-# Test Coverage
-.coverage
-htmlcov/
-.pytest_cache/
+# ============ TESTING ============
 coverage/
+*.lcov
 .nyc_output/
+test-results/
+playwright-report/
+.playwright/
 
-# Build Artifacts
-*.map
-
-# Temporary Files
+# ============ TEMPORARY FILES ============
+tmp/
+temp/
 *.tmp
-*.temp
 *.bak
-*.cache
+*.backup
 
-# Secrets (IMPORTANT!)
-*secret*
-*credential*
-*password*
-*.key
-*.pem
-*.p12
-*.pfx
-.env
+# ============ BACKUPS ============
+*.old
+README.old.md
 
-# Large Files
-*.mp4
-*.mov
-*.avi
-*.mkv
-*.zip
-*.tar
-*.tar.gz
-*.rar
-
-# Project-specific (add your own below)
-# project-specific-folder/
+# ============ MEMORY BANK ============
+# Keep structure, ignore personal data
+memory-bank/personalNotes.md
+memory-bank/*.local.md
