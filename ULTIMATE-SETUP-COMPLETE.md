@@ -201,35 +201,69 @@ rover merge 1 2 3 4
 
 ---
 
-## 💰 Cost Analysis
+## 💰 Cost Analysis (OPTIMIERT!)
 
 ### **Monthly Costs:**
 
-| Service | Free Tier | Usage | Cost |
-|---------|-----------|-------|------|
-| **Claude Code** | ✅ Free (rate limited) | Daily | $0 |
-| **Copilot CLI** | Included in Sub | Daily | $0* |
-| **Gemini AI** | ✅ 1500 req/day | Daily | $0 |
-| **OpenHands** | ✅ $10 credits | ~20-200 tasks | $0** |
+| Service | Free Tier | Optimal Usage | Actual Cost |
+|---------|-----------|---------------|-------------|
+| **Claude Code** | Rate limited | 10-20% (critical only!) | ~$0-15 |
+| **Copilot CLI** | ✅ In Subscription | 20-30% (GitHub + quick) | $0* |
+| **Gemini AI** | ✅ **1500/day!** | **60-70% (MAXIMIZE!)** | **$0** |
+| **OpenHands** | ✅ $10 credits | Optional | $0** |
 | **Rover** | ✅ Open Source | Unlimited | $0 |
-| **Brave Search** | ✅ 2000 req/month | As needed | $0 |
-| **Perplexity** | - | Optional | ~$5-10 |
+| **Brave Search** | ✅ 2000/month | As needed | $0 |
 | **GitHub** | ✅ Free | Unlimited | $0 |
 | **MCP Servers** | ✅ All local | Unlimited | $0 |
-| **TOTAL** | | | **~$5-10/month*** |
+| **TOTAL** | | | **~$0-15/month*** |
 
 *Included in GitHub Copilot subscription
 **Initial $10 free, then $20/month optional
-***Only Perplexity costs, rest is FREE!
+***ONLY Claude costs! Mit intelligenter Nutzung <$10 möglich!
 
-### **Cost per Task:**
-- Simple bug fix: $0 (Claude/Gemini free tier)
-- Feature implementation: $0-0.50 (mostly free)
-- E2E test generation: $0 (OpenHands $10 credits)
-- Large-scale analysis: $0 (Gemini 2M free)
-- Documentation: $0 (Gemini free tier)
+### **Kosten-Optimierungs-Strategie:**
 
-**ROI: Massive productivity gains for ~$5-10/month!**
+#### ✅ FREE Tier Maximierung (Gemini + Copilot)
+```
+Gemini:  1500 req/day × 30 days = 45,000 FREE/month!
+Copilot: Unlimited (already paid)
+→ 60-90% aller Tasks KOSTENLOS!
+```
+
+#### 💰 Claude Budget Management
+```
+Target: <100 Claude requests/month
+Focus: Security, Architecture, Complex Debugging
+Budget: ~$10-15/month
+```
+
+### **Cost per Task (REAL):**
+- Simple bug fix: **$0** (Copilot)
+- Large documentation: **$0** (Gemini, 1500/day free!)
+- Feature implementation: **$0-2** (Gemini bulk + Claude review)
+- E2E test generation: **$0** (OpenHands free credits)
+- Security audit: **$5-10** (Claude - aber notwendig!)
+- GitHub operations: **$0** (Copilot - in subscription)
+
+### **Intelligente Verteilung:**
+```
+📊 Monatliche Task-Verteilung (optimal):
+
+Gemini:  60-70%  (~300-400 tasks) = $0 (free tier!)
+Copilot: 20-30%  (~100-150 tasks) = $0 (in subscription)
+Claude:  10-20%  (~50-100 tasks)  = ~$10-15
+────────────────────────────────────────────
+TOTAL:   100%    (~500 tasks)     = ~$10-15/month
+
+Produktivität: 3-5x schneller
+Kosten: <$15/month
+ROI: MASSIV!
+```
+
+**🎯 Ziel: <$10/month durch Gemini-Maximierung!**
+
+**Siehe:** [AI-CAPABILITY-MATRIX.md](AI-CAPABILITY-MATRIX.md) für vollständige Kosten-Analyse
+**Siehe:** [ROVER-AI-SELECTOR.md](ROVER-AI-SELECTOR.md) für Budget-Tracking
 
 ---
 

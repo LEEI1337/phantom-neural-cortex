@@ -1,8 +1,8 @@
 # 🚀 Rover - Multi-Agent Orchestration Guide
 
-**Version:** 1.4.1
-**Status:** ✅ Initialized
-**Detected Agents:** Claude, Gemini
+**Version:** 2.0 - Optimized Edition
+**Status:** ✅ Initialized with Intelligent Agent Selection
+**Detected Agents:** Claude (Expert), Gemini (Worker), Copilot (GitHub Specialist)
 
 ---
 
@@ -14,8 +14,20 @@
 - 🔄 **Parallel Task Execution** - Mehrere Agents gleichzeitig
 - 🔒 **Isolated Workspaces** - Git Worktrees für jede Task
 - 🐳 **Docker Containers** - Sichere Isolation
-- 🤖 **Multi-Agent Support** - Claude, Gemini, Codex, Qwen
+- 🤖 **Multi-Agent Support** - Claude, Gemini, Copilot (optimiert!)
 - 📊 **Task Management** - Create, inspect, merge, iterate
+- 💰 **Cost Optimization** - Intelligente Agent-Auswahl (<$10/month!)
+
+### ⚡ NEU: Intelligente Agent-Rollen
+
+| Agent | Rolle | Kosten | Optimal für |
+|-------|-------|--------|-------------|
+| **Claude** | Senior Architect | $$$ (TEUER) | Security, Architecture, Debugging |
+| **Gemini** | Bulk Worker | $0 (1500/day) | Docs, Analysis, Refactoring |
+| **Copilot** | GitHub Specialist | $0 (in Sub) | PR, Issues, Quick Fixes |
+
+**Siehe:** [ROVER-AI-SELECTOR.md](ROVER-AI-SELECTOR.md) für detaillierte Auswahl-Strategie
+**Siehe:** [AI-CAPABILITY-MATRIX.md](AI-CAPABILITY-MATRIX.md) für vollständige Analyse
 
 ---
 
@@ -251,29 +263,93 @@ rover task "Create README examples" --agent claude
 
 ---
 
-## Agent Selection Guide
+## 💰 Agent Selection Guide (KOSTEN-OPTIMIERT!)
 
-### When to use Claude?
-- ✅ Complex reasoning tasks
-- ✅ Security-sensitive code
-- ✅ Architecture decisions
-- ✅ Debugging & root cause analysis
+### 🔐 Claude = Expensive Expert (10-20% usage, ~$15-20/month)
+**NUR für kritische Tasks!**
+
+✅ **USE Claude for:**
+- Security audits & vulnerability analysis
+- Architecture design & system patterns
+- Complex debugging & root cause analysis
+- Cryptography & payment flow reviews
+- Critical code path reviews
+
+❌ **DON'T use Claude for:**
+- Simple bug fixes (→ Copilot)
+- Bulk operations (→ Gemini)
+- Documentation (→ Gemini)
+- GitHub operations (→ Copilot)
 
 **Example:**
 ```bash
-rover task "Review authentication for security issues" --agent claude
+rover task "Security audit of authentication system" --agent claude
+rover task "Debug race condition in payment handler" --agent claude
+rover task "Design microservices architecture" --agent claude
 ```
 
-### When to use Gemini?
-- ✅ Large-scale code analysis (2M tokens!)
-- ✅ Repository-wide refactoring
-- ✅ Documentation generation
-- ✅ Dependency analysis
+---
+
+### 📚 Gemini = Free Workhorse (60-70% usage, $0/month!)
+**MAXIMIZE usage! 1500 free/day!**
+
+✅ **USE Gemini for:**
+- Large-scale documentation (2M token context!)
+- Repository-wide analysis & refactoring
+- Bulk code generation (>10 files)
+- Dependency mapping & analysis
+- Performance analysis across codebase
+- Data processing & test generation
+
+❌ **DON'T use Gemini for:**
+- Security-critical code (→ Claude)
+- GitHub-specific operations (→ Copilot)
 
 **Example:**
 ```bash
-rover task "Analyze entire codebase structure" --agent gemini
+rover task "Generate docs for all 200 API endpoints" --agent gemini
+rover task "Analyze all 500 files for performance" --agent gemini
+rover task "Refactor 50 components to new pattern" --agent gemini
 ```
+
+---
+
+### 🐙 Copilot = GitHub Specialist (20-30% usage, $0/month!)
+**Already paid! Use freely!**
+
+✅ **USE Copilot for:**
+- GitHub PR, Issues, Workflows operations
+- Quick bug fixes & single-file edits
+- Linting, formatting, config updates
+- E2E test execution
+- Terminal commands & scripts
+
+❌ **DON'T use Copilot for:**
+- Large multi-file analysis (→ Gemini)
+- Security audits (→ Claude)
+- Complex debugging (→ Claude)
+
+**Example:**
+```bash
+rover task "Create PR for bug fix" --agent copilot
+rover task "Fix typo in README" --agent copilot
+rover task "Update GitHub Actions workflow" --agent copilot
+```
+
+---
+
+### 🎯 Quick Decision Tree
+
+```
+Task Type?
+├─ GitHub PR/Issue/Workflow? → **Copilot** ($0)
+├─ Security/Architecture/Debug? → **Claude** ($$$)
+├─ Large/Bulk/Docs? → **Gemini** ($0)
+├─ Quick Fix? → **Copilot** ($0)
+└─ Default → **Gemini** ($0, most free tier!)
+```
+
+**📖 Detailed Guide:** See [ROVER-AI-SELECTOR.md](ROVER-AI-SELECTOR.md)
 
 ---
 
