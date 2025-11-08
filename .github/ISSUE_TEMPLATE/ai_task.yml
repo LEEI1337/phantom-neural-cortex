@@ -1,0 +1,42 @@
+name: 🤖 AI Task (OpenHands Auto-Fix)
+description: Quick automated task for AI agents to implement
+title: "[AI] "
+labels: ["ai-task"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🤖 AI-Automated Implementation
+
+        Add label `openhands` to trigger Claude Sonnet 4.5 auto-implementation.
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Complexity
+      options:
+        - Simple (< 2 hours)
+        - Medium (2-8 hours)
+        - Complex (1-3 days)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      placeholder: Describe what needs to be implemented
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
