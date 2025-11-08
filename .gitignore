@@ -110,6 +110,12 @@ lazy-bird-*.log
 # Keep systemd templates, ignore local overrides
 lazy-bird/systemd/*.local.service
 
+# Feedback Loop System
+lazy-bird/feedback/__pycache__/
+lazy-bird/feedback/*.pyc
+lazy-bird/feedback/.pytest_cache/
+lazy-bird/feedback/test-results/
+
 # ============ IDE & EDITORS ============
 .vscode/*
 !.vscode/settings.json.example
@@ -157,33 +163,27 @@ temp/
 *.backup
 .github-issue-*.md
 
-# ============ BACKUPS ============
+# ============ BACKUPS & OLD FILES ============
 *.old
+*.backup
 README.old.md
+docs/*.old
 
 # ============ MEMORY BANK ============
 # Keep structure, ignore personal data
 memory-bank/personalNotes.md
 memory-bank/*.local.md
 
-# ============ DEPRECATED DOCS (Too Verbose) ============
-# Use concise EN/DE versions instead
-docs/QUICK-START.md
-docs/FINAL-SETUP-SUMMARY.md
-docs/ULTIMATE-SETUP-COMPLETE.md
-docs/OPTIMIZATION-SUMMARY.md
-docs/setup/SETUP-GUIDE.md
-docs/setup/SETUP-VERIFICATION.md
-docs/setup/OPENHANDS-SETUP.md
-docs/architecture/ARCHITECTURE.md
-docs/architecture/AI-CAPABILITY-MATRIX.md
-docs/architecture/CLAUDE-VS-COPILOT.md
-docs/guides/ROVER-GUIDE.md
-docs/guides/ROVER-AI-SELECTOR.md
-docs/archive/
-
 # ============ PERSONAL SETUP GUIDES ============
 # Local step-by-step guides (personal workflow)
 GITHUB_SETUP_STEPS.md
 LAZY-BIRD-STATUS.md
 REPOSITORY-STRUKTUR.md
+
+# ============ DEPRECATED DOCS ============
+# These files have been removed/archived
+docs/QUICK-START.md
+docs/FINAL-SETUP-SUMMARY.md
+docs/ULTIMATE-SETUP-COMPLETE.md
+docs/INDEX.md.old
+docs/archive/

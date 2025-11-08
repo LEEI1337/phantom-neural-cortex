@@ -19,10 +19,11 @@
 
 | Document | Language | Description |
 |---|---|---|
-| [ARCHITECTURE-EN.md](ARCHITECTURE-EN.md) | 🇬🇧 English | 3-layer system explained |
-| [ARCHITECTURE-DE.md](ARCHITECTURE-DE.md) | 🇩🇪 Deutsch | 3-Ebenen-System erklärt |
+| [SYSTEM-ARCHITECTURE.md](SYSTEM-ARCHITECTURE.md) | 🌐 Visual | **Complete system overview with diagrams** ⭐ |
+| [ARCHITECTURE-EN.md](ARCHITECTURE-EN.md) | 🇬🇧 English | 6-layer system explained |
+| [ARCHITECTURE-DE.md](ARCHITECTURE-DE.md) | 🇩🇪 Deutsch | 6-Ebenen-System erklärt |
 
-**Understand the system** - How Claude, Gemini, Copilot work together.
+**Understand the system** - Complete visual architecture with all 6 layers, feedback loop, and AI selection logic.
 
 ---
 
@@ -32,6 +33,34 @@
 |---|---|
 | [MCP-SERVERS.md](MCP-SERVERS.md) | All 18 MCP servers reference |
 | [../config/AGENTS.md](../config/AGENTS.md) | 4 custom agents (@code-expert, etc.) |
+| [HOW-TO-CREATE-PROJECT.md](HOW-TO-CREATE-PROJECT.md) | Step-by-step project creation guide |
+
+### Lazy Bird (Automation System)
+
+| Document | Description |
+|---|---|
+| [LAZY-BIRD-ARCHITECTURE.md](LAZY-BIRD-ARCHITECTURE.md) | Layer 0-4 Architecture |
+| [LAZY-BIRD-SETUP-EN.md](LAZY-BIRD-SETUP-EN.md) | 🇬🇧 Setup Guide |
+| [LAZY-BIRD-SETUP-DE.md](LAZY-BIRD-SETUP-DE.md) | 🇩🇪 Setup Anleitung |
+| [LAZY-BIRD-SUMMARY.md](LAZY-BIRD-SUMMARY.md) | Quick Summary |
+| [../lazy-bird/README.md](../lazy-bird/README.md) | Main Lazy Bird README |
+
+### Feedback Loop System (UltraThink)
+
+| Document | Description |
+|---|---|
+| [feedback-loop/FEEDBACK-LOOP-DESIGN.md](feedback-loop/FEEDBACK-LOOP-DESIGN.md) | Complete system design |
+| [feedback-loop/FEEDBACK-LOOP-ANALYSIS.md](feedback-loop/FEEDBACK-LOOP-ANALYSIS.md) | Critical analysis & optimizations |
+| [feedback-loop/OPTIMIZATION-SUMMARY.md](feedback-loop/OPTIMIZATION-SUMMARY.md) | Phase 1 improvements summary |
+| [../lazy-bird/feedback/README.md](../lazy-bird/feedback/README.md) | Implementation README |
+
+### Detailed Documentation
+
+| Folder | Description |
+|---|---|
+| [architecture/](architecture/) | Detailed architecture docs |
+| [guides/](guides/) | Step-by-step guides |
+| [setup/](setup/) | Setup & verification guides |
 
 ---
 
