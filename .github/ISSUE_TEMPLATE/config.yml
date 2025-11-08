@@ -1,4 +1,4 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: 💬 GitHub Discussions
     url: https://github.com/LEEI1337/ai-dev-orchestrator/discussions
@@ -9,3 +9,9 @@ contact_links:
   - name: 🔒 Security Issue
     url: https://github.com/LEEI1337/ai-dev-orchestrator/security/advisories/new
     about: Report a security vulnerability privately
+  - name: 🤖 OpenHands Auto-Fix
+    url: https://github.com/LEEI1337/ai-dev-orchestrator/issues/new?labels=openhands&template=ai_task.yml
+    about: Create an AI task for OpenHands (Claude Sonnet 4.5) to implement
+  - name: 🐦 Lazy Bird Project
+    url: https://github.com/LEEI1337/ai-dev-orchestrator/issues/new?labels=lazy-bird&template=lazy_bird_project.yml
+    about: Start a multi-week project with Lazy Bird autonomous implementation

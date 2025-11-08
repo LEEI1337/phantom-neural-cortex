@@ -1,0 +1,271 @@
+name: 🐦 Lazy Bird Project (Multi-Week Implementation)
+description: Large-scale project for Lazy Bird autonomous implementation with Rover orchestration
+title: "[Lazy Bird] "
+labels: ["lazy-bird", "project", "multi-ai"]
+assignees:
+  - copilot
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐦 Lazy Bird Multi-AI Project
+
+        This template is for **large-scale projects** that require:
+        - Multiple AI agents working in parallel
+        - Rover orchestration with git worktrees
+        - Test-driven validation before PR
+        - Multi-week implementation timeline
+
+        **Perfect for:**
+        - New features spanning multiple modules
+        - Large refactoring projects
+        - System integrations
+        - Infrastructure improvements
+
+  - type: input
+    id: project-duration
+    attributes:
+      label: Estimated Duration
+      description: How long will this project take?
+      placeholder: "e.g., 2 weeks, 1 month"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project-priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: textarea
+    id: project-summary
+    attributes:
+      label: Project Summary
+      description: High-level overview of what this project achieves
+      placeholder: |
+        Example:
+        Integrate Lazy Bird automation layer above Rover to enable fully autonomous
+        GitHub issue → implementation → PR workflow across our multi-AI system.
+    validations:
+      required: true
+
+  - type: textarea
+    id: objectives
+    attributes:
+      label: Objectives & Goals
+      description: What are the key objectives?
+      placeholder: |
+        ### Primary Goals
+        1. Autonomous issue processing without manual intervention
+        2. Rover integration for isolation & orchestration
+        3. Multi-AI support (Claude/Gemini/Copilot routing)
+        4. Cost optimization within $20-30/month budget
+
+        ### Success Metrics
+        - 80%+ automation rate
+        - 20+ hours/month saved
+        - 90%+ test pass rate on first run
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-design
+    attributes:
+      label: Technical Design
+      description: Architecture and technical approach
+      placeholder: |
+        ### Architecture
+        ```
+        Layer 4: Lazy Bird (Automation)
+        Layer 3: Rover (Orchestration)
+        Layer 2: AI CLIs (Claude/Gemini/Copilot)
+        Layer 1: MCP Servers (Tools & Data)
+        ```
+
+        ### Key Components
+        - rover-adapter.py: Translate Lazy Bird → Rover commands
+        - agent-selector.py: Multi-AI routing logic
+        - godot-server.py: Test coordination
+        - project-manager.py: Multi-project config
+
+  - type: textarea
+    id: implementation-phases
+    attributes:
+      label: Implementation Phases
+      description: Break down into phases/milestones
+      placeholder: |
+        ### Phase 1: Foundation (Week 1)
+        - [ ] Fork Lazy Bird repository
+        - [ ] Study codebase structure
+        - [ ] Design rover-adapter.py interface
+        - [ ] Setup development environment
+
+        ### Phase 2: Core Integration (Week 2-3)
+        - [ ] Implement rover-adapter.py
+        - [ ] Modify issue-watcher.py
+        - [ ] Integrate test coordinator
+        - [ ] Create AI agent selection logic
+
+        ### Phase 3: Multi-AI & Multi-Project (Week 4)
+        - [ ] Multi-AI routing implementation
+        - [ ] Multi-project support
+        - [ ] Cost optimization tracking
+
+        ### Phase 4: Production (Week 5)
+        - [ ] Performance optimization
+        - [ ] Security hardening
+        - [ ] Monitoring & observability
+        - [ ] Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: ai-agent-strategy
+    attributes:
+      label: AI Agent Selection Strategy
+      description: How should different AI agents be used?
+      placeholder: |
+        **Claude (Expert - $20/mo):**
+        - Security-critical tasks
+        - Architecture decisions
+        - Complex algorithms
+        - Labels: `security`, `architecture`, `complex`
+
+        **Gemini (FREE - 1000 req/day):**
+        - Documentation
+        - Bulk refactoring
+        - Large-scale changes
+        - Labels: `documentation`, `bulk-refactor`
+
+        **Copilot (FREE/$10 - GitHub specialist):**
+        - GitHub workflows
+        - Quick fixes
+        - PR automation
+        - Labels: `github-workflow`, `quick-fix`
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-strategy
+    attributes:
+      label: Testing Strategy
+      description: How will this be tested?
+      placeholder: |
+        ### Unit Tests
+        - rover-adapter.py command generation
+        - Agent selection logic
+        - Project configuration parsing
+
+        ### Integration Tests
+        - Lazy Bird → Rover task creation
+        - Rover → AI agent execution
+        - Test coordinator → Rover results
+
+        ### End-to-End Tests
+        - Complete workflow: Issue → PR
+        - Multi-project parallel execution
+        - Retry logic on test failures
+    validations:
+      required: true
+
+  - type: textarea
+    id: cost-analysis
+    attributes:
+      label: Cost Impact Analysis
+      description: How does this affect costs?
+      placeholder: |
+        **Current Monthly Cost:** $30
+        - Claude Pro: $20
+        - Copilot: $10
+        - Gemini: $0
+
+        **After Implementation:** $30 (same)
+        - Infrastructure: $0 (local Docker)
+        - Lazy Bird: $0 (open source)
+        - Rover: $0 (open source)
+
+        **ROI:** Zero additional cost, 20-100h/month time saved
+
+  - type: textarea
+    id: risks-mitigations
+    attributes:
+      label: Risks & Mitigations
+      description: What could go wrong and how to prevent it?
+      placeholder: |
+        | Risk | Impact | Probability | Mitigation |
+        |------|--------|-------------|------------|
+        | Rover API changes break integration | High | Low | Pin Rover version |
+        | Container resource exhaustion | High | Medium | Set resource limits |
+        | API rate limits exceeded | Medium | Medium | Implement rate limiting |
+
+  - type: textarea
+    id: documentation-plan
+    attributes:
+      label: Documentation Plan
+      description: What documentation needs to be created/updated?
+      placeholder: |
+        ### User Documentation
+        - LAZY-BIRD-SETUP-EN.md
+        - LAZY-BIRD-SETUP-DE.md
+        - LAZY-BIRD-WORKFLOWS.md
+
+        ### Developer Documentation
+        - ARCHITECTURE.md update
+        - ROVER-ADAPTER-API.md
+        - CONTRIBUTING.md update
+
+        ### Operations Documentation
+        - DEPLOYMENT.md
+        - MONITORING.md
+        - TROUBLESHOOTING.md
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: What needs to be done before starting?
+      options:
+        - label: Branch protection is configured
+        - label: CI/CD workflows are passing
+        - label: Required secrets are configured
+        - label: Development environment is set up
+        - label: Dependencies are documented
+
+  - type: checkboxes
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Project is complete when...
+      options:
+        - label: All implementation phases completed
+        - label: All tests passing (unit, integration, e2e)
+        - label: Documentation complete (EN/DE)
+        - label: Cost stays within budget ($20-30/month)
+        - label: 80%+ automation rate achieved
+        - label: Security review completed
+        - label: Monitoring and alerting configured
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 Lazy Bird Workflow
+
+        1. **Add `lazy-bird` label** to this issue
+        2. **Lazy Bird watches** for new labeled issues (polls every 60s)
+        3. **Project Manager** selects appropriate config
+        4. **Rover creates** isolated worktree + container
+        5. **AI agent executes** task (Claude/Gemini/Copilot)
+        6. **Test Coordinator** validates results
+        7. **PR created** automatically if tests pass
+        8. **You review & merge** the PR
+
+        **Note:** Large projects may take days/weeks. Progress updates via PR comments.

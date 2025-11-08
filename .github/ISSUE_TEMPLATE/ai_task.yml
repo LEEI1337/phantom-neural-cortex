@@ -1,0 +1,156 @@
+name: 🤖 AI Task (Automated Implementation)
+description: Create a task for AI agents (OpenHands/Lazy Bird) to implement automatically
+title: "[AI-Task] "
+labels: ["ai-task", "automation"]
+assignees:
+  - copilot
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## AI-Assisted Implementation
+
+        This template is for tasks that should be implemented **automatically by AI agents**.
+
+        **Supported AI Agents:**
+        - 🤖 **OpenHands** - Add label `openhands` for Claude Sonnet 4.5 implementation
+        - 🐦 **Lazy Bird** - Add label `lazy-bird` for automated multi-AI workflow
+        - 🤝 **Copilot** - Assigned by default for GitHub integration tasks
+
+  - type: dropdown
+    id: task-type
+    attributes:
+      label: Task Type
+      description: What kind of task is this?
+      options:
+        - Feature Implementation
+        - Bug Fix
+        - Refactoring
+        - Documentation
+        - Testing
+        - Configuration
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Complexity Level
+      description: How complex is this task?
+      options:
+        - Simple (< 2 hours)
+        - Medium (2-8 hours)
+        - Complex (1-3 days)
+        - Very Complex (> 3 days)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: preferred-agent
+    attributes:
+      label: Preferred AI Agent
+      description: Which AI should handle this? (Auto-selected based on complexity)
+      options:
+        - Auto (let system decide)
+        - Claude (complex tasks, architecture)
+        - Gemini (docs, bulk operations)
+        - Copilot (GitHub workflows, quick fixes)
+    validations:
+      required: true
+
+  - type: textarea
+    id: task-description
+    attributes:
+      label: Task Description
+      description: Describe what needs to be implemented
+      placeholder: |
+        Example:
+        Implement a feature that validates markdown files in the repository.
+
+        Requirements:
+        - Use markdownlint for validation
+        - Create GitHub Actions workflow
+        - Add configuration file
+        - Update documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: How do we know when this is done?
+      placeholder: |
+        - [ ] Markdown validation works for all .md files
+        - [ ] Workflow runs on PR
+        - [ ] Configuration is customizable
+        - [ ] Documentation is updated
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-context
+    attributes:
+      label: Technical Context
+      description: Any technical details the AI should know?
+      placeholder: |
+        - Existing architecture: Layer-based (MCP → AI CLIs → Rover → Lazy Bird)
+        - Related files: .github/workflows/docs-quality.yml
+        - Dependencies: markdownlint-cli2
+        - Constraints: Must work with existing workflows
+
+  - type: textarea
+    id: test-plan
+    attributes:
+      label: Test Plan
+      description: How should the AI verify this works?
+      placeholder: |
+        1. Run markdown validation on test files
+        2. Trigger workflow via PR
+        3. Verify all checks pass
+        4. Test with intentionally broken markdown
+
+  - type: checkboxes
+    id: ai-agent-labels
+    attributes:
+      label: AI Agent Selection
+      description: Which AI agent should implement this? (Add corresponding labels)
+      options:
+        - label: 🤖 OpenHands (Claude Sonnet 4.5) - Add label `openhands`
+        - label: 🐦 Lazy Bird (Multi-AI orchestration) - Add label `lazy-bird`
+        - label: 🤝 Copilot (GitHub specialist) - Already assigned
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Before submitting this AI task
+      options:
+        - label: Task is well-defined and atomic (single responsibility)
+          required: true
+        - label: Acceptance criteria are testable
+          required: true
+        - label: No secrets or sensitive data included
+          required: true
+        - label: Related issues/PRs linked if applicable
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## What happens next?
+
+        1. **Add the appropriate label** (`openhands` or `lazy-bird`) to trigger automation
+        2. **AI agent will:**
+           - Analyze the task
+           - Create implementation plan
+           - Write code and tests
+           - Create a Pull Request
+        3. **You review and merge** the PR after validation
+
+        **Estimated response time:**
+        - OpenHands: 10-30 minutes (depending on complexity)
+        - Lazy Bird: 1-6 hours (includes testing & validation)
+        - Copilot: Manual review and suggestions
