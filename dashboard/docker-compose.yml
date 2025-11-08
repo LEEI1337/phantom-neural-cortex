@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:16-alpine
+    container_name: phantom-cortex-db
+    environment:
+      POSTGRES_USER: phantom_cortex
+      POSTGRES_PASSWORD: phantom_cortex_secure_password
+      POSTGRES_DB: phantom_cortex
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phantom_cortex"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: phantom-cortex-backend
+    environment:
+      DATABASE_URL: postgresql://phantom_cortex:phantom_cortex_secure_password@database:5432/phantom_cortex
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "1336:1336"
+    volumes:
+      - ./backend:/app
+      - ../lazy-bird:/lazy-bird  # Mount lazy-bird modules (Python package path)
+    depends_on:
+      database:
+        condition: service_healthy
+    command: uvicorn main:socket_app --host 0.0.0.0 --port 1336 --reload
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: phantom-cortex-frontend
+    environment:
+      VITE_API_URL: http://localhost:1336/api
+      VITE_WS_URL: http://localhost:1336
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0 --port 1337
+
+  # Redis (for caching and WebSocket scaling)
+  redis:
+    image: redis:7-alpine
+    container_name: phantom-cortex-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: phantom-cortex-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - backend
+
+  # Grafana Dashboards
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: phantom-cortex-grafana
+    ports:
+      - "1338:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/phantom-cortex.json
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    depends_on:
+      - prometheus
+
+  # PostgreSQL Exporter
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: phantom-cortex-postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://phantom_cortex:phantom_cortex_secure_password@database:5432/phantom_cortex?sslmode=disable"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.55.0
+    container_name: phantom-cortex-redis-exporter
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: "redis:6379"
+    depends_on:
+      - redis
+
+  # Node Exporter (System Metrics) - Note: Limited functionality on Windows
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: phantom-cortex-node-exporter
+    ports:
+      - "9100:9100"
+    # Windows: Cannot mount root filesystem, running in container-only mode
+    command:
+      - '--path.procfs=/proc'
+      - '--path.sysfs=/sys'
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: phantom-cortex-network

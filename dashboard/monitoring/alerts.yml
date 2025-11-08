@@ -1,0 +1,151 @@
+groups:
+  - name: phantom_cortex_alerts
+    interval: 30s
+    rules:
+      # Quality Alerts
+      - alert: LowQualityScore
+        expr: avg(lazybird_quality_score) < 60
+        for: 5m
+        labels:
+          severity: warning
+          component: quality
+        annotations:
+          summary: "Low quality score detected"
+          description: "Average quality score is {{ $value }}% (threshold: 60%)"
+
+      - alert: CriticalQualityScore
+        expr: avg(lazybird_quality_score) < 40
+        for: 2m
+        labels:
+          severity: critical
+          component: quality
+        annotations:
+          summary: "Critical quality score detected"
+          description: "Average quality score is {{ $value }}% (threshold: 40%)"
+
+      # Task Failure Alerts
+      - alert: HighTaskFailureRate
+        expr: sum(rate(lazybird_tasks_completed_total{status="failed"}[5m])) / sum(rate(lazybird_tasks_completed_total[5m])) * 100 > 20
+        for: 5m
+        labels:
+          severity: warning
+          component: tasks
+        annotations:
+          summary: "High task failure rate"
+          description: "Task failure rate is {{ $value }}% (threshold: 20%)"
+
+      - alert: CriticalTaskFailureRate
+        expr: sum(rate(lazybird_tasks_completed_total{status="failed"}[5m])) / sum(rate(lazybird_tasks_completed_total[5m])) * 100 > 50
+        for: 2m
+        labels:
+          severity: critical
+          component: tasks
+        annotations:
+          summary: "Critical task failure rate"
+          description: "Task failure rate is {{ $value }}% (threshold: 50%)"
+
+      # Cost Alerts
+      - alert: HighDailyCost
+        expr: sum(increase(lazybird_cost_usd_total[1d])) > 50
+        for: 1m
+        labels:
+          severity: warning
+          component: cost
+        annotations:
+          summary: "High daily cost detected"
+          description: "Daily cost is ${{ $value }} (threshold: $50)"
+
+      - alert: BudgetExceeded
+        expr: lazybird_budget_utilization_percent > 90
+        for: 5m
+        labels:
+          severity: critical
+          component: cost
+        annotations:
+          summary: "Budget nearly exceeded"
+          description: "Budget utilization is {{ $value }}% (threshold: 90%)"
+
+      # Performance Alerts
+      - alert: SlowTaskProcessing
+        expr: histogram_quantile(0.95, sum(rate(lazybird_task_duration_seconds_bucket[5m])) by (le)) > 300
+        for: 10m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "Slow task processing detected"
+          description: "P95 task duration is {{ $value }}s (threshold: 300s)"
+
+      - alert: TooManyIterations
+        expr: histogram_quantile(0.95, sum(rate(lazybird_iteration_count_bucket[5m])) by (le)) > 10
+        for: 10m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "Too many refinement iterations"
+          description: "P95 iteration count is {{ $value }} (threshold: 10)"
+
+      # Cache Alerts
+      - alert: LowCacheHitRate
+        expr: avg(lazybird_cache_hit_rate_percent) by (cache_type) < 50
+        for: 10m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Low cache hit rate for {{ $labels.cache_type }}"
+          description: "Cache hit rate is {{ $value }}% (threshold: 50%)"
+
+      # Agent Switch Alerts
+      - alert: FrequentAgentSwitches
+        expr: sum(rate(lazybird_agent_switches_total[5m])) > 0.5
+        for: 10m
+        labels:
+          severity: info
+          component: agents
+        annotations:
+          summary: "Frequent agent switches detected"
+          description: "Agent switch rate is {{ $value }}/s (threshold: 0.5/s)"
+
+      # ML Component Alerts
+      - alert: LowIterationPredictorAccuracy
+        expr: lazybird_iteration_predictor_accuracy_percent < 70
+        for: 30m
+        labels:
+          severity: warning
+          component: ml
+        annotations:
+          summary: "Low iteration predictor accuracy"
+          description: "Iteration predictor accuracy is {{ $value }}% (threshold: 70%)"
+
+      - alert: LowLatentCompressionRatio
+        expr: lazybird_latent_compression_ratio < 1.3
+        for: 30m
+        labels:
+          severity: info
+          component: ml
+        annotations:
+          summary: "Low latent reasoning compression ratio"
+          description: "Compression ratio is {{ $value }}x (threshold: 1.3x)"
+
+      # System Health Alerts
+      - alert: BackendDown
+        expr: up{job="phantom-cortex-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Phantom Neural Cortex backend is down"
+          description: "Backend service is not responding"
+
+      - alert: DatabaseDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "Database service is not responding"
