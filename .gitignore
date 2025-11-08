@@ -99,6 +99,17 @@ data.db
 **/worktrees/
 rover-*.log
 
+# ============ LAZY BIRD ============
+# Lazy Bird automation system
+.lazy-bird/
+lazy-bird/configs/projects.json
+lazy-bird/configs/*.local.json
+lazy-bird/*.pid
+lazy-bird-*.log
+.config/lazy_bird/secrets/
+# Keep systemd templates, ignore local overrides
+lazy-bird/systemd/*.local.service
+
 # ============ IDE & EDITORS ============
 .vscode/*
 !.vscode/settings.json.example
@@ -144,6 +155,7 @@ temp/
 *.tmp
 *.bak
 *.backup
+.github-issue-*.md
 
 # ============ BACKUPS ============
 *.old
