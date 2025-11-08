@@ -243,10 +243,22 @@ I'll update this issue with progress and create a PR when ready.
         """
         try:
             # Handle both HTTPS and SSH URLs
-            if "github.com/" in repo_url:
-                parts = repo_url.split("github.com/")[-1].rstrip("/").rstrip(".git")
-                owner, repo = parts.split("/")
-                return owner, repo
+            # Remove common prefixes and suffixes
+            url = repo_url.strip()
+            
+            # For HTTPS URLs: https://github.com/owner/repo
+            if url.startswith("https://github.com/"):
+                path = url[len("https://github.com/"):].rstrip("/").rstrip(".git")
+            # For SSH URLs: git@github.com:owner/repo
+            elif url.startswith("git@github.com:"):
+                path = url[len("git@github.com:"):].rstrip("/").rstrip(".git")
+            else:
+                return None, None
+            
+            # Split into owner/repo
+            parts = path.split("/", 1)
+            if len(parts) == 2:
+                return parts[0], parts[1]
         except Exception:
             pass
         
