@@ -17,7 +17,7 @@ Thank you for your interest in contributing! This project aims to provide a prof
 
 ```bash
 # Fork the repository on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/ai-dev-orchestrator.git
+git clone https://github.com/LEEI1337/ai-dev-orchestrator.git
 cd ai-dev-orchestrator
 ```
 
@@ -291,8 +291,8 @@ Any thoughts on how to implement this
 
 ## 🎓 Questions?
 
-- **General Questions** - Use [GitHub Discussions](https://github.com/YOUR_USERNAME/ai-dev-orchestrator/discussions)
-- **Bug Reports** - Open an [Issue](https://github.com/YOUR_USERNAME/ai-dev-orchestrator/issues)
+- **General Questions** - Use [GitHub Discussions](https://github.com/LEEI1337/ai-dev-orchestrator/discussions)
+- **Bug Reports** - Open an [Issue](https://github.com/LEEI1337/ai-dev-orchestrator/issues)
 - **Quick Help** - Check existing documentation first
 
 ## 📜 License

@@ -2,7 +2,7 @@
 
 > **Professional multi-AI development environment with intelligent cost optimization**
 
-Transform your development workflow with 5 harmonized AI systems, 18 MCP servers, and intelligent task orchestration - all for <$15/month.
+Transform your development workflow with 5 harmonized AI systems, 18 MCP servers, and intelligent task orchestration - starting from $20/month with strategic free tier usage.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -11,7 +11,7 @@ Transform your development workflow with 5 harmonized AI systems, 18 MCP servers
 
 ## 🎯 What is This?
 
-A **production-ready AI development environment** that intelligently orchestrates multiple AI systems (Claude, Gemini, Copilot, OpenHands) with cost-optimized task distribution, achieving **3-5x faster development** for **<$15/month**.
+A **production-ready AI development environment** that intelligently orchestrates multiple AI systems (Claude, Gemini, Copilot, OpenHands) with cost-optimized task distribution, achieving **3-5x faster development** for **~$20-30/month** (or $20 minimum with strategic free tier maximization).
 
 ### Key Features
 
@@ -27,23 +27,23 @@ A **production-ready AI development environment** that intelligently orchestrate
 
 ## 💡 The Big Idea
 
-**Problem:** Using expensive AI (Claude) for everything = $40-50/month
-**Solution:** Intelligently distribute tasks across 3 AI systems based on strengths & cost
+**Problem:** Using Claude Max for everything = $100-200/month
+**Solution:** Intelligently distribute tasks + maximize free tiers
 
 ### Optimized Strategy
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ Claude (10-20%)    → Security, Architecture   ~$10-15  │
-│ Gemini (60-70%)    → Bulk, Docs, Analysis     $0 FREE! │
-│ Copilot (20-30%)   → GitHub, Quick Fixes      $0 FREE! │
+│ Claude Pro (10-20%)  → Security, Architecture    $20   │
+│ Gemini (60-70%)      → Bulk, Docs, Analysis      $0!   │
+│ Copilot (20-30%)     → GitHub, Quick Fixes      $0-10  │
 ├─────────────────────────────────────────────────────────┤
-│ TOTAL: ~500 tasks/month                     = ~$10-15  │
+│ TOTAL: ~500 tasks/month                   = $20-30/mo  │
 │ ROI: 3-5x faster development                           │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Result:** ~75% cost reduction + massive productivity gains!
+**Result:** Use free tiers strategically + Claude Pro minimum = $20-30/month!
 
 ---
 
@@ -64,7 +64,7 @@ A **production-ready AI development environment** that intelligently orchestrate
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/YOUR_USERNAME/ai-dev-orchestrator.git
+git clone https://github.com/LEEI1337/ai-dev-orchestrator.git
 cd ai-dev-orchestrator
 
 # 2. Install AI CLIs
@@ -131,9 +131,9 @@ rover ls -w
 
 | AI | Role | Cost | Use For | Don't Use For |
 |---|---|---|---|---|
-| **Claude** | Senior Architect | $15-20/mo | Security, Architecture, Complex Debug | Bulk ops, Docs, GitHub |
-| **Gemini** | Bulk Worker | **$0/mo** | Large analysis, Docs, Refactoring | Security audits, GitHub |
-| **Copilot** | GitHub Specialist | **$0/mo** | PR, Issues, Quick fixes | Large analysis, Security |
+| **Claude** | Senior Architect | Pro $20/mo | Security, Architecture, Complex Debug | Bulk ops, Docs, GitHub |
+| **Gemini** | Bulk Worker | **FREE** (1000/day) | Large analysis, Docs, Refactoring | Security audits, GitHub |
+| **Copilot** | GitHub Specialist | FREE or Pro $10/mo | PR, Issues, Quick fixes | Large analysis, Security |
 
 **📖 Full Details:** [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
 
@@ -168,29 +168,47 @@ rover ls -w
 ### Monthly Costs (Real)
 
 ```
-┌─────────────────────────────────────────────────────┐
-│ Service         │ Usage    │ Free Tier  │ Cost     │
-├─────────────────────────────────────────────────────┤
-│ Gemini AI       │ 60-70%   │ 1500/day   │ $0       │
-│ Copilot CLI     │ 20-30%   │ Unlimited  │ $0       │
-│ Claude Code     │ 10-20%   │ Limited    │ ~$10-15  │
-│ OpenHands       │ Optional │ $10 credit │ $0       │
-│ Rover           │ Unlimited│ Open source│ $0       │
-│ MCP Servers     │ Unlimited│ All local  │ $0       │
-├─────────────────────────────────────────────────────┤
-│ TOTAL                                   │ ~$10-15  │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ Service         │ Usage    │ Free Tier      │ Cost          │
+├──────────────────────────────────────────────────────────────┤
+│ Gemini AI       │ 60-70%   │ 1000 req/day   │ $0 FREE!      │
+│ Copilot CLI     │ 20-30%   │ 2000/month     │ $0-10/mo      │
+│ Claude Code     │ 10-20%   │ None           │ $20/mo (Pro)  │
+│ OpenHands       │ Optional │ $10 credit     │ $0-20/mo      │
+│ Perplexity      │ Optional │ Limited        │ $0-20/mo      │
+│ Rover           │ Unlimited│ Open source    │ $0 FREE!      │
+│ MCP Servers     │ Unlimited│ All local      │ $0 FREE!      │
+├──────────────────────────────────────────────────────────────┤
+│ MINIMUM (Free tiers)                        │ $20/mo        │
+│ OPTIMAL (Best value)                        │ $30/mo        │
+│ POWER USER                                  │ $100-200/mo   │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### Cost Optimization Examples
+### Real Cost Examples
 
-**Feature Development** (~$5)
+**Minimum Setup** ($20/month)
+- Claude Pro: $20 (required for Code)
+- Gemini: FREE (1000/day limit)
+- Copilot: FREE tier (2000/month)
+- Total: **$20/month**
+
+**Optimal Setup** ($30/month)
+- Claude Pro: $20
+- Gemini: FREE (maximized!)
+- Copilot Pro: $10
+- Total: **$30/month**
+
+**Example Workflow Costs:**
+
 ```bash
+# Feature Development (uses ~3 Claude requests)
 rover task "Analyze impact" --agent gemini          # $0
-rover task "Design architecture" --agent claude     # $2
+rover task "Design architecture" --agent claude     # ~$0.50
 rover task "Implement 30 components" --agent gemini # $0
-rover task "Security review" --agent claude         # $3
+rover task "Security review" --agent claude         # ~$0.50
 rover task "Create PR" --agent copilot              # $0
+# Total: ~$1 from your $20 Claude Pro subscription
 ```
 
 **Documentation Sprint** ($0!)
@@ -248,7 +266,7 @@ rover task "Generate code examples" --agent gemini             # $0
 - 🐛 Complex debugging & root cause analysis
 - 🔄 Repository-wide refactoring
 - 🧪 E2E test automation
-- 💰 Cost-conscious development (<$15/month)
+- 💰 Cost-conscious development ($20-30/month with free tier optimization)
 
 ### Example Workflows
 
@@ -281,7 +299,7 @@ rover merge 1 2 3 4  # Merge when ready
 - **Parallel Speedup:** 3-5x faster
 - **Context Window:** Up to 2M tokens (Gemini)
 - **Daily Free Requests:** 1500+ (Gemini)
-- **Monthly Cost:** <$15 (with optimization)
+- **Monthly Cost:** $20-30 (with strategic free tier usage)
 
 ---
 
@@ -319,8 +337,8 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 ## 🔗 Links
 
 - **Documentation:** [docs/](docs/)
-- **Issues:** [GitHub Issues](https://github.com/YOUR_USERNAME/ai-dev-orchestrator/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/ai-dev-orchestrator/discussions)
+- **Issues:** [GitHub Issues](https://github.com/LEEI1337/ai-dev-orchestrator/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/LEEI1337/ai-dev-orchestrator/discussions)
 
 ---
 
@@ -341,6 +359,6 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 **Made with ❤️ by developers, for developers**
 
-[⭐ Star this repo](https://github.com/YOUR_USERNAME/ai-dev-orchestrator) if you find it useful!
+[⭐ Star this repo](https://github.com/LEEI1337/ai-dev-orchestrator) if you find it useful!
 
 </div>
