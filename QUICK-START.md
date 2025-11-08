@@ -217,19 +217,32 @@ uvx --python 3.12 openhands \
 
 ## ⚡ Pro-Tips
 
-### 1. Parallel AI Usage
+### 1. Parallel AI Usage (mit Rover!)
 ```bash
-# Terminal 1: Claude analyzes
-claude "@code-expert analyze architecture"
+# ✅ RICHTIG: Rover orchestriert parallel
+rover task "Analyze architecture" --agent claude
+rover task "Scan for performance issues" --agent gemini
+rover task "Generate E2E tests" --agent claude
 
-# Terminal 2: Gemini scans
-copilot /agent gemini-specialist
+# Monitor all tasks
+rover ls -w
 
-# Terminal 3: OpenHands implements
-openhands
+# Rover managed:
+# → Isolated git worktrees
+# → Separate Docker containers
+# → No conflicts!
+# → Easy tracking
 
-# Combine results for best outcome!
+# Review & merge
+rover inspect 1
+rover merge 1
 ```
+
+**Warum Rover?**
+- ✅ Echte Isolation (git worktrees + Docker)
+- ✅ Kein Konflikt zwischen Agents
+- ✅ Task Management included
+- ✅ Parallele Ausführung optimiert
 
 ### 2. MCP Server Synergy
 ```
