@@ -16,10 +16,7 @@ Branch protection rules enforce quality standards by:
 Before enabling branch protection, ensure:
 
 1. **GitHub Secrets are configured** (Settings → Secrets and variables → Actions):
-   - `ANTHROPIC_API_KEY` - For OpenHands AI auto-fix functionality
-   - `VERCEL_TOKEN` - For Vercel deployments
-   - `VERCEL_ORG_ID` - Your Vercel organization ID
-   - `VERCEL_PROJECT_ID` - Your Vercel project ID
+   - `ANTHROPIC_API_KEY` - For OpenHands AI auto-fix functionality (optional)
 
 2. **Workflows run successfully**:
    ```bash
@@ -28,12 +25,9 @@ Before enabling branch protection, ensure:
    ```
 
    Check GitHub Actions tab to ensure all jobs complete successfully:
-   - ✅ Lint & Format Check
-   - ✅ TypeScript Type Check
-   - ✅ Unit Tests
-   - ✅ Build
-   - ✅ E2E Tests
-   - ✅ Security Scan
+   - ✅ Markdown Lint - Validates Markdown formatting
+   - ✅ Check Links - Verifies all links in documentation
+   - ✅ Validate Repository Structure - Checks required files exist
 
 ## Step-by-Step Configuration
 
@@ -67,16 +61,13 @@ Before enabling branch protection, ensure:
   - ✓ Require branches to be up to date before merging
 
 - **Add required status checks** (click the search box and add these):
-  - `lint` - Lint & Format Check
-  - `type-check` - TypeScript Type Check
-  - `unit-tests` - Unit Tests
-  - `build` - Build
-  - `e2e` - E2E Tests
-  - `security` - Security Scan
+  - `Markdown Lint` - Validates Markdown formatting
+  - `Check Links` - Verifies all documentation links work
+  - `Validate Repository Structure` - Ensures required files exist
 
 **Note**: These status checks will only appear in the list after they've run at least once. Push a commit to trigger the workflows first.
 
-**Why**: Prevents broken code, type errors, test failures, and security vulnerabilities from being merged.
+**Why**: Ensures documentation quality and prevents broken links from being merged.
 
 #### ✅ Require conversation resolution before merging
 
