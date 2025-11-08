@@ -1,0 +1,31 @@
+[Unit]
+Description=Lazy Bird Issue Watcher - Autonomous GitHub automation
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=runner
+Group=runner
+WorkingDirectory=/home/runner/ai-dev-orchestrator/lazy-bird/scripts
+Environment="GITHUB_TOKEN=your_github_token_here"
+Environment="PYTHONUNBUFFERED=1"
+
+# Run issue watcher
+ExecStart=/usr/bin/python3 /home/runner/ai-dev-orchestrator/lazy-bird/scripts/issue-watcher.py
+
+# Restart on failure
+Restart=on-failure
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lazy-bird-watcher
+
+# Security
+PrivateTmp=yes
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
