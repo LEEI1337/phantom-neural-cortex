@@ -150,5 +150,6 @@ Rover merged Änderungen zurück
 ---
 
 **Mehr erfahren:**
-- [AI Selector Guide](guides/ROVER-AI-SELECTOR.md) - Welche AI für welche Task
+- [Dokumentations-Index](INDEX.md) - Alle Dokumentation organisiert
 - [MCP Servers](MCP-SERVERS.md) - Alle 18 Server erklärt
+- [Schnellstart](QUICKSTART-DE.md) - In 5 Minuten loslegen

@@ -57,7 +57,7 @@ A **production-ready AI development environment** that intelligently orchestrate
 - **API Keys:**
   - GitHub Token (free)
   - Brave Search API (free tier)
-  - Google Gemini API (1500 free/day)
+  - Google Gemini API (1000 free/day)
   - Anthropic Claude API (optional, for Claude Code)
 
 ### Installation (5 minutes)
@@ -97,7 +97,7 @@ rover task "Review security patterns" --agent claude     # PAID
 rover ls -w
 ```
 
-**📖 Full Guide:** [docs/QUICK-START.md](docs/QUICK-START.md)
+**📖 Full Guide:** [EN](docs/QUICKSTART-EN.md) | [DE](docs/QUICKSTART-DE.md)
 
 ---
 
@@ -135,31 +135,21 @@ rover ls -w
 | **Gemini** | Bulk Worker | **FREE** (1000/day) | Large analysis, Docs, Refactoring | Security audits, GitHub |
 | **Copilot** | GitHub Specialist | FREE or Pro $10/mo | PR, Issues, Quick fixes | Large analysis, Security |
 
-**📖 Full Details:** [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
+**📖 Full Details:** [EN](docs/ARCHITECTURE-EN.md) | [DE](docs/ARCHITECTURE-DE.md)
 
 ---
 
 ## 🎓 Documentation
 
 ### Getting Started
-- **[Quick Start](docs/QUICK-START.md)** - 5-minute setup guide
-- **[Setup Guide](docs/setup/SETUP-GUIDE.md)** - Detailed installation
-- **[Setup Verification](docs/setup/SETUP-VERIFICATION.md)** - Test your setup
+- **Quick Start** - 5-minute setup guide ([EN](docs/QUICKSTART-EN.md) | [DE](docs/QUICKSTART-DE.md))
 
 ### Architecture & Strategy
-- **[Architecture Overview](docs/architecture/ARCHITECTURE.md)** - 3-layer system explained
-- **[AI Capability Matrix](docs/architecture/AI-CAPABILITY-MATRIX.md)** - Cost & capability analysis
-- **[Claude vs Copilot](docs/architecture/CLAUDE-VS-COPILOT.md)** - When to use what
-
-### Rover Orchestration
-- **[Rover Guide](docs/guides/ROVER-GUIDE.md)** - Multi-agent orchestration
-- **[AI Selector](docs/guides/ROVER-AI-SELECTOR.md)** - Intelligent task routing
-- **[Workflows](docs/guides/ROVER-AI-SELECTOR.md#workflows)** - Real-world examples
+- **Architecture Overview** - 3-layer system explained ([EN](docs/ARCHITECTURE-EN.md) | [DE](docs/ARCHITECTURE-DE.md))
 
 ### Reference
 - **[MCP Servers](docs/MCP-SERVERS.md)** - All 18 servers explained
 - **[Custom Agents](config/AGENTS.md)** - 4 specialized agents
-- **[OpenHands Setup](docs/setup/OPENHANDS-SETUP.md)** - E2E & CI/CD automation
 
 ---
 
@@ -219,7 +209,7 @@ rover task "Generate code examples" --agent gemini             # $0
 # All parallel, all FREE!
 ```
 
-**📊 Full Analysis:** [docs/OPTIMIZATION-SUMMARY.md](docs/OPTIMIZATION-SUMMARY.md)
+**📊 Full Analysis:** See [Architecture](docs/ARCHITECTURE-EN.md) for cost strategy
 
 ---
 
@@ -298,7 +288,7 @@ rover merge 1 2 3 4  # Merge when ready
 - **Agent Response:** <3 seconds
 - **Parallel Speedup:** 3-5x faster
 - **Context Window:** Up to 2M tokens (Gemini)
-- **Daily Free Requests:** 1500+ (Gemini)
+- **Daily Free Requests:** 1000 (Gemini)
 - **Monthly Cost:** $20-30 (with strategic free tier usage)
 
 ---
@@ -325,12 +315,22 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 ## 🙏 Acknowledgments
 
+### Core AI Systems
 - **[Anthropic](https://www.anthropic.com/)** - Claude Code & API
-- **[Google](https://ai.google.dev/)** - Gemini AI with 2M context
+- **[Google AI](https://ai.google.dev/)** - Gemini AI with 2M context
 - **[GitHub](https://github.com/)** - Copilot CLI
 - **[Endor Labs](https://www.endorlabs.com/)** - Rover orchestration
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** - Autonomous AI development
+
+### MCP Ecosystem
 - **[Model Context Protocol](https://modelcontextprotocol.io/)** - MCP specification
+- **[MCP Servers](https://github.com/modelcontextprotocol/servers)** - Official MCP server implementations
+- **[Brave Search](https://brave.com/search/api/)** - Web search MCP server
+- **[Playwright](https://playwright.dev/)** - Browser automation
+- **[Perplexity AI](https://www.perplexity.ai/)** - AI-powered search
+
+### Community & Open Source
+Special thanks to all MCP server developers and the open source community!
 
 ---
 
@@ -346,18 +346,17 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 | Document | Description |
 |---|---|
-| [Quick Start](docs/QUICK-START.md) | Get started in 5 minutes |
-| [Architecture](docs/architecture/ARCHITECTURE.md) | System design & flow |
-| [Cost Analysis](docs/OPTIMIZATION-SUMMARY.md) | Detailed cost breakdown |
-| [Rover Guide](docs/guides/ROVER-GUIDE.md) | Orchestration workflows |
-| [AI Selector](docs/guides/ROVER-AI-SELECTOR.md) | Task routing logic |
-| [MCP Servers](docs/MCP-SERVERS.md) | Server reference |
+| [Quick Start EN](docs/QUICKSTART-EN.md) / [DE](docs/QUICKSTART-DE.md) | Get started in 5 minutes |
+| [Architecture EN](docs/ARCHITECTURE-EN.md) / [DE](docs/ARCHITECTURE-DE.md) | System design & AI roles |
+| [MCP Servers](docs/MCP-SERVERS.md) | All 18 servers reference |
+| [Custom Agents](config/AGENTS.md) | 4 specialized agents |
+| [Documentation Index](docs/INDEX.md) | All docs organized |
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by developers, for developers**
+**Made with ❤️ by developers, for developers in Austria 🇦🇹**
 
 [⭐ Star this repo](https://github.com/LEEI1337/ai-dev-orchestrator) if you find it useful!
 

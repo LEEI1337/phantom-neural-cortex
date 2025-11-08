@@ -150,5 +150,6 @@ Rover merges changes back
 ---
 
 **Learn more:**
-- [AI Selector Guide](guides/ROVER-AI-SELECTOR.md) - Which AI for which task
+- [Documentation Index](INDEX.md) - All documentation organized
 - [MCP Servers](MCP-SERVERS.md) - All 18 servers explained
+- [Quick Start](QUICKSTART-EN.md) - Get started in 5 minutes
