@@ -6,6 +6,7 @@ AI Development Orchestrator Dashboard Backend
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from typing import Optional
 import socketio
 
 from database import init_db
@@ -220,6 +221,56 @@ async def health_check():
             "active_connections": 0,
             "total_requests": 0,
         }
+    }
+
+@app.get("/api/cache-stats", tags=["system"])
+async def get_cache_stats():
+    """
+    Get cache statistics for all caching layers.
+    Returns hit rates, sizes, and performance metrics.
+    """
+    # Mock cache statistics for now
+    # TODO: Integrate with actual cache manager when available
+    return {
+        "guideline_cache": {
+            "size": 0,
+            "hits": 0,
+            "misses": 0,
+            "hit_rate": 0.0
+        },
+        "github_cache": {
+            "size": 0,
+            "hits": 0,
+            "misses": 0,
+            "hit_rate": 0.0
+        },
+        "quality_pattern_cache": {
+            "size": 0,
+            "hits": 0,
+            "misses": 0,
+            "hit_rate": 0.0
+        }
+    }
+
+@app.post("/api/clear-cache", tags=["system"])
+async def clear_cache(layer: Optional[str] = None):
+    """
+    Clear cache for specified layer or all layers.
+
+    Args:
+        layer: Optional cache layer ('guideline', 'github', 'quality')
+    """
+    # TODO: Integrate with actual cache manager when available
+    cleared_layers = []
+    if layer:
+        cleared_layers.append(layer)
+    else:
+        cleared_layers = ["guideline_cache", "github_cache", "quality_pattern_cache"]
+
+    return {
+        "status": "success",
+        "cleared_layers": cleared_layers,
+        "message": f"Cleared {len(cleared_layers)} cache layer(s)"
     }
 
 # Root endpoint

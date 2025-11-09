@@ -175,16 +175,16 @@ function ImpactCard({
   color: 'blue' | 'green' | 'purple'
 }) {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-800 border-blue-200',
-    green: 'bg-green-100 text-green-800 border-green-200',
-    purple: 'bg-purple-100 text-purple-800 border-purple-200',
+    blue: 'bg-neon-cyan/10 text-neon-cyan border-neon-cyan/30 shadow-neon-cyan',
+    green: 'bg-neon-green/10 text-neon-green border-neon-green/30',
+    purple: 'bg-neon-purple/10 text-neon-purple border-neon-purple/30 shadow-neon-purple',
   }
 
   return (
-    <div className={`border rounded-lg p-6 ${colorClasses[color]}`}>
-      <div className="text-sm font-medium opacity-80 mb-1">{title}</div>
+    <div className={`border rounded-lg p-6 bg-card/60 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:shadow-neon-cyan ${colorClasses[color]}`}>
+      <div className="text-sm font-medium font-mono opacity-80 mb-1">{title}</div>
       <div className="text-3xl font-bold mb-2">{value}</div>
-      <div className="text-sm opacity-80">{description}</div>
+      <div className="text-sm opacity-80 font-mono">{description}</div>
     </div>
   )
 }
@@ -230,8 +230,8 @@ function PerformanceComparisonChart({ metrics }: { metrics: PerformanceMetrics }
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="baseline" fill="#94a3b8" name="Baseline" />
-        <Bar dataKey="optimized" fill="#3b82f6" name="Optimized" />
+        <Bar dataKey="baseline" fill="#64748b" name="Baseline" />
+        <Bar dataKey="optimized" fill="#00F5FF" name="Optimized" />
       </BarChart>
     </ResponsiveContainer>
   )
@@ -244,7 +244,7 @@ function OptimizationImpactChart({ metrics }: { metrics: PerformanceMetrics }) {
     { name: 'Cost Savings', value: metrics.cost_savings_percent },
   ]
 
-  const COLORS = ['#3b82f6', '#10b981', '#8b5cf6']
+  const COLORS = ['#00F5FF', '#39FF14', '#9D4EDD'] // Neon cyan, green, purple
 
   return (
     <ResponsiveContainer width="100%" height={300}>

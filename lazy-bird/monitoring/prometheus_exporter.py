@@ -494,7 +494,11 @@ class MetricsAggregator:
         Args:
             db_session: SQLAlchemy Session
         """
-        from dashboard.backend.models import Project, Task, QualitySnapshot, CostTracking
+        try:
+            from models import Project, Task, QualitySnapshot, CostTracking
+        except ImportError:
+            # If running from different context, try dashboard path
+            from dashboard.backend.models import Project, Task, QualitySnapshot, CostTracking
 
         # Quality trends
         for project in db_session.query(Project).all():

@@ -99,10 +99,12 @@ services:
       - "1338:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
       - ./monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/phantom-cortex.json
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
       GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
     depends_on:
       - prometheus
 
