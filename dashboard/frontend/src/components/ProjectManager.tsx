@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tantml:react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus, Edit2, Trash2, Archive, Play, Pause } from 'lucide-react'
 import { api } from '@/lib/api'
 import type { Project, ProjectType } from '@/lib/types'
