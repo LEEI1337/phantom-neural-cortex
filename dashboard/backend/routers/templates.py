@@ -165,23 +165,43 @@ TEMPLATES = {
 
 # Endpoints
 
-@router.get("/templates", response_model=List[TemplateResponse])
+@router.get("/")
 async def list_templates():
     """
     List all available project templates.
     """
-    return list(TEMPLATES.values())
+    return {
+        "templates": [
+            {
+                "id": t.id,
+                "name": t.name,
+                "description": t.description,
+                "icon": t.icon
+            }
+            for t in TEMPLATES.values()
+        ]
+    }
 
-@router.get("/templates/{template_id}", response_model=TemplateResponse)
+@router.get("/{template_id}")
 async def get_template(template_id: str):
     """
     Get details of a specific template.
     """
     if template_id not in TEMPLATES:
         raise HTTPException(status_code=404, detail="Template not found")
-    return TEMPLATES[template_id]
 
-@router.post("/templates/{template_id}/apply")
+    t = TEMPLATES[template_id]
+    return {
+        "name": t.name,
+        "description": t.description,
+        "guidelines": t.guidelines,
+        "prerequisites": t.prerequisites,
+        "tech_stack": t.tech_stack,
+        "estimated_duration": t.estimated_duration,
+        "complexity": t.complexity
+    }
+
+@router.post("/{template_id}/apply")
 async def apply_template(template_id: str, project_name: str, customizations: Optional[Dict] = None):
     """
     Apply a template to create a new project with preset configuration.
