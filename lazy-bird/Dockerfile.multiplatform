@@ -1,0 +1,112 @@
+# Multi-Platform Dockerfile for Lazy Bird
+# Supports: linux/amd64, linux/arm64, windows/amd64
+# Usage: docker buildx build --platform linux/amd64,linux/arm64 -t lazy-bird:latest .
+
+# ============================================================
+# Stage 1: Base Python Image (Platform-Aware)
+# ============================================================
+FROM --platform=$BUILDPLATFORM python:3.11-slim AS base
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+RUN echo "Building on $BUILDPLATFORM for $TARGETPLATFORM"
+
+# Install system dependencies (platform-specific)
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# ============================================================
+# Stage 2: Python Dependencies
+# ============================================================
+FROM base AS dependencies
+
+# Copy requirements first for better layer caching
+COPY lazy-bird/requirements.txt ./lazy-bird/
+COPY dashboard/backend/requirements.txt ./dashboard/backend/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r lazy-bird/requirements.txt && \
+    pip install --no-cache-dir -r dashboard/backend/requirements.txt
+
+# ============================================================
+# Stage 3: Application Code
+# ============================================================
+FROM dependencies AS application
+
+# Copy entire lazy-bird codebase
+COPY lazy-bird/ ./lazy-bird/
+COPY dashboard/backend/ ./dashboard/backend/
+
+# Set PYTHONPATH
+ENV PYTHONPATH=/app:/app/lazy-bird:/app/dashboard/backend
+
+# ============================================================
+# Stage 4: Production Image
+# ============================================================
+FROM python:3.11-slim AS production
+
+ARG TARGETPLATFORM
+
+# Platform-specific optimizations
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+        echo "Optimizing for ARM64"; \
+        apt-get update && apt-get install -y --no-install-recommends \
+        libjemalloc2 && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
+
+WORKDIR /app
+
+# Copy installed packages from dependencies stage
+COPY --from=dependencies /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=dependencies /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY --from=application /app /app
+
+# Environment variables
+ENV PYTHONPATH=/app:/app/lazy-bird:/app/dashboard/backend
+ENV PYTHONUNBUFFERED=1
+
+# Expose ports
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health || exit 1
+
+# Default command
+CMD ["uvicorn", "dashboard.backend.main:socket_app", "--host", "0.0.0.0", "--port", "8000"]
+
+# ============================================================
+# Stage 5: Development Image (with dev tools)
+# ============================================================
+FROM application AS development
+
+# Install development dependencies
+RUN pip install --no-cache-dir \
+    pytest==7.4.3 \
+    pytest-asyncio==0.21.1 \
+    pytest-cov==4.1.0 \
+    black==23.12.1 \
+    ruff==0.1.9 \
+    mypy==1.7.1 \
+    ipython==8.18.1
+
+# Jupyter for interactive development
+RUN pip install --no-cache-dir \
+    jupyter==1.0.0 \
+    notebook==7.0.6
+
+EXPOSE 8000 8888
+
+CMD ["uvicorn", "dashboard.backend.main:socket_app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

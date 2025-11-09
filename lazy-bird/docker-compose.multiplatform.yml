@@ -1,0 +1,179 @@
+version: '3.8'
+
+# Cross-Platform Docker Compose Configuration
+# Supports deployment on Windows, Linux (amd64/arm64), macOS
+
+services:
+  # Lazy Bird Application (Multi-Platform)
+  lazy-bird-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.multiplatform
+      target: production
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    container_name: lazy-bird-app
+    environment:
+      DATABASE_URL: postgresql://lazybird:lazybird_secure_password@database:5432/lazybird
+      REDIS_URL: redis://redis:6379/0
+      PYTHONUNBUFFERED: 1
+      # Platform detection
+      PLATFORM: ${PLATFORM:-linux/amd64}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./lazy-bird:/app/lazy-bird:ro
+      - ./dashboard/backend:/app/dashboard/backend:ro
+      - app_data:/app/data
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+  # PostgreSQL Database (Multi-Platform)
+  database:
+    image: postgres:16-alpine
+    platform: ${DATABASE_PLATFORM:-linux/amd64}
+    container_name: lazy-bird-db
+    environment:
+      POSTGRES_USER: lazybird
+      POSTGRES_PASSWORD: lazybird_secure_password
+      POSTGRES_DB: lazybird
+      # Performance tuning
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_MAX_CONNECTIONS: 100
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lazybird"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    restart: unless-stopped
+
+  # Redis Cache (Multi-Platform)
+  redis:
+    image: redis:7-alpine
+    platform: ${REDIS_PLATFORM:-linux/amd64}
+    container_name: lazy-bird-redis
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    restart: unless-stopped
+
+  # Prometheus (Monitoring)
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    platform: ${PROMETHEUS_PLATFORM:-linux/amd64}
+    container_name: lazy-bird-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./dashboard/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./dashboard/monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - lazy-bird-app
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+  # Grafana (Visualization)
+  grafana:
+    image: grafana/grafana:10.2.2
+    platform: ${GRAFANA_PLATFORM:-linux/amd64}
+    container_name: lazy-bird-grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./dashboard/monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/lazy-bird.json:ro
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_SERVER_ROOT_URL: http://localhost:3001
+      GF_ANALYTICS_REPORTING_ENABLED: false
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+# Volume definitions
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  app_data:
+    driver: local
+
+# Network configuration
+networks:
+  default:
+    name: lazy-bird-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
