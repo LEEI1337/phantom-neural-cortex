@@ -1,5 +1,8 @@
 version: '3.8'
 
+# 👻🧠 PHANTOM NEURAL CORTEX UI - AI Development Orchestration Platform
+name: phantom-neural-cortex-ui
+
 services:
   # PostgreSQL Database
   database:
