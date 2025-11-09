@@ -4,10 +4,11 @@
  */
 
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tantml:react-query'
 import { Plus, Edit2, Trash2, Archive, Play, Pause } from 'lucide-react'
 import { api } from '@/lib/api'
 import type { Project, ProjectType } from '@/lib/types'
+import ProjectWizard from './ProjectWizard'
 
 const PROJECT_TYPES: { value: ProjectType; label: string; icon: string }[] = [
   { value: 'python', label: 'Python', icon: '🐍' },
@@ -36,7 +37,7 @@ export default function ProjectManager() {
 
   // Create Project Mutation
   const createMutation = useMutation({
-    mutationFn: async (data: { name: string; type: ProjectType; github_repo?: string }) => {
+    mutationFn: async (data: { name: string; type: ProjectType; github_repo?: string; template_id?: string }) => {
       const result = await api.createProject(data)
       if (!result.success) throw new Error(result.error)
       return result.data!
@@ -97,7 +98,7 @@ export default function ProjectManager() {
 
       {/* Create Form */}
       {isCreating && (
-        <CreateProjectForm
+        <ProjectWizard
           onSubmit={(data) => createMutation.mutate(data)}
           onCancel={() => setIsCreating(false)}
           isSubmitting={createMutation.isPending}
@@ -135,100 +136,6 @@ export default function ProjectManager() {
           </button>
         </div>
       )}
-    </div>
-  )
-}
-
-function CreateProjectForm({
-  onSubmit,
-  onCancel,
-  isSubmitting,
-}: {
-  onSubmit: (data: { name: string; type: ProjectType; github_repo?: string }) => void
-  onCancel: () => void
-  isSubmitting: boolean
-}) {
-  const [name, setName] = useState('')
-  const [type, setType] = useState<ProjectType>('python')
-  const [githubRepo, setGithubRepo] = useState('')
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit({
-      name,
-      type,
-      github_repo: githubRepo || undefined,
-    })
-  }
-
-  return (
-    <div className="border rounded-lg p-6 bg-card">
-      <h3 className="text-lg font-semibold mb-4">Create New Project</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Project Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
-            placeholder="My Awesome Project"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Project Type</label>
-          <div className="grid grid-cols-3 gap-2">
-            {PROJECT_TYPES.map((pt) => (
-              <button
-                key={pt.value}
-                type="button"
-                onClick={() => setType(pt.value)}
-                className={`px-4 py-3 border rounded-lg text-left ${
-                  type === pt.value
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="text-2xl mb-1">{pt.icon}</div>
-                <div className="text-sm font-medium">{pt.label}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            GitHub Repository (Optional)
-          </label>
-          <input
-            type="text"
-            value={githubRepo}
-            onChange={(e) => setGithubRepo(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
-            placeholder="owner/repo"
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            type="submit"
-            disabled={isSubmitting || !name}
-            className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Creating...' : 'Create Project'}
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="px-4 py-2 border rounded-lg hover:bg-accent"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
     </div>
   )
 }

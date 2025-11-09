@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trash2, RefreshCw } from 'lucide-react'
 import { api } from '@/lib/api'
+import APIKeyManagement from '@/components/APIKeyManagement'
+import SwarmControls from '@/components/SwarmControls'
+import AgentTierConfiguration from '@/components/AgentTierConfiguration'
 
 export default function SettingsPage() {
   const queryClient = useQueryClient()
+  const [activeSection, setActiveSection] = useState<'system' | 'api-keys' | 'swarm' | 'agents'>('system')
 
   const { data: healthResponse } = useQuery({
     queryKey: ['system-health'],
@@ -45,85 +49,143 @@ export default function SettingsPage() {
         <p className="text-muted-foreground mt-1">System configuration and maintenance</p>
       </div>
 
-      {/* System Health */}
-      <div className="border rounded-lg p-6 bg-card">
-        <h2 className="text-xl font-semibold mb-4">System Health</h2>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Status</span>
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                health?.status === 'healthy'
-                  ? 'bg-green-100 text-green-800'
-                  : health?.status === 'degraded'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-red-100 text-red-800'
-              }`}
-            >
-              {health?.status?.toUpperCase() || 'UNKNOWN'}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Uptime</span>
-            <span className="font-medium">
-              {health ? formatUptime(health.uptime_seconds) : 'N/A'}
-            </span>
-          </div>
-        </div>
+      {/* Navigation Tabs */}
+      <div className="flex gap-2 border-b border-border pb-2">
+        <button
+          onClick={() => setActiveSection('system')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            activeSection === 'system'
+              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          System & Cache
+        </button>
+        <button
+          onClick={() => setActiveSection('api-keys')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            activeSection === 'api-keys'
+              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          API Keys
+        </button>
+        <button
+          onClick={() => setActiveSection('swarm')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            activeSection === 'swarm'
+              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Swarm Controls
+        </button>
+        <button
+          onClick={() => setActiveSection('agents')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            activeSection === 'agents'
+              ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Agent Tiers
+        </button>
+      </div>
 
-        {health?.components && (
-          <div className="mt-6">
-            <h3 className="font-medium mb-3">Components</h3>
-            <div className="space-y-2">
-              {Object.entries(health.components).map(([name, status]) => (
-                <div key={name} className="flex items-center justify-between">
-                  <span className="text-sm">{name}</span>
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      status ? 'bg-green-500' : 'bg-red-500'
-                    }`}
-                  />
-                </div>
-              ))}
+      {/* System & Cache Section */}
+      {activeSection === 'system' && (
+        <>
+          {/* System Health */}
+          <div className="border rounded-lg p-6 bg-card">
+            <h2 className="text-xl font-semibold mb-4">System Health</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Status</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    health?.status === 'healthy'
+                      ? 'bg-green-100 text-green-800'
+                      : health?.status === 'degraded'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {health?.status?.toUpperCase() || 'UNKNOWN'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Uptime</span>
+                <span className="font-medium">
+                  {health ? formatUptime(health.uptime_seconds) : 'N/A'}
+                </span>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* Cache Management */}
-      <div className="border rounded-lg p-6 bg-card">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Cache Management</h2>
-          <button
-            onClick={() => clearCacheMutation.mutate()}
-            disabled={clearCacheMutation.isPending}
-            className="flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 disabled:opacity-50"
-          >
-            <Trash2 size={16} />
-            Clear All Caches
-          </button>
-        </div>
-
-        {cacheStats && (
-          <div className="space-y-4">
-            <CacheLayerCard
-              name="Guideline Cache"
-              stats={cacheStats.guideline_cache}
-              onClear={() => clearCacheMutation.mutate('guideline')}
-            />
-            <CacheLayerCard
-              name="GitHub API Cache"
-              stats={cacheStats.github_cache}
-              onClear={() => clearCacheMutation.mutate('github')}
-            />
-            <CacheLayerCard
-              name="Quality Pattern Cache"
-              stats={cacheStats.quality_pattern_cache}
-              onClear={() => clearCacheMutation.mutate('quality')}
-            />
+            {health?.components && (
+              <div className="mt-6">
+                <h3 className="font-medium mb-3">Components</h3>
+                <div className="space-y-2">
+                  {Object.entries(health.components).map(([name, status]) => (
+                    <div key={name} className="flex items-center justify-between">
+                      <span className="text-sm">{name}</span>
+                      <div
+                        className={`w-3 h-3 rounded-full ${
+                          status ? 'bg-green-500' : 'bg-red-500'
+                        }`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+
+          {/* Cache Management */}
+          <div className="border rounded-lg p-6 bg-card">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Cache Management</h2>
+              <button
+                onClick={() => clearCacheMutation.mutate()}
+                disabled={clearCacheMutation.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 disabled:opacity-50"
+              >
+                <Trash2 size={16} />
+                Clear All Caches
+              </button>
+            </div>
+
+            {cacheStats && (
+              <div className="space-y-4">
+                <CacheLayerCard
+                  name="Guideline Cache"
+                  stats={cacheStats.guideline_cache}
+                  onClear={() => clearCacheMutation.mutate('guideline')}
+                />
+                <CacheLayerCard
+                  name="GitHub API Cache"
+                  stats={cacheStats.github_cache}
+                  onClear={() => clearCacheMutation.mutate('github')}
+                />
+                <CacheLayerCard
+                  name="Quality Pattern Cache"
+                  stats={cacheStats.quality_pattern_cache}
+                  onClear={() => clearCacheMutation.mutate('quality')}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* API Keys Section */}
+      {activeSection === 'api-keys' && <APIKeyManagement />}
+
+      {/* Swarm Controls Section */}
+      {activeSection === 'swarm' && <SwarmControls />}
+
+      {/* Agent Tiers Section */}
+      {activeSection === 'agents' && <AgentTierConfiguration />}
     </div>
   )
 }
