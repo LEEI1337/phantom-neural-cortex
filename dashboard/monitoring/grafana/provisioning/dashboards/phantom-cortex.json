@@ -1,0 +1,465 @@
+{
+  "title": "👻🧠 PHANTOM NEURAL CORTEX UI - AI Orchestration Monitoring",
+  "tags": [
+    "phantom-cortex",
+    "ai",
+    "orchestration",
+    "neural"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "15s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Quality Score Overview",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "avg(lazybird_quality_score)",
+          "legendFormat": "Average Quality",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "options": {
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 60,
+                "color": "yellow"
+              },
+              {
+                "value": 80,
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Task Completion Rate",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(rate(lazybird_tasks_completed_total{status=\"success\"}[5m])) / sum(rate(lazybird_tasks_completed_total[5m])) * 100",
+          "legendFormat": "Success Rate",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 70,
+                "color": "yellow"
+              },
+              {
+                "value": 90,
+                "color": "green"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Cost Today (USD)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(increase(lazybird_cost_usd_total[1d]))",
+          "legendFormat": "Total Cost",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Active Tasks",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(lazybird_active_agents)",
+          "legendFormat": "Active",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      }
+    },
+    {
+      "id": 5,
+      "title": "Quality Trend (7d)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "avg(lazybird_quality_trend) by (project_type)",
+          "legendFormat": "{{project_type}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
+          "min": 0,
+          "max": 100,
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Task Duration Distribution",
+      "type": "histogram",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(lazybird_task_duration_seconds_bucket[5m])) by (le, project_type))",
+          "legendFormat": "p95 - {{project_type}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(lazybird_task_duration_seconds_bucket[5m])) by (le, project_type))",
+          "legendFormat": "p50 - {{project_type}}",
+          "refId": "B"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Cost Breakdown by Agent",
+      "type": "piechart",
+      "targets": [
+        {
+          "expr": "sum(increase(lazybird_cost_usd_total[24h])) by (agent_type)",
+          "legendFormat": "{{agent_type}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 18
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Token Usage by Agent",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(lazybird_tokens_used_total[5m])) by (agent_type)",
+          "legendFormat": "{{agent_type}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 18
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Cache Hit Rate",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "avg(lazybird_cache_hit_rate_percent) by (cache_type)",
+          "legendFormat": "{{cache_type}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 18
+      },
+      "options": {
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 50,
+                "color": "yellow"
+              },
+              {
+                "value": 80,
+                "color": "green"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "Iteration Count Distribution",
+      "type": "heatmap",
+      "targets": [
+        {
+          "expr": "sum(rate(lazybird_iteration_count_bucket[5m])) by (le)",
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      }
+    },
+    {
+      "id": 11,
+      "title": "Agent Switches",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(lazybird_agent_switches_total[5m])) by (from_agent, to_agent)",
+          "legendFormat": "{{from_agent}} → {{to_agent}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 12,
+      "title": "ML Optimization Impact",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "lazybird_latent_compression_ratio",
+          "legendFormat": "Latent Compression",
+          "refId": "A"
+        },
+        {
+          "expr": "lazybird_iteration_predictor_accuracy_percent",
+          "legendFormat": "Iteration Predictor Accuracy",
+          "refId": "B"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "options": {
+        "graphMode": "area",
+        "orientation": "horizontal"
+      }
+    },
+    {
+      "id": 13,
+      "title": "Cost Savings from Optimizations",
+      "type": "bargauge",
+      "targets": [
+        {
+          "expr": "sum(lazybird_cost_savings_usd) by (optimization)",
+          "legendFormat": "{{optimization}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "title": "Quality Dimensions",
+      "type": "radar",
+      "targets": [
+        {
+          "expr": "avg(lazybird_quality_dimensions) by (dimension)",
+          "legendFormat": "{{dimension}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    {
+      "id": 15,
+      "title": "Agent Performance Comparison",
+      "type": "bargauge",
+      "targets": [
+        {
+          "expr": "avg(lazybird_agent_performance_score) by (agent_type, metric)",
+          "legendFormat": "{{agent_type}} - {{metric}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "lcd"
+      }
+    }
+  ]
+}
