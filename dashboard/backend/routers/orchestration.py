@@ -158,3 +158,16 @@ async def health_check():
     }
 
     return health_status
+
+
+@router.get("/circuit-breaker-status")
+async def get_circuit_breaker_status():
+    """Get circuit breaker status for all agents"""
+    orchestrator = get_orchestrator()
+
+    status = orchestrator.get_circuit_breaker_status()
+
+    return {
+        "timestamp": datetime.utcnow().isoformat(),
+        "circuit_breakers": status
+    }

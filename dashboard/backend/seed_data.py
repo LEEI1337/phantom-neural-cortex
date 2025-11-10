@@ -6,6 +6,7 @@ Seeds initial data including HRM presets, system templates, etc.
 """
 
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from database import SessionLocal, engine
 from models import Base, HRMPreset, Project
 from datetime import datetime
@@ -352,6 +353,22 @@ def seed_all(db: Session):
     seed_hrm_presets(db)
     seed_demo_projects(db)
     print("Database seeding complete!")
+
+
+async def seed_all_async(db: AsyncSession):
+    """Seed all initial data (async version)."""
+    print("Seeding database (async)...")
+
+    # Convert async session to sync for existing seed functions
+    # (Simplest approach - seed functions use sync queries)
+    from database import SessionLocal
+    sync_db = SessionLocal()
+    try:
+        seed_hrm_presets(sync_db)
+        seed_demo_projects(sync_db)
+        print("Database seeding complete (async)!")
+    finally:
+        sync_db.close()
 
 
 def main():

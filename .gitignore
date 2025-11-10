@@ -94,6 +94,14 @@ data.db
 *.db-shm
 *.db-wal
 
+# Redis
+dump.rdb
+appendonly.aof
+
+# Alembic migrations (keep versions/, ignore temp files)
+alembic.ini.local
+alembic/versions/*.pyc
+
 # ============ ROVER ============
 .rover/
 **/worktrees/
@@ -154,6 +162,32 @@ coverage/
 test-results/
 playwright-report/
 .playwright/
+.pytest_cache/
+.mypy_cache/
+.tox/
+htmlcov/
+
+# ============ DOCKER ============
+docker-compose.override.yml
+.dockerignore.local
+*.dockerfile.local
+
+# Docker volumes and data
+**/data/postgres/
+**/data/redis/
+**/data/grafana/
+**/data/prometheus/
+
+# ============ MONITORING ============
+# Grafana
+monitoring/grafana/data/
+grafana.db
+
+# Prometheus
+monitoring/prometheus/data/
+
+# Langfuse (if self-hosted)
+langfuse/data/
 
 # ============ TEMPORARY FILES ============
 tmp/

@@ -21,6 +21,9 @@ import logging
 import os
 import platform
 
+from .circuit_breaker import CircuitBreaker, CircuitState
+from .langfuse_integration import get_langfuse_observer
+
 logger = logging.getLogger(__name__)
 
 
@@ -118,6 +121,21 @@ class CLIOrchestrator:
 
         self.last_selection_reason = ""
 
+        # Circuit Breakers for resilience
+        self.claude_breaker = CircuitBreaker(
+            failure_threshold=5,
+            timeout_duration=60,
+            expected_exception=RuntimeError
+        )
+        self.gemini_breaker = CircuitBreaker(
+            failure_threshold=5,
+            timeout_duration=60,
+            expected_exception=RuntimeError
+        )
+
+        # Langfuse observability (optional)
+        self.langfuse = get_langfuse_observer()
+
         logger.info("CLIOrchestrator initialized (Hub-and-Spoke, subprocess-based)")
 
     async def execute_task(self, task: Task) -> AgentResponse:
@@ -144,6 +162,14 @@ class CLIOrchestrator:
         agent = await self._select_agent(task)
         logger.info(f"Selected agent: {agent.value} ({self.last_selection_reason})")
 
+        # Track agent selection in Langfuse
+        self.langfuse.track_agent_selection(
+            task_id=task.id,
+            selected_agent=agent.value,
+            reason=self.last_selection_reason,
+            all_rewards=self.reward_model
+        )
+
         # Broadcast agent selection
         if self.websocket:
             await self.websocket.broadcast({
@@ -153,50 +179,71 @@ class CLIOrchestrator:
                 "reason": self.last_selection_reason
             }, f"task_{task.id}")
 
-        # Route to agent
+        # Route to agent with Langfuse tracing
         start_time = datetime.utcnow()
 
-        try:
-            if agent == AgentType.CLAUDE:
-                response = await self._execute_claude(task)
-            elif agent == AgentType.GEMINI:
-                response = await self._execute_gemini(task)
-            else:
-                raise ValueError(f"Unknown agent: {agent}")
+        async with self.langfuse.trace_agent_execution(
+            task_id=task.id,
+            agent=agent.value,
+            prompt=task.prompt,
+            metadata={
+                "task_type": task.task_type.value,
+                "files_count": len(task.files),
+                "workspace": task.workspace
+            }
+        ) as trace:
+            try:
+                if agent == AgentType.CLAUDE:
+                    response = await self._execute_claude(task)
+                elif agent == AgentType.GEMINI:
+                    response = await self._execute_gemini(task)
+                else:
+                    raise ValueError(f"Unknown agent: {agent}")
 
-            # Calculate duration
-            duration = (datetime.utcnow() - start_time).total_seconds()
-            response.duration = duration
+                # Calculate duration
+                duration = (datetime.utcnow() - start_time).total_seconds()
+                response.duration = duration
 
-            # Update reward model
-            await self._update_reward(agent, task, response)
+                # Update Langfuse trace
+                trace.update(
+                    output=response.content,
+                    tokens=response.tokens,
+                    cost=response.cost,
+                    metadata={"duration": duration}
+                )
 
-            # Broadcast completion
-            if self.websocket:
-                await self.websocket.broadcast({
-                    "type": "task_completed",
-                    "task_id": task.id,
-                    "agent": agent.value,
-                    "cost": response.cost,
-                    "tokens": response.tokens,
-                    "duration": duration
-                }, f"task_{task.id}")
+                # Update reward model
+                await self._update_reward(agent, task, response)
 
-            return response
+                # Broadcast completion
+                if self.websocket:
+                    await self.websocket.broadcast({
+                        "type": "task_completed",
+                        "task_id": task.id,
+                        "agent": agent.value,
+                        "cost": response.cost,
+                        "tokens": response.tokens,
+                        "duration": duration
+                    }, f"task_{task.id}")
 
-        except Exception as e:
-            logger.error(f"Task {task.id} failed: {e}")
+                return response
 
-            # Broadcast error
-            if self.websocket:
-                await self.websocket.broadcast({
-                    "type": "task_failed",
-                    "task_id": task.id,
-                    "agent": agent.value,
-                    "error": str(e)
-                }, f"task_{task.id}")
+            except Exception as e:
+                logger.error(f"Task {task.id} failed: {e}")
 
-            raise
+                # Update trace with error
+                trace.update(metadata={"error": str(e)})
+
+                # Broadcast error
+                if self.websocket:
+                    await self.websocket.broadcast({
+                        "type": "task_failed",
+                        "task_id": task.id,
+                        "agent": agent.value,
+                        "error": str(e)
+                    }, f"task_{task.id}")
+
+                raise
 
     async def _select_agent(self, task: Task) -> AgentType:
         """
@@ -244,7 +291,7 @@ class CLIOrchestrator:
 
     async def _execute_claude(self, task: Task) -> AgentResponse:
         """
-        Execute via Claude CLI subprocess.
+        Execute via Claude CLI subprocess with circuit breaker protection.
 
         Command:
             claude --print -o json "prompt"
@@ -253,25 +300,27 @@ class CLIOrchestrator:
         - Non-interactive output (--print)
         - JSON format for parsing
         - Session continuity via --continue flag
+        - Circuit breaker for resilience
         """
-        # Get or create session ID
-        session_id = await self._get_session(task.id)
+        async def _claude_subprocess():
+            """Inner function for circuit breaker wrapping"""
+            # Get or create session ID
+            session_id = await self._get_session(task.id)
 
-        # Build command (use .cmd extension on Windows)
-        claude_bin = "claude.cmd" if platform.system() == "Windows" else "claude"
-        cmd = [claude_bin, "--print", "--output-format", "json"]
+            # Build command (use .cmd extension on Windows)
+            claude_bin = "claude.cmd" if platform.system() == "Windows" else "claude"
+            cmd = [claude_bin, "--print", "--output-format", "json"]
 
-        # Add session continuity
-        if session_id:
-            cmd.extend(["--resume", session_id])
+            # Add session continuity
+            if session_id:
+                cmd.extend(["--resume", session_id])
 
-        # Add prompt
-        cmd.append(task.prompt)
+            # Add prompt
+            cmd.append(task.prompt)
 
-        logger.info(f"Executing Claude CLI: {' '.join(cmd[:3])}...")
+            logger.info(f"Executing Claude CLI: {' '.join(cmd[:3])}...")
 
-        # Execute subprocess
-        try:
+            # Execute subprocess
             process = await asyncio.create_subprocess_exec(
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
@@ -315,16 +364,20 @@ class CLIOrchestrator:
                 session_id=new_session_id
             )
 
+        # Execute with circuit breaker protection
+        try:
+            return await self.claude_breaker.call_async(_claude_subprocess)
+
         except asyncio.TimeoutError:
             logger.error("Claude CLI timeout (120s)")
             raise RuntimeError("Claude CLI timeout")
 
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse Claude output: {e}")
-            # Return raw output if JSON parsing fails
+            # Return fallback response
             return AgentResponse(
                 agent=AgentType.CLAUDE,
-                content=stdout.decode() if stdout else "",
+                content="",
                 tokens=0,
                 cost=0.0,
                 duration=0
@@ -332,7 +385,7 @@ class CLIOrchestrator:
 
     async def _execute_gemini(self, task: Task) -> AgentResponse:
         """
-        Execute via Gemini CLI subprocess.
+        Execute via Gemini CLI subprocess with circuit breaker protection.
 
         Command:
             gemini -o json "prompt"
@@ -342,26 +395,28 @@ class CLIOrchestrator:
         - Real-time streaming
         - Glob pattern file context
         - FREE (no cost)
+        - Circuit breaker for resilience
         """
-        # Build command (use .cmd extension on Windows)
-        gemini_bin = "gemini.cmd" if platform.system() == "Windows" else "gemini"
-        cmd = [gemini_bin, "-o", "json"]
+        async def _gemini_subprocess():
+            """Inner function for circuit breaker wrapping"""
+            # Build command (use .cmd extension on Windows)
+            gemini_bin = "gemini.cmd" if platform.system() == "Windows" else "gemini"
+            cmd = [gemini_bin, "-o", "json"]
 
-        # Add yolo mode for auto-approval (optional)
-        # cmd.append("--yolo")
+            # Add yolo mode for auto-approval (optional)
+            # cmd.append("--yolo")
 
-        # Add file context
-        if task.files:
-            for file_pattern in task.files:
-                cmd.extend(["--include-directories", file_pattern])
+            # Add file context
+            if task.files:
+                for file_pattern in task.files:
+                    cmd.extend(["--include-directories", file_pattern])
 
-        # Add prompt
-        cmd.append(task.prompt)
+            # Add prompt
+            cmd.append(task.prompt)
 
-        logger.info(f"Executing Gemini CLI: {' '.join(cmd[:3])}...")
+            logger.info(f"Executing Gemini CLI: {' '.join(cmd[:3])}...")
 
-        # Execute subprocess with streaming
-        try:
+            # Execute subprocess with streaming
             process = await asyncio.create_subprocess_exec(
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
@@ -418,6 +473,10 @@ class CLIOrchestrator:
                 duration=0,
                 metadata={"raw_output": full_output}
             )
+
+        # Execute with circuit breaker protection
+        try:
+            return await self.gemini_breaker.call_async(_gemini_subprocess)
 
         except Exception as e:
             logger.error(f"Gemini CLI failed: {e}")
@@ -530,3 +589,18 @@ class CLIOrchestrator:
                 return {k: float(v) for k, v in stored_rewards.items()}
 
         return self.reward_model
+
+    def get_circuit_breaker_status(self) -> Dict[str, Any]:
+        """Get circuit breaker status for all agents"""
+        return {
+            "claude": {
+                "state": self.claude_breaker.state.value,
+                "failure_count": self.claude_breaker.failure_count,
+                "last_failure": self.claude_breaker.last_failure_time.isoformat() if self.claude_breaker.last_failure_time else None
+            },
+            "gemini": {
+                "state": self.gemini_breaker.state.value,
+                "failure_count": self.gemini_breaker.failure_count,
+                "last_failure": self.gemini_breaker.last_failure_time.isoformat() if self.gemini_breaker.last_failure_time else None
+            }
+        }

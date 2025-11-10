@@ -12,6 +12,7 @@ import socketio
 from database import init_db
 from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration
 from routers.websocket import sio
+from routers.redis_manager import redis_manager
 
 # Lifespan context manager for startup/shutdown events
 @asynccontextmanager
@@ -21,9 +22,23 @@ async def lifespan(app: FastAPI):
     print("Phantom Mode Engaged")
     print("Neural Cortex Active")
     init_db()
+
+    # Connect to Redis for distributed state management
+    try:
+        await redis_manager.connect()
+        print("Redis connected - Distributed state management active")
+    except Exception as e:
+        print(f"Redis connection failed (optional): {e}")
+
     yield
+
     # Shutdown
     print("Shutting down...")
+    try:
+        await redis_manager.disconnect()
+        print("Redis disconnected")
+    except Exception as e:
+        print(f"Redis disconnect warning: {e}")
 
 # Create FastAPI app with comprehensive OpenAPI documentation
 app = FastAPI(
@@ -197,8 +212,9 @@ async def health_check():
     db_status = "operational"
     try:
         from database import SessionLocal
+        from sqlalchemy import text
         db = SessionLocal()
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         db.close()
     except Exception as e:
         db_status = f"error: {str(e)}"

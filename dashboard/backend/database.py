@@ -100,6 +100,9 @@ sync_engine = create_engine(
 # Sync SessionLocal for legacy endpoints
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sync_engine)
 
+# Alias for backward compatibility (seed_data.py imports 'engine')
+engine = sync_engine
+
 
 def get_db() -> Generator[Session, None, None]:
     """

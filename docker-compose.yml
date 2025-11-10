@@ -1,0 +1,105 @@
+services:
+  # PostgreSQL - Main Database (Optional - currently using SQLite)
+  postgres:
+    image: postgres:16-alpine
+    container_name: phantom-postgres
+    environment:
+      POSTGRES_USER: phantom
+      POSTGRES_PASSWORD: phantom_db_pass_CHANGEME  # CHANGE IN PRODUCTION
+      POSTGRES_DB: phantom_cortex
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Redis - Session & Cache Management
+  redis:
+    image: redis:7-alpine
+    container_name: phantom-redis
+    # No password for local development (use --requirepass in production)
+    command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # Prometheus - Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: phantom-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+  # Grafana - Metrics Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: phantom-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=phantom_grafana_pass_CHANGEME  # CHANGE IN PRODUCTION
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+# USAGE:
+#
+# Start essential services (Redis, Prometheus, Grafana):
+#   docker-compose up -d redis prometheus grafana
+#
+# Start all services (including PostgreSQL):
+#   docker-compose up -d
+#
+# Stop all services:
+#   docker-compose down
+#
+# View logs:
+#   docker-compose logs -f
+#
+# Access Points:
+#   - Grafana UI: http://localhost:3000 (admin / phantom_grafana_pass_CHANGEME)
+#   - Prometheus UI: http://localhost:9090
+#   - Redis: localhost:6379 (no password in dev mode)
+#   - PostgreSQL: localhost:5432 (user: phantom, password: phantom_db_pass_CHANGEME)
+#
+# IMPORTANT SECURITY NOTES:
+# 1. CHANGE ALL PASSWORDS marked with _CHANGEME before production use
+# 2. Use strong, randomly generated passwords
+# 3. Consider using Docker secrets or environment files (.env)
+# 4. Do not commit passwords to version control
+#
+# Backend Integration:
+#   Update .env file:
+#     REDIS_URL=redis://localhost:6379
+#     DATABASE_URL=postgresql://phantom:phantom_db_pass_CHANGEME@localhost:5432/phantom_cortex
+#
+# Prometheus Scrape Config:
+#   monitoring/prometheus.yml should contain:
+#     scrape_configs:
+#       - job_name: 'phantom-backend'
+#         static_configs:
+#           - targets: ['host.docker.internal:1336']
+#         metrics_path: '/api/prometheus/metrics'
