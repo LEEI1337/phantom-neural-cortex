@@ -1,0 +1,331 @@
+/* ============================================================================
+   MATRIX & RAINBOW EFFECTS
+   ============================================================================ */
+
+/* Rainbow Gradient Text */
+.matrix-text {
+  background: linear-gradient(
+    90deg,
+    #06b6d4 0%,
+    #22c55e 25%,
+    #f59e0b 50%,
+    #ef4444 75%,
+    #06b6d4 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Animated Rainbow Text */
+.matrix-text.animated,
+.rainbow-text-animated {
+  animation: rainbow-shift 4s linear infinite;
+}
+
+/* Decrypting Glitch Effect */
+.matrix-text.decrypting {
+  animation: glitch-rainbow 2s ease-in-out;
+  text-shadow:
+    2px 2px 0px rgba(6, 182, 212, 0.5),
+    4px 4px 0px rgba(34, 197, 86, 0.3),
+    6px 6px 0px rgba(245, 158, 11, 0.2);
+}
+
+/* Glitch Rainbow Effect */
+.glitch-rainbow {
+  position: relative;
+  display: inline-block;
+  animation: glitch-1 0.5s ease-in-out;
+}
+
+.glitch-rainbow::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 100%;
+  color: rgba(6, 182, 212, 0.8);
+  animation: glitch-2 0.5s ease-in-out;
+}
+
+.glitch-rainbow::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 2px;
+  width: 100%;
+  color: rgba(34, 197, 86, 0.8);
+  animation: glitch-2 0.5s ease-in-out;
+  animation-delay: 0.1s;
+}
+
+/* CIA Terminal Style Loader */
+.cia-loader {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #06b6d4;
+  text-shadow:
+    0 0 10px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(6, 182, 212, 0.25);
+  animation: blink-cursor 1s steps(2) infinite;
+}
+
+.cia-loader::after {
+  content: '▮';
+  display: inline-block;
+  animation: blink-cursor 1s steps(2) infinite;
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  content: attr(data-glitch);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.glitch-text::before {
+  animation: glitch-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  color: #06b6d4;
+  z-index: -1;
+}
+
+.glitch-text::after {
+  animation: glitch-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite reverse;
+  color: #22c55e;
+  z-index: -2;
+}
+
+/* Matrix Rain Effect */
+.matrix-rain {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.matrix-char {
+  position: absolute;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #06b6d4;
+  opacity: 0.5;
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.matrix-char.active {
+  opacity: 1;
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+  color: #22c55e;
+}
+
+/* Rainbow Bar Effect */
+.rainbow-bar {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #06b6d4,
+    #22c55e,
+    #f59e0b,
+    #ef4444,
+    #06b6d4
+  );
+  background-size: 200% 100%;
+  animation: rainbow-shift 3s linear infinite;
+}
+
+/* Matrix Title Style */
+.matrix-title {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    #06b6d4 0%,
+    #22c55e 50%,
+    #06b6d4 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-shift 5s linear infinite;
+}
+
+/* Neon Text Effect */
+.neon-text {
+  color: #06b6d4;
+  text-shadow:
+    0 0 10px #06b6d4,
+    0 0 20px rgba(6, 182, 212, 0.5),
+    0 0 30px rgba(6, 182, 212, 0.3);
+  font-weight: bold;
+}
+
+.neon-text.success {
+  color: #22c55e;
+  text-shadow:
+    0 0 10px #22c55e,
+    0 0 20px rgba(34, 197, 86, 0.5),
+    0 0 30px rgba(34, 197, 86, 0.3);
+}
+
+.neon-text.warning {
+  color: #f59e0b;
+  text-shadow:
+    0 0 10px #f59e0b,
+    0 0 20px rgba(245, 158, 11, 0.5),
+    0 0 30px rgba(245, 158, 11, 0.3);
+}
+
+.neon-text.error {
+  color: #ef4444;
+  text-shadow:
+    0 0 10px #ef4444,
+    0 0 20px rgba(239, 68, 68, 0.5),
+    0 0 30px rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================================================
+   KEYFRAME ANIMATIONS
+   ============================================================================ */
+
+@keyframes rainbow-shift {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glitch-1 {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, -2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(2px, 2px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-2px, -2px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(2px, 2px);
+  }
+}
+
+@keyframes glitch-2 {
+  0% {
+    clip-path: inset(61% 0 40% 0);
+    transform: translate(2px, 2px);
+  }
+  20% {
+    clip-path: inset(1% 0 92% 0);
+    transform: translate(-2px, -2px);
+  }
+  40% {
+    clip-path: inset(1% 0 43% 0);
+    transform: translate(2px, -2px);
+  }
+  60% {
+    clip-path: inset(58% 0 25% 0);
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    clip-path: inset(7% 0 54% 0);
+    transform: translate(2px, 2px);
+  }
+  100% {
+    clip-path: inset(43% 0 58% 0);
+    transform: translate(-2px, -2px);
+  }
+}
+
+@keyframes fadeInGlitch {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  20% {
+    opacity: 0.5;
+    transform: translateX(5px);
+  }
+  40% {
+    opacity: 0.8;
+    transform: translateX(-3px);
+  }
+  60% {
+    opacity: 0.9;
+    transform: translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes blink-cursor {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Matrix Rain Animation */
+@keyframes matrix-fall {
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Neon Glow Pulse */
+@keyframes neon-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(6, 182, 212, 0.5),
+      0 0 20px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 15px rgba(6, 182, 212, 0.8),
+      0 0 30px rgba(6, 182, 212, 0.5);
+  }
+}
+
+.neon-glow {
+  animation: neon-glow 2s ease-in-out infinite;
+}

@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "permissions": {
+    "autonomousMode": true,
+    "yoloMode": true,
+    "requireApproval": false
+  },
+  "cascade": {
+    "autonomousExecution": true,
+    "allowCommandExecution": true,
+    "allowFileModification": true,
+    "commandAllowlist": [
+      "*"
+    ],
+    "commandDenylist": [],
+    "autoApproveCommands": [
+      "npm",
+      "npm install",
+      "npm test",
+      "npm run",
+      "python",
+      "git",
+      "git add",
+      "git commit",
+      "git push",
+      "bash",
+      "sh"
+    ]
+  },
+  "composer": {
+    "autoApplyChanges": true,
+    "autoAcceptSuggestions": true,
+    "streamingMode": true
+  },
+  "privacy": {
+    "privacyMode": false,
+    "disableContextStorage": false,
+    "workspaceOnly": false
+  },
+  "fileExclusions": {
+    "patterns": [
+      ".env",
+      ".env.local",
+      "*.key",
+      "secrets.json"
+    ]
+  },
+  "agent": {
+    "agentMode": true,
+    "agentAutonomy": "full",
+    "allowPRCreation": true,
+    "allowAutoCommit": true,
+    "allowCodeExecution": true
+  },
+  "rules": {
+    "rulesDirectory": ".cursor/rules",
+    "autoLoadRules": true
+  }
+}

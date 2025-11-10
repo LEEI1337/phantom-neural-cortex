@@ -73,15 +73,6 @@
         "PERPLEXITY_TIMEOUT_MS": "300000"
       }
     },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-puppeteer"
-      ],
-      "env": {}
-    },
     "browser-tools": {
       "type": "stdio",
       "command": "npx",

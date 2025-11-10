@@ -1,0 +1,331 @@
+/* Unified Swarm Page Layout */
+.unified-swarm-page {
+  width: 100vw;
+  height: 100vh;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Header */
+.swarm-header {
+  height: 64px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-bottom: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 10;
+}
+
+.logo-text {
+  font-family: 'Courier New', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(
+    90deg,
+    #06b6d4 0%,
+    #3b82f6 25%,
+    #8b5cf6 50%,
+    #ec4899 75%,
+    #06b6d4 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-shift 30s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.logo-text:hover {
+  transform: scale(1.05);
+}
+
+@keyframes rainbow-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.header-btn {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 20px;
+}
+
+.header-btn:hover {
+  background: #334155;
+  border-color: #06b6d4;
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.15);
+}
+
+/* Main Content */
+.swarm-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.swarm-sidebar {
+  width: 60px;
+  background: #1e293b;
+  border-right: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 8px;
+  z-index: 9;
+}
+
+.sidebar-btn {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 24px;
+  position: relative;
+}
+
+.sidebar-btn:hover {
+  background: #334155;
+  transform: translateX(2px);
+}
+
+.sidebar-btn.active {
+  background: #06b6d4;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.sidebar-btn.active::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: #06b6d4;
+  border-radius: 2px;
+}
+
+/* Graph Area */
+.swarm-graph-area {
+  flex: 1;
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Panel Area */
+.swarm-panel-area {
+  width: 480px;
+  background: #1e293b;
+  border-left: 1px solid #334155;
+  overflow-y: auto;
+  animation: slideInRight 250ms ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Footer */
+.swarm-footer {
+  height: 40px;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 24px;
+  font-size: 13px;
+  color: #94a3b8;
+  z-index: 10;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.status-dot.active {
+  background: #22c55e;
+  animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Party Mode Styles */
+.party-mode .swarm-header {
+  animation: rainbow-border 2s linear infinite;
+}
+
+.party-mode .sidebar-btn.active {
+  animation: rainbow-glow 2s ease-in-out infinite;
+}
+
+@keyframes rainbow-border {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes rainbow-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+  25% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+  75% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.5); }
+}
+
+/* Achievement Toast */
+.achievement-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-left: 4px solid #06b6d4;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideInRight 0.5s ease-out, wiggle 0.5s ease 0.5s;
+  max-width: 320px;
+}
+
+.achievement-toast.rainbow {
+  border-left: 4px solid transparent;
+  border-image: linear-gradient(
+    180deg,
+    #06b6d4, #3b82f6, #8b5cf6, #ec4899, #f59e0b
+  ) 1;
+}
+
+.achievement-toast.party-mode {
+  animation: slideInRight 0.5s ease-out, wiggle 0.5s ease 0.5s, rainbow-glow 3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.achievement-content {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.achievement-icon {
+  font-size: 32px;
+}
+
+.achievement-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #06b6d4;
+  margin-bottom: 4px;
+}
+
+.achievement-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.achievement-description {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 1440px) {
+  .swarm-panel-area {
+    width: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .swarm-panel-area {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 40px;
+    width: 100%;
+    max-width: 400px;
+    z-index: 20;
+  }
+}
+
+@media (max-width: 768px) {
+  .swarm-sidebar {
+    width: 48px;
+  }
+
+  .sidebar-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .swarm-panel-area {
+    max-width: 100%;
+  }
+
+  .swarm-footer {
+    font-size: 11px;
+    gap: 16px;
+    padding: 0 12px;
+  }
+}

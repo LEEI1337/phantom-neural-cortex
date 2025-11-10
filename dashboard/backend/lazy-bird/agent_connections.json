@@ -1,0 +1,31 @@
+[
+  {
+    "agent_id": "ollama",
+    "agent_name": "Ollama (Local)",
+    "connection_type": "local",
+    "endpoint": "http://localhost",
+    "port": 11434,
+    "enabled": true
+  },
+  {
+    "agent_id": "claude",
+    "agent_name": "Anthropic Claude",
+    "connection_type": "api",
+    "api_key_id": "claude_key_1",
+    "enabled": true
+  },
+  {
+    "agent_id": "openai",
+    "agent_name": "OpenAI GPT",
+    "connection_type": "api",
+    "api_key_id": "openai_key_1",
+    "enabled": true
+  },
+  {
+    "agent_id": "gemini",
+    "agent_name": "Google Gemini",
+    "connection_type": "api",
+    "api_key_id": "gemini_key_1",
+    "enabled": true
+  }
+]

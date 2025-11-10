@@ -1,4 +1,10 @@
-# 🤖 Claude-Spezifische Guidelines
+#  Claude-Spezifische Guidelines
+
+> ** DEPRECATED:** This file is deprecated. Please use the hierarchical layer system instead:
+> - [LAYER-2-CLAUDE.md](layers/LAYER-2-CLAUDE.md) - Claude-specific guidelines
+>
+> **Migration Date:** 2025-11-09
+> **Will be removed in:** Version 3.0.0
 
 **Agent:** Claude (Anthropic)
 **Use Case:** Security, Architecture, Complex Problems
@@ -7,7 +13,7 @@
 
 ---
 
-## 🎯 Wann Claude verwendet wird
+##  Wann Claude verwendet wird
 
 Claude wird automatisch gewählt bei Issues mit Labels:
 - `security` - Sicherheitsrelevante Tasks
@@ -17,14 +23,14 @@ Claude wird automatisch gewählt bei Issues mit Labels:
 
 ---
 
-## 📋 Claude-Spezifische Anforderungen
+##  Claude-Spezifische Anforderungen
 
 ### 1. Security First
 
 **IMMER** Security Best Practices anwenden:
 
 ```python
-# ✅ RICHTIG: Input Validation
+#  RICHTIG: Input Validation
 def process_user_input(data: str) -> str:
     # Sanitize input
     if not isinstance(data, str):
@@ -34,18 +40,18 @@ def process_user_input(data: str) -> str:
     # Escape HTML
     return html.escape(data)
 
-# ❌ FALSCH: Direkte Verwendung
+#  FALSCH: Direkte Verwendung
 def process_user_input(data):
     return data  # XSS vulnerability!
 ```
 
 ```typescript
-// ✅ RICHTIG: SQL Injection Prevention
+//  RICHTIG: SQL Injection Prevention
 const getUserById = async (id: number) => {
   return await db.query('SELECT * FROM users WHERE id = $1', [id]);
 };
 
-// ❌ FALSCH: SQL Injection möglich
+//  FALSCH: SQL Injection möglich
 const getUserById = async (id: number) => {
   return await db.query(`SELECT * FROM users WHERE id = ${id}`);
 };
@@ -54,7 +60,7 @@ const getUserById = async (id: number) => {
 ### 2. Umfassende Error Handling
 
 ```python
-# ✅ RICHTIG: Proper Error Handling
+#  RICHTIG: Proper Error Handling
 def fetch_data(url: str) -> dict:
     try:
         response = requests.get(url, timeout=10)
@@ -73,7 +79,7 @@ def fetch_data(url: str) -> dict:
         logger.error(f"Unexpected error: {e}")
         raise
 
-# ❌ FALSCH: Bare except
+#  FALSCH: Bare except
 def fetch_data(url):
     try:
         return requests.get(url).json()
@@ -84,7 +90,7 @@ def fetch_data(url):
 ### 3. Type Safety (TypeScript/Python)
 
 ```typescript
-// ✅ RICHTIG: Strict Types
+//  RICHTIG: Strict Types
 interface User {
   id: number;
   name: string;
@@ -96,14 +102,14 @@ function getUser(id: number): Promise<User> {
   // Implementation
 }
 
-// ❌ FALSCH: Any types
+//  FALSCH: Any types
 function getUser(id: any): Promise<any> {
   // Type safety lost!
 }
 ```
 
 ```python
-# ✅ RICHTIG: Type Hints
+#  RICHTIG: Type Hints
 from typing import List, Optional
 
 def filter_users(
@@ -114,7 +120,7 @@ def filter_users(
         return [u for u in users if u.role == role]
     return users
 
-# ❌ FALSCH: No type hints
+#  FALSCH: No type hints
 def filter_users(users, role=None):
     # No type checking
     pass
@@ -129,7 +135,7 @@ Claude MUSS für JEDEN Feature:
 - Error Cases testen
 
 ```python
-# ✅ RICHTIG: Comprehensive Tests
+#  RICHTIG: Comprehensive Tests
 def test_user_creation():
     """Test normal user creation."""
     user = create_user("john@example.com", "password123")
@@ -156,7 +162,7 @@ def test_user_creation_duplicate_email():
 ### 5. Ausführliche Dokumentation
 
 ```python
-# ✅ RICHTIG: Comprehensive Docstring
+#  RICHTIG: Comprehensive Docstring
 def authenticate_user(
     username: str,
     password: str,
@@ -190,7 +196,7 @@ def authenticate_user(
     """
     # Implementation
 
-# ❌ FALSCH: Minimal Documentation
+#  FALSCH: Minimal Documentation
 def auth(u, p):
     # Login user
     pass
@@ -198,7 +204,7 @@ def auth(u, p):
 
 ---
 
-## 🏗️ Architektur-Prinzipien
+##  Architektur-Prinzipien
 
 Claude folgt diesen Prinzipien:
 
@@ -226,45 +232,45 @@ Claude folgt diesen Prinzipien:
 
 ---
 
-## 📁 Claude Projekt-Struktur Erweiterungen
+##  Claude Projekt-Struktur Erweiterungen
 
 Zusätzlich zur Standard-Struktur erstellt Claude:
 
 ```
 projekt/
-├── src/
-│   ├── core/              # Core Business Logic
-│   ├── services/          # External Services
-│   ├── middleware/        # Middleware Components
-│   ├── validators/        # Input Validators
-│   └── errors/            # Custom Error Classes
-│
-├── tests/
-│   ├── unit/
-│   │   ├── test_core.py
-│   │   └── test_services.py
-│   ├── integration/
-│   │   └── test_api.py
-│   └── security/
-│       └── test_auth.py   # Security Tests!
-│
-├── docs/
-│   ├── API.md
-│   ├── ARCHITECTURE.md
-│   ├── SECURITY.md        # Security Documentation!
-│   └── TESTING.md         # Test Strategy
-│
-└── .github/
-    ├── workflows/
-    │   ├── ci.yml
-    │   ├── security-scan.yml  # Security Scanning!
-    │   └── dependency-check.yml
-    └── SECURITY.md        # Security Policy
+ src/
+    core/              # Core Business Logic
+    services/          # External Services
+    middleware/        # Middleware Components
+    validators/        # Input Validators
+    errors/            # Custom Error Classes
+
+ tests/
+    unit/
+       test_core.py
+       test_services.py
+    integration/
+       test_api.py
+    security/
+        test_auth.py   # Security Tests!
+
+ docs/
+    API.md
+    ARCHITECTURE.md
+    SECURITY.md        # Security Documentation!
+    TESTING.md         # Test Strategy
+
+ .github/
+     workflows/
+        ci.yml
+        security-scan.yml  # Security Scanning!
+        dependency-check.yml
+     SECURITY.md        # Security Policy
 ```
 
 ---
 
-## 🔒 Security Checklist
+##  Security Checklist
 
 Claude MUSS diese Punkte prüfen:
 
@@ -281,15 +287,15 @@ Claude MUSS diese Punkte prüfen:
 
 ---
 
-## 📦 Dependencies
+##  Dependencies
 
 Claude verwendet nur:
-- ✅ Aktuelle, gepflegte Libraries
-- ✅ Libraries mit gutem Security Track Record
-- ✅ Minimal Dependencies (weniger Angriffsfläche)
+-  Aktuelle, gepflegte Libraries
+-  Libraries mit gutem Security Track Record
+-  Minimal Dependencies (weniger Angriffsfläche)
 
 ```python
-# ✅ RICHTIG: Pinned Versions
+#  RICHTIG: Pinned Versions
 # requirements.txt
 fastapi==0.104.1
 pydantic==2.5.0
@@ -297,7 +303,7 @@ sqlalchemy==2.0.23
 bcrypt==4.1.1
 pytest==7.4.3
 
-# ❌ FALSCH: Unpinned Versions
+#  FALSCH: Unpinned Versions
 # requirements.txt
 fastapi
 pydantic
@@ -306,7 +312,7 @@ sqlalchemy  # Could break with updates!
 
 ---
 
-## 🧪 Test Coverage Requirements
+##  Test Coverage Requirements
 
 Claude MUSS erreichen:
 - **Minimum:** 80% Code Coverage
@@ -323,14 +329,14 @@ Name                      Stmts   Miss  Cover
 src/__init__.py              12      0   100%
 src/core/auth.py             45      3    93%
 src/core/users.py            38      2    95%
-src/services/email.py        22      6    73%  # ⚠️ Zu niedrig!
+src/services/email.py        22      6    73%  #  Zu niedrig!
 ---------------------------------------------
-TOTAL                       117     11    91%  # ✅ OK
+TOTAL                       117     11    91%  #  OK
 ```
 
 ---
 
-## 🎯 Code Review Checkliste
+##  Code Review Checkliste
 
 Vor PR-Erstellung prüft Claude:
 
@@ -361,7 +367,7 @@ Vor PR-Erstellung prüft Claude:
 
 ---
 
-## 💰 Kosten-Bewusstsein
+##  Kosten-Bewusstsein
 
 Da Claude $20/mo kostet, wird er NUR für verwendet:
 - Sicherheitskritische Features
@@ -379,4 +385,4 @@ Da Claude $20/mo kostet, wird er NUR für verwendet:
 
 ---
 
-**Claude steht für höchste Code-Qualität und Sicherheit!** 🔒
+**Claude steht für höchste Code-Qualität und Sicherheit!** 

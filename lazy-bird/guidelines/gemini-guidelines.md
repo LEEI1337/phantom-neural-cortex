@@ -1,4 +1,10 @@
-# 🤖 Gemini-Spezifische Guidelines
+#  Gemini-Spezifische Guidelines
+
+> ** DEPRECATED:** This file is deprecated. Please use the hierarchical layer system instead:
+> - [LAYER-2-GEMINI.md](layers/LAYER-2-GEMINI.md) - Gemini-specific guidelines
+>
+> **Migration Date:** 2025-11-09
+> **Will be removed in:** Version 3.0.0
 
 **Agent:** Gemini (Google)
 **Use Case:** Dokumentation, Bulk Tasks, General Development
@@ -7,7 +13,7 @@
 
 ---
 
-## 🎯 Wann Gemini verwendet wird
+##  Wann Gemini verwendet wird
 
 Gemini ist der DEFAULT Agent und wird verwendet für:
 - `documentation` - Dokumentations-Erstellung
@@ -19,18 +25,18 @@ Gemini ist der DEFAULT Agent und wird verwendet für:
 
 ---
 
-## 📋 Gemini-Spezifische Anforderungen
+##  Gemini-Spezifische Anforderungen
 
 ### 1. Effizienz & Geschwindigkeit
 
 Gemini optimiert für:
-- ✅ Schnelle Implementierung
-- ✅ Wenig Iterations
-- ✅ Pragmatische Lösungen
-- ✅ DRY Code
+-  Schnelle Implementierung
+-  Wenig Iterations
+-  Pragmatische Lösungen
+-  DRY Code
 
 ```python
-# ✅ RICHTIG: Effiziente Implementierung
+#  RICHTIG: Effiziente Implementierung
 def generate_api_docs(endpoints: List[Endpoint]) -> str:
     """Generate API documentation from endpoints."""
     docs = ["# API Documentation\n"]
@@ -52,7 +58,7 @@ def generate_api_docs(endpoints: List[Endpoint]) -> str:
 
     return "\n".join(docs)
 
-# ❌ FALSCH: Over-engineered
+#  FALSCH: Over-engineered
 class DocumentationGenerator:
     def __init__(self, config):
         self.config = config
@@ -67,7 +73,7 @@ class DocumentationGenerator:
 Nutze bewährte Patterns statt Custom Solutions:
 
 ```typescript
-// ✅ RICHTIG: Standard Express Pattern
+//  RICHTIG: Standard Express Pattern
 app.get('/api/users/:id', async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) {
@@ -76,7 +82,7 @@ app.get('/api/users/:id', async (req, res) => {
   res.json(user);
 });
 
-// ❌ FALSCH: Custom abstraction
+//  FALSCH: Custom abstraction
 class EndpointHandler {
   constructor(private endpoint: Endpoint) {}
   async handle(req: Request, res: Response) {
@@ -90,7 +96,7 @@ class EndpointHandler {
 Für Bulk-Tasks verwende Templates:
 
 ```python
-# ✅ RICHTIG: Template für CRUD
+#  RICHTIG: Template für CRUD
 CRUD_TEMPLATE = '''
 def create_{model}(data: dict) -> {Model}:
     """Create new {model}."""
@@ -120,7 +126,7 @@ for model in ['User', 'Product', 'Order']:
 Gemini's Stärke: EXZELLENTE Dokumentation!
 
 ```markdown
-# ✅ RICHTIG: Comprehensive README
+#  RICHTIG: Comprehensive README
 
 ## Installation
 
@@ -169,35 +175,35 @@ MIT
 
 ---
 
-## 📁 Gemini Projekt-Struktur
+##  Gemini Projekt-Struktur
 
 Gemini hält sich an die Standard-Struktur, OHNE zusätzliche Komplexität:
 
 ```
 projekt/
-├── src/
-│   ├── main.py            # Simple entry point
-│   ├── lib/               # Core functionality
-│   └── utils/             # Utilities
-│
-├── tests/
-│   ├── test_main.py       # Basic tests (60-70% coverage OK)
-│   └── test_lib.py
-│
-├── docs/
-│   ├── README.md          # Excellent documentation!
-│   ├── API.md
-│   └── EXAMPLES.md        # Lots of examples!
-│
-├── requirements.txt       # Minimal dependencies
-└── .gitignore
+ src/
+    main.py            # Simple entry point
+    lib/               # Core functionality
+    utils/             # Utilities
+
+ tests/
+    test_main.py       # Basic tests (60-70% coverage OK)
+    test_lib.py
+
+ docs/
+    README.md          # Excellent documentation!
+    API.md
+    EXAMPLES.md        # Lots of examples!
+
+ requirements.txt       # Minimal dependencies
+ .gitignore
 ```
 
 **Fokus:** Einfachheit, Klarheit, Dokumentation
 
 ---
 
-## 🚀 Bulk Operations Best Practices
+##  Bulk Operations Best Practices
 
 ### Dokumentation für 200 API Endpoints:
 
@@ -218,15 +224,15 @@ def generate_all_api_docs(endpoints: List[Endpoint]) -> None:
         with open(filename, 'w') as f:
             f.write(content)
 
-        print(f"✅ Generated: {filename} ({len(eps)} endpoints)")
+        print(f" Generated: {filename} ({len(eps)} endpoints)")
 
 # Generate for all
 generate_all_api_docs(endpoints)
 
 # Output:
-# ✅ Generated: docs/api/users.md (45 endpoints)
-# ✅ Generated: docs/api/products.md (67 endpoints)
-# ✅ Generated: docs/api/orders.md (88 endpoints)
+#  Generated: docs/api/users.md (45 endpoints)
+#  Generated: docs/api/products.md (67 endpoints)
+#  Generated: docs/api/orders.md (88 endpoints)
 ```
 
 ### Code-Generierung aus Schema:
@@ -242,28 +248,28 @@ def generate_models_from_schema(schema: dict) -> None:
         with open(filename, 'w') as f:
             f.write(model_code)
 
-        print(f"✅ Generated: {filename}")
+        print(f" Generated: {filename}")
 
 # One command generates all models!
 ```
 
 ---
 
-## 🎯 Optimierung für Free Tier
+##  Optimierung für Free Tier
 
 Da Gemini FREE ist, optimieren wir anders:
 
 ### 1. Batch Processing
 
 ```python
-# ✅ RICHTIG: Process in batches
+#  RICHTIG: Process in batches
 def process_all_files(files: List[str]) -> None:
     """Process multiple files efficiently."""
     for i in range(0, len(files), 10):
         batch = files[i:i+10]
         process_batch(batch)
 
-# ❌ FALSCH: Individual processing (slow)
+#  FALSCH: Individual processing (slow)
 for file in files:
     process_one_file(file)  # 1000 einzelne Calls
 ```
@@ -294,7 +300,7 @@ for func in functions:
 ### 3. Smart Caching
 
 ```python
-# ✅ RICHTIG: Cache results
+#  RICHTIG: Cache results
 cache = {}
 
 def get_or_generate(key: str) -> str:
@@ -308,7 +314,7 @@ def get_or_generate(key: str) -> str:
 
 ---
 
-## 📊 Test Coverage Expectations
+##  Test Coverage Expectations
 
 Gemini Ziel: **60-70% Coverage**
 
@@ -318,7 +324,7 @@ Gemini Ziel: **60-70% Coverage**
 - KEINE exhaustive Edge Cases (das macht Claude)
 
 ```python
-# ✅ RICHTIG: Pragmatic Testing
+#  RICHTIG: Pragmatic Testing
 def test_create_user():
     """Test user creation."""
     user = create_user("john@example.com", "password123")
@@ -334,7 +340,7 @@ def test_create_user_invalid_email():
 
 ---
 
-## 📚 Dokumentations-Standards
+##  Dokumentations-Standards
 
 Gemini's Superkraft: BESTE Dokumentation!
 
@@ -401,7 +407,7 @@ MIT
 ### Code Comments:
 
 ```python
-# ✅ RICHTIG: Clear, concise comments
+#  RICHTIG: Clear, concise comments
 def calculate_discount(price: float, code: str) -> float:
     """
     Calculate discounted price.
@@ -426,16 +432,16 @@ def calculate_discount(price: float, code: str) -> float:
 
 ---
 
-## 💡 Pragmatic Patterns
+##  Pragmatic Patterns
 
 ### 1. KISS (Keep It Simple, Stupid)
 
 ```python
-# ✅ RICHTIG: Simple & Clear
+#  RICHTIG: Simple & Clear
 def format_date(date):
     return date.strftime("%Y-%m-%d")
 
-# ❌ FALSCH: Over-engineered
+#  FALSCH: Over-engineered
 class DateFormatter:
     def __init__(self, format_string="%Y-%m-%d"):
         self.format = format_string
@@ -450,13 +456,13 @@ formatter = DateFormatter()
 ### 2. Prefer Built-ins
 
 ```python
-# ✅ RICHTIG: Use standard library
+#  RICHTIG: Use standard library
 from collections import Counter
 
 def count_items(items):
     return Counter(items)
 
-# ❌ FALSCH: Reinvent the wheel
+#  FALSCH: Reinvent the wheel
 def count_items(items):
     counts = {}
     for item in items:
@@ -466,7 +472,7 @@ def count_items(items):
 
 ---
 
-## 🎯 Gemini Checkliste
+##  Gemini Checkliste
 
 - [ ] Code ist einfach & klar
 - [ ] Standard Patterns verwendet
@@ -479,17 +485,17 @@ def count_items(items):
 
 ---
 
-## 💰 Cost Efficiency
+##  Cost Efficiency
 
 Gemini ist FREE → Nutzen wir maximal aus!
 
 **Perfekt für:**
-- ✅ Dokumentation (Unlimitiert!)
-- ✅ Code Generation (Templates)
-- ✅ Bulk Refactorings
-- ✅ Standard CRUD Operations
-- ✅ API Endpoint Creation
-- ✅ Test Generation
+-  Dokumentation (Unlimitiert!)
+-  Code Generation (Templates)
+-  Bulk Refactorings
+-  Standard CRUD Operations
+-  API Endpoint Creation
+-  Test Generation
 
 **Sparen wir Claude ($20) für:**
 - Sicherheit
@@ -498,4 +504,4 @@ Gemini ist FREE → Nutzen wir maximal aus!
 
 ---
 
-**Gemini = Geschwindigkeit + Effizienz + FREE!** 🚀
+**Gemini = Geschwindigkeit + Effizienz + FREE!** 

@@ -155,8 +155,9 @@ curl -X POST "http://localhost:8000/api/speckit/features?project_id=my-project" 
 ┌─────────────────────────────────────────────────────────────┐
 │  LAYER 2: DASHBOARD & API (Real-time Interface)            │
 │  • React + TypeScript Frontend (Vite + Tailwind)           │
-│  • FastAPI Backend (45+ REST Endpoints)                    │
-│  • PostgreSQL + Redis + WebSocket                          │
+│  • FastAPI Backend (52+ REST Endpoints)                    │
+│  • PostgreSQL + Redis + WebSocket (13 Event Types)         │
+│  • HRM Control Panel (12 ML/RL Parameters)                 │
 │  • 5-Dimensions Configuration UI                           │
 │  📋 API Docs: http://localhost:8000/docs                    │
 └─────────────────────────────────────────────────────────────┘
@@ -188,7 +189,111 @@ curl -X POST "http://localhost:8000/api/speckit/features?project_id=my-project" 
 
 ---
 
-## 📋 Spec-Kit Integration (NEW!)
+## 🧠 HRM - Hierarchical Reasoning Module (NEW!)
+
+**Real-time Control über 12 ML/RL-Optimierungen** für maximale Effizienz.
+
+### Die 12 Neural Cortex Optimierungen
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  1. Latent Reasoning Compression  │  40-60% Token Savings   │
+│  2. ML Iteration Prediction       │  2-3 Iterations saved   │
+│  3. Smart Agent Switching         │  52% Cost Reduction     │
+│  4. Deep Supervision Checkpoints  │  Early Quality Detection│
+│  5. Parallel Quality Evaluation   │  4-16x Faster Analysis  │
+│  6. Three-Layer Caching           │  20-35% Speed Boost     │
+│  7. Bayesian Weight Optimization  │  Optimal Parameters     │
+│  8. RL Refinement Chain (PPO)     │  15-34% Quality Gain    │
+│  9. Prometheus Metrics Export     │  Real-time Monitoring   │
+│  10. Multi-Repository Coordination│  Cross-Repo Consistency │
+│  11. Feedback Loop Prevention     │  Infinite Loop Detection│
+│  12. Cost-Quality-Speed Balancing │  Adaptive Trade-offs    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### HRM Control Panel
+
+**Web-UI für Echtzeit-Kontrolle:**
+
+```bash
+# Zugriff über Dashboard
+http://localhost:1337/hrm
+
+# Features:
+- 12 Parameter mit Slidern/Toggles
+- Live Impact-Berechnung (Cost/Speed/Quality/Tokens)
+- 4 Built-in Presets (Speed/Cost/Quality/Balanced)
+- One-Click Apply
+- WebSocket Live-Updates
+```
+
+### API Beispiele
+
+```bash
+# 1. Preset anwenden
+POST /api/hrm/config/presets/speed_optimized/apply?project_id=abc123
+{
+  "apply_immediately": true
+}
+
+# Response:
+{
+  "status": "applied",
+  "impact_estimate": {
+    "cost_change": -0.25,      # -25% Kosten
+    "speed_change": 0.35,      # +35% Schneller
+    "quality_change": -0.08    # -8% Qualität
+  },
+  "active_tasks_affected": 3
+}
+
+# 2. Manuelle Konfiguration
+POST /api/hrm/config
+{
+  "project_id": "abc123",
+  "config": {
+    "latent_reasoning": {
+      "enabled": true,
+      "dimensionality": 768,   # 128-1024
+      "compression_ratio_target": 4.0
+    },
+    "agent_switching": {
+      "strategy": "cost_optimized"  # cost|quality|speed|adaptive
+    }
+  }
+}
+
+# 3. Impact simulieren (vor Anwendung)
+POST /api/hrm/simulate
+{
+  "current_config": { ... },
+  "proposed_config": { ... },
+  "task_context": {
+    "complexity": 12.5,
+    "estimated_duration": 450
+  }
+}
+```
+
+### WebSocket Events
+
+```javascript
+// HRM Live-Updates empfangen
+socket.on('hrm_config_update', (data) => {
+  console.log('Config updated:', data.config)
+  console.log('Impact:', data.impact)
+})
+
+socket.on('hrm_checkpoint_reached', (data) => {
+  console.log('Checkpoint:', data.checkpoint.checkpoint_percent)
+  console.log('Quality:', data.checkpoint.quality_score)
+})
+```
+
+---
+
+## 📋 Spec-Kit Integration
 
 **GitHub Spec-Driven Development** mit UltraThink ML-Optimierungen.
 
@@ -379,14 +484,17 @@ POST /api/speckit/phases/implement     # Execution starten
 **Frontend (React + TypeScript):**
 - ProjectManager (CRUD + Slot Management)
 - ConfigEditor (5-Dimensions UI)
+- HRMControlPanel (12 ML/RL Parameters)
+- HRMPresetGallery (One-Click Optimization)
 - SpecKitWorkflow (Visual Pipeline)
 - MetricsDashboard (Real-time Charts)
 - TaskManager (Drag & Drop)
 
 **Backend (FastAPI + Python):**
-- 45+ REST API Endpoints
+- 52+ REST API Endpoints
+- HRM Router (7 endpoints)
 - Spec-Kit Router (10 endpoints)
-- WebSocket Live Updates
+- WebSocket Live Updates (13 event types)
 - PostgreSQL + Redis
 - Prometheus Metrics
 
@@ -411,10 +519,15 @@ POST /api/speckit/phases/implement     # Execution starten
 - **[Spec-Kit Integration](docs/SPECKIT_INTEGRATION.md)** - Complete Workflow Guide
 - **[Implementation Complete](docs/IMPLEMENTATION_COMPLETE.md)** - Full Overview
 
+### HRM (Hierarchical Reasoning Module)
+- **[HRM Backend - Phase 1](docs/HRM_BACKEND_PHASE1_COMPLETE.md)** - 8 Models, 7 APIs, 4 Presets
+- **[HRM Frontend - Phase 2](docs/HRM_FRONTEND_PHASE2_COMPLETE.md)** - React UI, WebSocket, Charts
+- **[API Reference](docs/API-REFERENCE.md)** - 52+ Endpoints dokumentiert
+
 ### Architecture
 - **[System Architecture](docs/SYSTEM-ARCHITECTURE.md)** - 5-Layer System
 - **[ADR Index](docs/adr/README.md)** - 12 Decision Records
-- **[API Documentation](http://localhost:8000/docs)** - Swagger UI
+- **[API Documentation](http://localhost:1336/docs)** - Swagger UI
 
 ### Reference
 - **[Latent Reasoning](docs/adr/001-latent-reasoning-compression.md)** - Token Compression

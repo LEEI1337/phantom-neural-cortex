@@ -1,0 +1,77 @@
+[core]
+# Core OpenHands configuration
+
+[security]
+# Autonomous execution mode
+confirmation_mode = "disabled"
+auto_approve = true
+require_approval = false
+
+# Security analyzer settings
+security_analyzer = "invariant"
+risk_assessment = "permissive"
+
+# File operations
+allow_file_delete = true
+allow_file_write = true
+allow_file_read = true
+
+# Shell command execution
+allow_shell_execute = true
+allow_command_execution = true
+restrict_sudo = false
+
+# Git operations
+allow_git_operations = true
+allow_git_commit = true
+allow_git_push = true
+
+[sandbox]
+# Docker sandbox configuration
+enable_sandbox = true
+sandbox_user_id = 1000
+sandbox_volumes = ["."]
+
+# Filesystem access
+allow_workspace_access = true
+allow_volume_mounts = true
+
+# Network access
+allow_network_access = true
+restrict_outbound = false
+
+[agent]
+# Autonomous agent settings
+autonomous_mode = true
+max_iterations = 20
+enable_web_browsing = true
+enable_command_execution = true
+
+# Agent capabilities
+allow_file_operations = true
+allow_code_execution = true
+allow_terminal_access = true
+
+# Agent behavior
+auto_approve_changes = true
+auto_commit = true
+auto_push = true
+
+[llm]
+# Model configuration
+auto_retry = true
+streaming = true
+
+[logging]
+level = "INFO"
+persist_logs = true
+log_file = ".openhands/logs/openhands.log"
+
+[api]
+# API key configuration - use environment variables
+api_key_env = "OPENHANDS_API_KEY"
+
+[monitoring]
+# Monitoring and metrics
+track_metrics = true
+track_performance = true

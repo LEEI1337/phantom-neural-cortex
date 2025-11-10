@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from pydantic import BaseModel
+from datetime import datetime
 import uuid
 
 from database import get_db
@@ -71,8 +72,8 @@ class ProjectResponse(BaseModel):
     successful_tasks: int
     avg_quality: float
     total_cost: float
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True

@@ -5,7 +5,7 @@ Performance, cost, and quality metrics
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, cast, String
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
@@ -87,7 +87,7 @@ async def get_dashboard_stats(db: Session = Depends(get_db)):
     cost_by_agent = {}
     for agent in AgentType:
         agent_cost = db.query(func.sum(CostTracking.cost)).filter(
-            CostTracking.agent == agent
+            cast(CostTracking.agent, String) == agent.value
         ).scalar() or 0.0
         cost_by_agent[agent.value] = agent_cost
 
@@ -178,7 +178,7 @@ async def get_cost_metrics(
     cost_by_agent = {}
     for agent in AgentType:
         agent_cost = db.query(func.sum(CostTracking.cost)).filter(
-            CostTracking.agent == agent
+            cast(CostTracking.agent, String) == agent.value
         ).scalar() or 0.0
         cost_by_agent[agent.value] = agent_cost
 
@@ -202,7 +202,7 @@ async def get_agent_performance(
     performances = []
 
     for agent in AgentType:
-        query = db.query(Task).filter(Task.assigned_agent == agent)
+        query = db.query(Task).filter(cast(Task.assigned_agent, String) == agent.value)
 
         if project_id:
             query = query.filter(Task.project_id == project_id)
@@ -211,16 +211,16 @@ async def get_agent_performance(
         successful = query.filter(Task.status == TaskStatus.COMPLETED).count()
 
         avg_quality = db.query(func.avg(Task.final_quality)).filter(
-            Task.assigned_agent == agent,
+            cast(Task.assigned_agent, String) == agent.value,
             Task.final_quality.isnot(None)
         ).scalar() or 0.0
 
         avg_cost = db.query(func.avg(CostTracking.cost)).filter(
-            CostTracking.agent == agent
+            cast(CostTracking.agent, String) == agent.value
         ).scalar() or 0.0
 
         avg_time = db.query(func.avg(Task.duration_seconds)).filter(
-            Task.assigned_agent == agent,
+            cast(Task.assigned_agent, String) == agent.value,
             Task.duration_seconds.isnot(None)
         ).scalar() or 0.0
 

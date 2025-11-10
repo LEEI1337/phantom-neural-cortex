@@ -1,0 +1,490 @@
+/* ============================================================================
+   REACT FLOW GRAPH CUSTOMIZATIONS
+   ============================================================================ */
+
+/* React Flow Container */
+.react-flow {
+  background: linear-gradient(135deg, #0f172a 0%, #1a1f2e 100%);
+  border: 1px solid #334155;
+}
+
+.react-flow__viewport {
+  background: transparent;
+}
+
+.react-flow__panel {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   NODE CUSTOMIZATION
+   ============================================================================ */
+
+/* Default Node Styling */
+.react-flow__node {
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 200ms ease;
+}
+
+.react-flow__node:hover {
+  border-color: #06b6d4;
+  box-shadow:
+    0 4px 12px rgba(6, 182, 212, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.react-flow__node.selected {
+  border: 2px solid #06b6d4;
+  box-shadow:
+    0 0 20px rgba(6, 182, 212, 0.25),
+    inset 0 0 10px rgba(6, 182, 212, 0.1);
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.react-flow__node.selected::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  border-radius: 10px;
+  animation: subtle-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Node Input/Output Styling */
+.react-flow__handle {
+  background: #06b6d4;
+  border: 2px solid #1e293b;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: all 200ms ease;
+}
+
+.react-flow__handle:hover {
+  width: 12px;
+  height: 12px;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.react-flow__handle.connectingFrom {
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 86, 0.5);
+}
+
+.react-flow__handle.connectingTo {
+  background: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* Handle Top/Bottom/Left/Right */
+.react-flow__handle.top {
+  top: -4px;
+}
+
+.react-flow__handle.bottom {
+  bottom: -4px;
+}
+
+.react-flow__handle.left {
+  left: -4px;
+}
+
+.react-flow__handle.right {
+  right: -4px;
+}
+
+/* ============================================================================
+   EDGE CUSTOMIZATION
+   ============================================================================ */
+
+/* SVG Edge Styling */
+.react-flow__edges svg {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Default Edge Path */
+.react-flow__edge-path {
+  stroke: #334155;
+  stroke-width: 2;
+  transition: stroke 200ms ease, stroke-width 200ms ease;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #06b6d4;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.4));
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #06b6d4;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
+}
+
+/* Edge Label Styling */
+.react-flow__edge-label {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #cbd5e1;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 200ms ease;
+}
+
+.react-flow__edge:hover .react-flow__edge-label,
+.react-flow__edge.selected .react-flow__edge-label {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: #06b6d4;
+  color: #06b6d4;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+}
+
+/* Animated Edge Styling */
+.animated-edge .react-flow__edge-path {
+  stroke: url(#edge-gradient);
+  stroke-dasharray: 5, 5;
+  animation: edge-flow 0.5s linear infinite;
+}
+
+@keyframes edge-flow {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* SVG Gradient Definition for animated edges */
+svg defs {
+  display: none;
+}
+
+/* ============================================================================
+   EDGE TYPE VARIATIONS
+   ============================================================================ */
+
+/* Success Edge (Green) */
+.edge-success .react-flow__edge-path {
+  stroke: #22c55e;
+}
+
+.edge-success:hover .react-flow__edge-path,
+.edge-success.selected .react-flow__edge-path {
+  stroke: #22c55e;
+  filter: drop-shadow(0 0 5px rgba(34, 197, 86, 0.5));
+}
+
+/* Warning Edge (Orange) */
+.edge-warning .react-flow__edge-path {
+  stroke: #f59e0b;
+}
+
+.edge-warning:hover .react-flow__edge-path,
+.edge-warning.selected .react-flow__edge-path {
+  stroke: #f59e0b;
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4));
+}
+
+/* Error Edge (Red) */
+.edge-error .react-flow__edge-path {
+  stroke: #ef4444;
+}
+
+.edge-error:hover .react-flow__edge-path,
+.edge-error.selected .react-flow__edge-path {
+  stroke: #ef4444;
+  filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5));
+}
+
+/* Dashed Edge */
+.edge-dashed .react-flow__edge-path {
+  stroke-dasharray: 5, 5;
+}
+
+/* Dotted Edge */
+.edge-dotted .react-flow__edge-path {
+  stroke-dasharray: 2, 2;
+}
+
+/* ============================================================================
+   CONTROLS & UI ELEMENTS
+   ============================================================================ */
+
+/* React Flow Controls Styling */
+.react-flow__controls {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.react-flow__controls button {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  width: 36px;
+  height: 36px;
+  transition: all 200ms ease;
+}
+
+.react-flow__controls button:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: #06b6d4;
+  color: #06b6d4;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+}
+
+.react-flow__controls button:active {
+  transform: scale(0.95);
+}
+
+.react-flow__controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* React Flow Minimap */
+.react-flow__minimap {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__minimap-canvas {
+  background: #0f172a;
+}
+
+.react-flow__minimap-node {
+  fill: #334155;
+  stroke: none;
+}
+
+.react-flow__minimap-node.selected {
+  fill: #06b6d4;
+}
+
+.react-flow__minimap-mask {
+  fill: rgba(6, 182, 212, 0.1);
+  stroke: #06b6d4;
+}
+
+/* ============================================================================
+   BACKGROUND
+   ============================================================================ */
+
+.react-flow__background {
+  background-color: #0f172a;
+}
+
+.react-flow__background-pattern {
+  fill: rgba(52, 65, 85, 0.15);
+}
+
+.react-flow__background-dot {
+  fill: rgba(52, 65, 85, 0.2);
+}
+
+/* ============================================================================
+   SELECTION & INTERACTION
+   ============================================================================ */
+
+.react-flow__selection {
+  border: 2px dashed #06b6d4;
+  background: rgba(6, 182, 212, 0.05);
+  border-radius: 4px;
+}
+
+.react-flow__selectionpane {
+  background: transparent;
+}
+
+/* Panning and Zooming */
+.react-flow__pane {
+  cursor: grab;
+}
+
+.react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
+/* ============================================================================
+   CUSTOM NODE TYPES
+   ============================================================================ */
+
+/* Input Node */
+.react-flow__node-input {
+  background: linear-gradient(135deg, #1e293b 0%, rgba(6, 182, 212, 0.05) 100%);
+  border: 2px solid #334155;
+}
+
+.react-flow__node-input:hover {
+  border-color: #06b6d4;
+  box-shadow:
+    0 4px 12px rgba(6, 182, 212, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Output Node */
+.react-flow__node-output {
+  background: linear-gradient(135deg, #1e293b 0%, rgba(34, 197, 86, 0.05) 100%);
+  border: 2px solid #334155;
+}
+
+.react-flow__node-output:hover {
+  border-color: #22c55e;
+  box-shadow:
+    0 4px 12px rgba(34, 197, 86, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Default Node */
+.react-flow__node-default {
+  background: linear-gradient(135deg, #1e293b 0%, rgba(30, 41, 59, 0.8) 100%);
+  border: 1px solid #334155;
+}
+
+.react-flow__node-default:hover {
+  border-color: #06b6d4;
+  box-shadow:
+    0 4px 12px rgba(6, 182, 212, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   CUSTOM EDGE TYPES
+   ============================================================================ */
+
+/* Straight Edge */
+.react-flow__edge-straight {
+  stroke-width: 2;
+}
+
+/* Bezier Edge */
+.react-flow__edge-bezier {
+  stroke-width: 2;
+}
+
+/* Step Edge */
+.react-flow__edge-step {
+  stroke-width: 2;
+}
+
+/* Smooth Step Edge */
+.react-flow__edge-smoothstep {
+  stroke-width: 2;
+}
+
+/* ============================================================================
+   NOTIFICATION & STATUS
+   ============================================================================ */
+
+/* Graph Notification */
+.graph-notification {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  max-width: 300px;
+  text-align: center;
+  animation: slideInTop 250ms ease;
+}
+
+.graph-notification.success {
+  border-color: #22c55e;
+  background: rgba(34, 197, 86, 0.05);
+  color: #22c55e;
+}
+
+.graph-notification.warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+  color: #f59e0b;
+}
+
+.graph-notification.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+  color: #ef4444;
+}
+
+/* ============================================================================
+   ZOOM & PAN INDICATORS
+   ============================================================================ */
+
+.zoom-level-indicator {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* ============================================================================
+   NODE TOOLTIP
+   ============================================================================ */
+
+.node-tooltip {
+  position: absolute;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   DRAGGING STATE
+   ============================================================================ */
+
+.react-flow__node.dragging {
+  box-shadow:
+    0 8px 24px rgba(6, 182, 212, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.react-flow__node.dragging::after {
+  opacity: 0.2;
+}
+
+/* ============================================================================
+   RESPONSIVENESS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .react-flow__controls {
+    scale: 0.8;
+  }
+
+  .react-flow__minimap {
+    max-width: 150px;
+  }
+}

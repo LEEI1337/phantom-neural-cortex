@@ -10,7 +10,7 @@ from typing import Optional
 import socketio
 
 from database import init_db
-from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates
+from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration
 from routers.websocket import sio
 
 # Lifespan context manager for startup/shutdown events
@@ -18,8 +18,8 @@ from routers.websocket import sio
 async def lifespan(app: FastAPI):
     # Startup
     print("Starting PHANTOM NEURAL CORTEX UI Backend...")
-    print("👻 Phantom Mode Engaged")
-    print("🧠 Neural Cortex Active")
+    print("Phantom Mode Engaged")
+    print("Neural Cortex Active")
     init_db()
     yield
     # Shutdown
@@ -131,6 +131,14 @@ Currently uses API keys (to be implemented). Future: OAuth2 with JWT tokens.
             "name": "templates",
             "description": "Project templates and guidelines. Predefined templates with best practices for common project types.",
         },
+        {
+            "name": "hrm",
+            "description": "Hierarchical Reasoning Module (HRM) configuration. Real-time control of 12 ML/RL optimizations with impact simulation.",
+        },
+        {
+            "name": "Agent Configuration",
+            "description": "Agent connection and configuration management. Manage agent endpoints, API keys, skills, MCP servers, and config files.",
+        },
     ],
 )
 
@@ -156,6 +164,9 @@ app.include_router(speckit.router, prefix="/api/speckit", tags=["speckit"])
 app.include_router(api_keys.router, prefix="/api/api-keys", tags=["api-keys"])
 app.include_router(swarm.router, prefix="/api/swarm", tags=["swarm"])
 app.include_router(templates.router, prefix="/api/templates", tags=["templates"])
+app.include_router(hrm.router, prefix="/api/hrm", tags=["hrm"])
+app.include_router(agents.router, prefix="/api/agents", tags=["Agent Configuration"])
+app.include_router(orchestration.router)
 
 # System startup time for uptime calculation
 import time
@@ -277,7 +288,7 @@ async def clear_cache(layer: Optional[str] = None):
 @app.get("/")
 async def root():
     return {
-        "message": "👻🧠 Phantom Neural Cortex API v2.0",
+        "message": "Phantom Neural Cortex API v2.0",
         "tagline": "The Mind Behind The Machine",
         "docs": "/docs",
         "health": "/api/health"

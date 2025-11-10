@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "permissions": {
+    "autonomousMode": true,
+    "requireApproval": false
+  },
+  "cascade": {
+    "turboMode": true,
+    "autonomousCommandExecution": true,
+    "allowFileModification": true,
+    "allowList": [
+      "*"
+    ],
+    "denyList": [],
+    "autoApproveCommands": [
+      "npm",
+      "npm install",
+      "npm test",
+      "npm run",
+      "python",
+      "pip",
+      "git",
+      "git add",
+      "git commit",
+      "git push",
+      "bash",
+      "sh",
+      "node",
+      "jest",
+      "pytest"
+    ]
+  },
+  "rules": {
+    "rulesDirectory": ".windsurf/rules",
+    "autoLoadRules": true,
+    "allowGitignoreAccess": true
+  },
+  "workspace": {
+    "contextWindow": "full",
+    "allowWorkspaceAccess": true
+  },
+  "logging": {
+    "usageLogging": false,
+    "disableSensitiveCodeLogging": true
+  },
+  "security": {
+    "sandboxMode": false,
+    "restrictedOperations": []
+  },
+  "performance": {
+    "streamingMode": true,
+    "parallelExecution": true
+  },
+  "agent": {
+    "agentMode": true,
+    "allowPRCreation": true,
+    "allowAutoCommit": true,
+    "allowCodeExecution": true,
+    "allowWebBrowsing": true
+  }
+}

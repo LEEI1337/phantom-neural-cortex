@@ -187,3 +187,11 @@ docs/FINAL-SETUP-SUMMARY.md
 docs/ULTIMATE-SETUP-COMPLETE.md
 docs/INDEX.md.old
 docs/archive/
+
+# ============ ARCHIVES ============
+# Archived old/outdated files
+archive/
+
+# CLI Orchestration Test Files
+dashboard/backend/test_cli_chain.py
+test_chain.txt

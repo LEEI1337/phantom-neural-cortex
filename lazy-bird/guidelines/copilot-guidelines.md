@@ -1,4 +1,10 @@
-# 🤖 Copilot-Spezifische Guidelines
+#  Copilot-Spezifische Guidelines
+
+> ** DEPRECATED:** This file is deprecated. Please use the hierarchical layer system instead:
+> - [LAYER-2-COPILOT.md](layers/LAYER-2-COPILOT.md) - Copilot-specific guidelines
+>
+> **Migration Date:** 2025-11-09
+> **Will be removed in:** Version 3.0.0
 
 **Agent:** GitHub Copilot
 **Use Case:** GitHub Workflows, Quick Fixes, PR Operations
@@ -7,7 +13,7 @@
 
 ---
 
-## 🎯 Wann Copilot verwendet wird
+##  Wann Copilot verwendet wird
 
 Copilot ist spezialisiert auf GitHub-bezogene Tasks:
 - `github-workflow` - GitHub Actions & Workflows
@@ -20,14 +26,14 @@ Copilot ist spezialisiert auf GitHub-bezogene Tasks:
 
 ---
 
-## 📋 Copilot-Spezifische Anforderungen
+##  Copilot-Spezifische Anforderungen
 
 ### 1. GitHub Actions First
 
 Copilot's Kernkompetenz: PERFEKTE GitHub Actions!
 
 ```yaml
-# ✅ RICHTIG: Complete, Production-Ready Workflow
+#  RICHTIG: Complete, Production-Ready Workflow
 name: CI/CD Pipeline
 
 on:
@@ -143,7 +149,7 @@ jobs:
 ### 2. Matrix Testing
 
 ```yaml
-# ✅ RICHTIG: Test multiple versions
+#  RICHTIG: Test multiple versions
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -224,48 +230,48 @@ jobs:
 
 ---
 
-## 📁 Copilot Projekt-Struktur Erweiterungen
+##  Copilot Projekt-Struktur Erweiterungen
 
 ```
 projekt/
-├── .github/
-│   ├── workflows/
-│   │   ├── ci.yml              # Main CI Pipeline
-│   │   ├── cd.yml              # Deployment Pipeline
-│   │   ├── tests.yml           # Test Matrix
-│   │   ├── lint.yml            # Linting
-│   │   ├── security.yml        # Security Scans
-│   │   ├── dependabot.yml      # Dependency Updates
-│   │   └── release.yml         # Release Automation
-│   │
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.yml
-│   │   ├── feature_request.yml
-│   │   └── config.yml
-│   │
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   ├── CODEOWNERS              # Auto-assign reviewers
-│   └── dependabot.yml          # Dependabot config
-│
-├── scripts/
-│   ├── ci/
-│   │   ├── setup.sh            # CI setup script
-│   │   ├── test.sh             # Test runner
-│   │   └── deploy.sh           # Deployment script
-│   └── github/
-│       └── release.sh          # Release helper
-│
-└── .gitattributes              # Git attributes
+ .github/
+    workflows/
+       ci.yml              # Main CI Pipeline
+       cd.yml              # Deployment Pipeline
+       tests.yml           # Test Matrix
+       lint.yml            # Linting
+       security.yml        # Security Scans
+       dependabot.yml      # Dependency Updates
+       release.yml         # Release Automation
+   
+    ISSUE_TEMPLATE/
+       bug_report.yml
+       feature_request.yml
+       config.yml
+   
+    PULL_REQUEST_TEMPLATE.md
+    CODEOWNERS              # Auto-assign reviewers
+    dependabot.yml          # Dependabot config
+
+ scripts/
+    ci/
+       setup.sh            # CI setup script
+       test.sh             # Test runner
+       deploy.sh           # Deployment script
+    github/
+        release.sh          # Release helper
+
+ .gitattributes              # Git attributes
 ```
 
 ---
 
-## 🔧 Quick Fix Best Practices
+##  Quick Fix Best Practices
 
 Copilot ist perfekt für schnelle Fixes:
 
 ```python
-# ✅ RICHTIG: Quick, targeted fix
+#  RICHTIG: Quick, targeted fix
 def calculate_total(items: List[Item]) -> float:
     """Calculate total price of items."""
     # BUG FIX: Handle empty list
@@ -287,12 +293,12 @@ def calculate_total(items: List[Item]) -> float:
 
 ---
 
-## 🚀 CI/CD Patterns
+##  CI/CD Patterns
 
 ### Continuous Integration
 
 ```yaml
-# ✅ RICHTIG: Fast CI Pipeline
+#  RICHTIG: Fast CI Pipeline
 name: Continuous Integration
 
 on:
@@ -328,7 +334,7 @@ jobs:
 ### Continuous Deployment
 
 ```yaml
-# ✅ RICHTIG: Safe Deployment
+#  RICHTIG: Safe Deployment
 name: Deploy to Production
 
 on:
@@ -362,7 +368,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          text: 'Deployment to production successful! 🎉'
+          text: 'Deployment to production successful! '
 
       - name: Rollback on failure
         if: failure()
@@ -372,10 +378,10 @@ jobs:
 
 ---
 
-## 🔐 GitHub Secrets Management
+##  GitHub Secrets Management
 
 ```yaml
-# ✅ RICHTIG: Secure secrets usage
+#  RICHTIG: Secure secrets usage
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -394,16 +400,16 @@ jobs:
 ```
 
 **Secret Best Practices:**
-- ✅ Use GitHub Secrets (never hardcode)
-- ✅ Use Environment protection rules
-- ✅ Rotate secrets regularly
-- ✅ Minimal secret scope
-- ❌ Never echo secrets
-- ❌ Never commit secrets
+-  Use GitHub Secrets (never hardcode)
+-  Use Environment protection rules
+-  Rotate secrets regularly
+-  Minimal secret scope
+-  Never echo secrets
+-  Never commit secrets
 
 ---
 
-## 📦 Dependency Management
+##  Dependency Management
 
 ### Dependabot Configuration
 
@@ -436,7 +442,7 @@ updates:
 
 ---
 
-## 🎯 PR Automation
+##  PR Automation
 
 ### Auto-merge for Dependabot
 
@@ -498,7 +504,7 @@ jobs:
 
 ---
 
-## 🎯 Copilot Checkliste
+##  Copilot Checkliste
 
 - [ ] GitHub Actions workflows komplett & funktionsfähig
 - [ ] Matrix testing für multiple Versionen
@@ -513,7 +519,7 @@ jobs:
 
 ---
 
-## 💰 Cost Efficiency
+##  Cost Efficiency
 
 **Free Tier (2000 completions/mo):**
 - Perfekt für Quick Fixes
@@ -526,7 +532,7 @@ jobs:
 
 ---
 
-## 📚 Resource Links
+##  Resource Links
 
 - [GitHub Actions Docs](https://docs.github.com/en/actions)
 - [Workflow Syntax](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)
@@ -534,4 +540,4 @@ jobs:
 
 ---
 
-**Copilot = GitHub Mastery!** 🐙
+**Copilot = GitHub Mastery!** 

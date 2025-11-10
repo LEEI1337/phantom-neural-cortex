@@ -1,0 +1,62 @@
+{
+  "permissions": {
+    "mode": "autonomous",
+    "allowAutoApproval": true,
+    "alwaysApprovedTools": [
+      "edit",
+      "write",
+      "delete",
+      "run_command",
+      "git",
+      "npm",
+      "python",
+      "bash",
+      "shell"
+    ],
+    "commandAllowlist": [
+      "npm",
+      "npm install",
+      "npm test",
+      "npm run",
+      "python",
+      "pip",
+      "git",
+      "git add",
+      "git commit",
+      "git push",
+      "git pull",
+      "bash",
+      "sh",
+      "node",
+      "jest",
+      "pytest",
+      "eslint",
+      "prettier"
+    ],
+    "commandDenylist": []
+  },
+  "sandbox": {
+    "profile": "permissive-open",
+    "restrictWrites": false,
+    "allowedOperations": [
+      "read",
+      "write",
+      "delete",
+      "execute"
+    ]
+  },
+  "privacy": {
+    "onDeviceOnly": false,
+    "disableContextStorage": false
+  },
+  "behavior": {
+    "yoloMode": true,
+    "autoConfirm": true,
+    "respectGitignore": true,
+    "respectEditorconfig": true
+  },
+  "logging": {
+    "level": "info",
+    "persistLogs": true
+  }
+}

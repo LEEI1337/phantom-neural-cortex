@@ -1,0 +1,171 @@
+# ========================================
+# Phantom Neural Cortex - Lazy Bird Requirements
+# Python 3.11+ Required
+# ========================================
+
+# ============ CORE AI FRAMEWORKS ============
+# Claude AI SDK
+anthropic>=0.34.0
+
+# Google Gemini AI
+google-generativeai>=0.8.0
+
+# GitHub Copilot Integration (if using CLI)
+# Note: GitHub Copilot primarily works through IDE extensions
+
+# ============ ML/RL OPTIMIZATION LIBRARIES ============
+# Machine Learning - Core
+scikit-learn>=1.5.0
+numpy>=1.26.0
+scipy>=1.11.0
+
+# Bayesian Optimization (ADR-008)
+scikit-optimize>=0.10.0
+
+# Reinforcement Learning (ADR-011)
+# Note: Using custom PPO implementation, no heavy RL libs needed
+gymnasium>=0.29.0  # For RL environments if needed
+
+# ============ NEURAL NETWORK FEATURES ============
+# Latent Reasoning Compression (ADR-001)
+# Using scikit-learn for dimensionality reduction
+
+# Embeddings and Vector Operations
+sentence-transformers>=2.7.0  # For hierarchical embeddings (ADR-003)
+
+# ============ NETWORKING & GRAPH OPERATIONS ============
+# Multi-Repository Coordination (ADR-009)
+networkx>=3.2.0
+
+# ============ DATA PROCESSING ============
+pandas>=2.2.0  # Data analysis
+pydantic>=2.7.0  # Data validation
+pydantic-settings>=2.3.0  # Settings management
+
+# ============ WEB & API ============
+# FastAPI for Dashboard Backend
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+
+# HTTP Requests
+httpx>=0.27.0
+requests>=2.32.0
+
+# WebSocket Support
+python-socketio>=5.11.0
+websockets>=12.0
+
+# ============ DATABASE ============
+# PostgreSQL
+sqlalchemy>=2.0.30
+psycopg2-binary>=2.9.9
+alembic>=1.13.0  # Database migrations
+
+# Redis
+redis>=5.0.0
+hiredis>=2.3.0  # C parser for Redis
+
+# SQLite (built-in to Python, but ORM support)
+# Covered by SQLAlchemy
+
+# ============ GITHUB INTEGRATION ============
+PyGithub>=2.3.0  # GitHub API wrapper
+gitpython>=3.1.43  # Git operations
+
+# ============ MONITORING & METRICS ============
+# Prometheus Integration (ADR-010)
+prometheus-client>=0.20.0
+
+# Logging and Monitoring
+loguru>=0.7.0  # Enhanced logging
+rich>=13.7.0  # Rich terminal output
+
+# ============ TESTING ============
+pytest>=8.2.0
+pytest-cov>=5.0.0  # Coverage reporting
+pytest-asyncio>=0.23.0  # Async test support
+pytest-mock>=3.14.0  # Mocking
+
+# ============ CODE QUALITY ============
+# Security Scanning
+bandit>=1.7.8  # Security linter
+safety>=3.2.0  # Dependency vulnerability scanner
+
+# Type Checking
+mypy>=1.10.0
+types-requests>=2.32.0
+
+# Code Formatting
+black>=24.4.0
+ruff>=0.4.0  # Fast Python linter
+
+# ============ UTILITIES ============
+# Configuration & Environment
+python-dotenv>=1.0.0  # .env file support
+pyyaml>=6.0.0  # YAML parsing
+toml>=0.10.2  # TOML parsing
+
+# CLI Tools
+click>=8.1.7  # CLI framework
+typer>=0.12.0  # Modern CLI builder
+
+# Date/Time
+python-dateutil>=2.9.0
+
+# File Operations
+pathlib2>=2.3.7  # Enhanced path operations (Python 3.11 has pathlib built-in)
+
+# Process Management
+psutil>=5.9.8  # System and process utilities
+
+# Async Support
+asyncio>=3.4.3
+aiofiles>=23.2.0  # Async file operations
+
+# ============ CACHING (ADR-007) ============
+# Three-Layer Caching System
+cachetools>=5.3.0  # Memory cache
+diskcache>=5.6.0  # Disk cache
+aiocache>=0.12.0  # Async cache
+
+# ============ OPTIONAL: PERFORMANCE ============
+# Performance Profiling
+py-spy>=0.3.14  # Sampling profiler
+memory-profiler>=0.61.0  # Memory profiling
+
+# ============ OPTIONAL: JUPYTER/NOTEBOOKS ============
+# For ML experimentation and demos
+jupyter>=1.0.0
+ipykernel>=6.29.0
+matplotlib>=3.9.0  # Plotting
+seaborn>=0.13.0  # Statistical visualization
+
+# ============ DEPLOYMENT ============
+# Docker SDK (for Docker operations from Python)
+docker>=7.1.0
+
+# Kubernetes Client (for K8s deployments)
+kubernetes>=30.1.0
+
+# ============ DEVELOPMENT ONLY ============
+# Development server with auto-reload
+watchdog>=4.0.0  # File system events
+
+# ============ NOTES ============
+# This requirements.txt covers all dependencies for:
+# - Lazy Bird Core System
+# - 12 ML/RL Optimizations
+# - Spec-Kit Integration
+# - Dashboard Backend
+# - Multi-Agent Orchestration
+# - Monitoring & Metrics
+# - Testing & QA
+#
+# Install with:
+#   pip install -r requirements.txt
+#
+# For production (minimal):
+#   pip install -r requirements.txt --no-dev
+#
+# For development (includes Jupyter, profiling):
+#   pip install -r requirements.txt

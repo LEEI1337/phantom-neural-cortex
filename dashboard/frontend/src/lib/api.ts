@@ -287,6 +287,307 @@ class ApiClient {
   > {
     return this.request(`/templates/${id}`)
   }
+
+  // ==================== HRM CONFIGURATION ====================
+
+  async getHRMConfig(params: {
+    project_id?: string
+    task_id?: string
+  }): Promise<ApiResponse<any>> {
+    const searchParams = new URLSearchParams()
+    if (params.project_id) searchParams.set('project_id', params.project_id)
+    if (params.task_id) searchParams.set('task_id', params.task_id)
+
+    const query = searchParams.toString()
+    return this.request(`/hrm/config${query ? `?${query}` : ''}`)
+  }
+
+  async updateHRMConfig(data: {
+    project_id?: string
+    task_id?: string
+    config: any
+    apply_immediately?: boolean
+    persist?: boolean
+  }): Promise<ApiResponse<{
+    status: string
+    config_id: string
+    applied_at: string
+    impact_estimate: {
+      cost_change: number
+      speed_change: number
+      quality_change: number
+      token_reduction: number
+    }
+    active_tasks_affected: number
+    future_tasks_affected: boolean
+  }>> {
+    return this.request('/hrm/config', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async simulateHRMImpact(data: {
+    current_config: any
+    proposed_config: any
+    task_context: {
+      complexity?: number
+      estimated_duration?: number
+      current_quality?: number
+    }
+  }): Promise<ApiResponse<{
+    impact_analysis: {
+      cost: { current: number; predicted: number; change_percent: number; confidence: number }
+      speed: { current: number; predicted: number; change_percent: number; confidence: number }
+      quality: { current: number; predicted: number; change_percent: number; confidence: number }
+      tokens: { current: number; predicted: number; change_percent: number; confidence: number }
+    }
+    warnings: string[]
+    recommendations: string[]
+  }>> {
+    return this.request('/hrm/simulate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async getHRMPresets(params?: {
+    include_builtin?: boolean
+    visibility?: string
+  }): Promise<ApiResponse<{
+    presets: Array<{
+      id: string
+      name: string
+      description: string
+      icon: string
+      color: string
+      builtin: boolean
+      config: any
+      usage_stats: {
+        usage_count: number
+        avg_quality: number | null
+        avg_cost: number | null
+        avg_duration: number | null
+      }
+    }>
+  }>> {
+    const searchParams = new URLSearchParams()
+    if (params?.include_builtin !== undefined)
+      searchParams.set('include_builtin', params.include_builtin.toString())
+    if (params?.visibility)
+      searchParams.set('visibility', params.visibility)
+
+    const query = searchParams.toString()
+    return this.request(`/hrm/config/presets${query ? `?${query}` : ''}`)
+  }
+
+  async createHRMPreset(data: {
+    name: string
+    description: string
+    icon: string
+    color: string
+    config: any
+    visibility: string
+  }): Promise<ApiResponse<any>> {
+    return this.request('/hrm/config/presets', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async applyHRMPreset(
+    preset_id: string,
+    params: {
+      project_id: string
+      apply_immediately?: boolean
+    }
+  ): Promise<ApiResponse<{
+    status: string
+    config_id: string
+    applied_at: string
+    impact_estimate: {
+      cost_change: number
+      speed_change: number
+      quality_change: number
+      token_reduction: number
+    }
+    active_tasks_affected: number
+    future_tasks_affected: boolean
+  }>> {
+    const searchParams = new URLSearchParams()
+    searchParams.set('project_id', params.project_id)
+    if (params.apply_immediately !== undefined)
+      searchParams.set('apply_immediately', params.apply_immediately.toString())
+
+    const query = searchParams.toString()
+    return this.request(`/hrm/config/presets/${preset_id}/apply?${query}`, {
+      method: 'POST',
+    })
+  }
+
+  async getHRMConfigHistory(config_id: string): Promise<ApiResponse<{
+    history: Array<{
+      id: string
+      config_id: string
+      changed_by: string
+      changed_at: string
+      change_type: string
+      old_config: any
+      new_config: any
+      task_id: string | null
+      impact_metrics: {
+        cost_change: number
+        speed_change: number
+        quality_change: number
+        token_reduction: number
+      }
+    }>
+  }>> {
+    return this.request(`/hrm/config/history/${config_id}`)
+  }
+
+  // ==================== AGENT CONFIGURATION ====================
+
+  async getAgentConnections(): Promise<ApiResponse<{
+    connections: Array<{
+      agent_id: string
+      agent_name: string
+      connection_type: 'api' | 'local' | 'remote'
+      endpoint?: string
+      port?: number
+      api_key_id?: string
+      enabled: boolean
+    }>
+  }>> {
+    return this.request('/agents/connections')
+  }
+
+  async getAgentConnection(agent_id: string): Promise<ApiResponse<{
+    agent_id: string
+    agent_name: string
+    connection_type: 'api' | 'local' | 'remote'
+    endpoint?: string
+    port?: number
+    api_key_id?: string
+    enabled: boolean
+  }>> {
+    return this.request(`/agents/connections/${agent_id}`)
+  }
+
+  async createAgentConnection(data: {
+    agent_id: string
+    agent_name: string
+    connection_type: 'api' | 'local' | 'remote'
+    endpoint?: string
+    port?: number
+    api_key_id?: string
+    enabled?: boolean
+  }): Promise<ApiResponse<{
+    agent_id: string
+    agent_name: string
+    connection_type: 'api' | 'local' | 'remote'
+    endpoint?: string
+    port?: number
+    api_key_id?: string
+    enabled: boolean
+  }>> {
+    return this.request('/agents/connections', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateAgentConnection(
+    agent_id: string,
+    data: {
+      agent_name?: string
+      endpoint?: string
+      port?: number
+      api_key_id?: string
+      enabled?: boolean
+    }
+  ): Promise<ApiResponse<{
+    agent_id: string
+    agent_name: string
+    connection_type: 'api' | 'local' | 'remote'
+    endpoint?: string
+    port?: number
+    api_key_id?: string
+    enabled: boolean
+  }>> {
+    return this.request(`/agents/connections/${agent_id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteAgentConnection(agent_id: string): Promise<ApiResponse<{
+    message: string
+  }>> {
+    return this.request(`/agents/connections/${agent_id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async getAgentConfigFiles(file_type?: string): Promise<ApiResponse<{
+    files: Array<{
+      file_path: string
+      file_type: 'skill' | 'mcp' | 'instruction' | 'config'
+      content: string
+      last_modified: string
+    }>
+  }>> {
+    const query = file_type ? `?file_type=${file_type}` : ''
+    return this.request(`/agents/files${query}`)
+  }
+
+  async getAgentConfigFile(file_path: string): Promise<ApiResponse<{
+    file_path: string
+    file_type: 'skill' | 'mcp' | 'instruction' | 'config'
+    content: string
+    last_modified: string
+  }>> {
+    return this.request(`/agents/files/${encodeURIComponent(file_path)}`)
+  }
+
+  async updateAgentConfigFile(
+    file_path: string,
+    content: string
+  ): Promise<ApiResponse<{
+    file_path: string
+    file_type: 'skill' | 'mcp' | 'instruction' | 'config'
+    content: string
+    last_modified: string
+  }>> {
+    return this.request(`/agents/files/${encodeURIComponent(file_path)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content }),
+    })
+  }
+
+  async createAgentConfigFile(data: {
+    file_path: string
+    file_type: 'skill' | 'mcp' | 'instruction' | 'config'
+    content: string
+  }): Promise<ApiResponse<{
+    file_path: string
+    file_type: 'skill' | 'mcp' | 'instruction' | 'config'
+    content: string
+    last_modified: string
+  }>> {
+    return this.request('/agents/files', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteAgentConfigFile(file_path: string): Promise<ApiResponse<{
+    message: string
+  }>> {
+    return this.request(`/agents/files/${encodeURIComponent(file_path)}`, {
+      method: 'DELETE',
+    })
+  }
 }
 
 // Export singleton instance

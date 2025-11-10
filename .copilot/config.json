@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "permissions": {
+    "mode": "autonomous",
+    "allowAllTools": true,
+    "allowedTools": [
+      "write",
+      "read",
+      "delete",
+      "execute",
+      "shell",
+      "git"
+    ],
+    "deniedTools": [],
+    "autoApprove": true
+  },
+  "trusted_folders": [
+    "."
+  ],
+  "shell_commands": {
+    "autoApprove": true,
+    "allowedCommands": [
+      "*"
+    ],
+    "deniedCommands": []
+  },
+  "git": {
+    "autoApprove": true,
+    "allowedOperations": [
+      "add",
+      "commit",
+      "push",
+      "pull",
+      "branch",
+      "checkout"
+    ]
+  },
+  "file_operations": {
+    "autoApprove": true,
+    "allowedPatterns": [
+      "**/*"
+    ],
+    "excludedPatterns": []
+  },
+  "security": {
+    "requireConfirmation": false,
+    "confirmHighRiskActions": false
+  },
+  "agent": {
+    "autonomousMode": true,
+    "allowPullRequests": true,
+    "allowAutoCommit": true,
+    "allowAutoMerge": false
+  }
+}
