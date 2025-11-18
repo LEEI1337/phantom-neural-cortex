@@ -34,17 +34,26 @@ logger.info(f"Database configured: {ASYNC_DATABASE_URL.split('@')[-1] if '@' in 
 # ============================================================================
 
 # Async Engine with optimized connection pool
-async_engine = create_async_engine(
-    ASYNC_DATABASE_URL,
-    echo=False,  # Set to True for SQL query logging
-    pool_size=20,  # Max connections in pool (increased for async workloads)
-    max_overflow=10,  # Additional connections beyond pool_size
-    pool_pre_ping=True,  # Verify connections before using
-    pool_recycle=3600,  # Recycle connections after 1 hour
-    connect_args={
-        "server_settings": {"application_name": "lazy-bird-dashboard"}
-    } if "postgresql" in ASYNC_DATABASE_URL else {}
-)
+# Different configurations for PostgreSQL vs SQLite
+if "postgresql" in ASYNC_DATABASE_URL:
+    async_engine = create_async_engine(
+        ASYNC_DATABASE_URL,
+        echo=False,
+        pool_size=20,
+        max_overflow=10,
+        pool_pre_ping=True,
+        pool_recycle=3600,
+        connect_args={
+            "server_settings": {"application_name": "lazy-bird-dashboard"}
+        }
+    )
+else:
+    # SQLite doesn't support pool_size/max_overflow
+    async_engine = create_async_engine(
+        ASYNC_DATABASE_URL,
+        echo=False,
+        connect_args={"check_same_thread": False}
+    )
 
 # Async SessionLocal for dependency injection
 AsyncSessionLocal = async_sessionmaker(
