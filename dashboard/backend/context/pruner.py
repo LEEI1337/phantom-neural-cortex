@@ -91,6 +91,7 @@ class ContextPruner:
         
         return PruneResult(
             pruned_items=pruned_items,
+            items_removed=len(pruned_items),
             tokens_freed=tokens_freed,
             new_total=status.total_tokens,
             new_usage_percent=status.usage_percent,
@@ -148,6 +149,7 @@ class ContextPruner:
         
         return PruneResult(
             pruned_items=pruned_items,
+            items_removed=len(pruned_items),
             tokens_freed=tokens_freed,
             new_total=status.total_tokens,
             new_usage_percent=status.usage_percent,
@@ -195,6 +197,7 @@ class ContextPruner:
         
         return PruneResult(
             pruned_items=pruned_items,
+            items_removed=len(pruned_items),
             tokens_freed=tokens_freed,
             new_total=status.total_tokens,
             new_usage_percent=status.usage_percent,
@@ -228,6 +231,7 @@ class ContextPruner:
             )
             return PruneResult(
                 pruned_items=[],
+                items_removed=0,
                 tokens_freed=0,
                 new_total=status.total_tokens,
                 new_usage_percent=status.usage_percent,
@@ -264,6 +268,7 @@ class ContextPruner:
         
         return PruneResult(
             pruned_items=all_pruned,
+            items_removed=len(all_pruned),
             tokens_freed=total_freed,
             new_total=status.total_tokens,
             new_usage_percent=status.usage_percent,
