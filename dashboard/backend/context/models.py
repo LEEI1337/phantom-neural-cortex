@@ -37,6 +37,7 @@ class ContextItem(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now, description="When item was added")
     importance: float = Field(default=1.0, description="Importance score (0-1)")
     pinned: bool = Field(default=False, description="Whether item is pinned (never pruned)")
+    tool_name: Optional[str] = Field(default=None, description="Name of tool if tool message")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
 
@@ -85,6 +86,7 @@ class ContextStatus(BaseModel):
 class PruneResult(BaseModel):
     """Result of pruning operation"""
     pruned_items: List[ContextItem] = Field(default_factory=list)
+    items_removed: int = Field(default=0)
     tokens_freed: int
     new_total: int
     new_usage_percent: float
