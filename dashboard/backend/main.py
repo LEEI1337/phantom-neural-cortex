@@ -10,7 +10,7 @@ from typing import Optional
 import socketio
 
 from database import init_db
-from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration
+from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration, context
 from routers.websocket import sio
 from routers.redis_manager import redis_manager
 
@@ -154,6 +154,14 @@ Currently uses API keys (to be implemented). Future: OAuth2 with JWT tokens.
             "name": "Agent Configuration",
             "description": "Agent connection and configuration management. Manage agent endpoints, API keys, skills, MCP servers, and config files.",
         },
+        {
+            "name": "Context Management",
+            "description": "Context window management with real-time token tracking, auto-pruning, and AI-powered compaction. OpenClaw-inspired features.",
+        },
+        {
+            "name": "Multi-Agent Orchestration",
+            "description": "CLI-first multi-agent orchestration. Execute tasks, chain agents, track costs, and optimize performance.",
+        },
     ],
 )
 
@@ -182,6 +190,7 @@ app.include_router(templates.router, prefix="/api/templates", tags=["templates"]
 app.include_router(hrm.router, prefix="/api/hrm", tags=["hrm"])
 app.include_router(agents.router, prefix="/api/agents", tags=["Agent Configuration"])
 app.include_router(orchestration.router)
+app.include_router(context.router)  # Context management endpoints
 
 # System startup time for uptime calculation
 import time
