@@ -246,8 +246,9 @@ class SessionManager:
             await self.redis_client.set(key, data, ex=self.session_timeout)
         
         elif self.storage_backend == "database" and self.db_session:
-            # TODO: Implement database persistence
-            pass
+            # Database persistence not yet implemented
+            # Sessions will only persist in memory for database backend
+            logger.warning("Database persistence not implemented, using memory storage")
     
     async def _load_sessions(self):
         """Load sessions from storage backend"""

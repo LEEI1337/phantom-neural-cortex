@@ -83,8 +83,10 @@ GATEWAY_HOST=0.0.0.0
 GATEWAY_PORT=18789
 GATEWAY_SESSION_TIMEOUT=3600
 GATEWAY_MAX_SESSIONS=1000
-GATEWAY_STORAGE_BACKEND=redis
+GATEWAY_STORAGE_BACKEND=redis  # Options: memory, redis
 ```
+
+**Note:** Currently supports `memory` and `redis` backends. Database backend (PostgreSQL/SQLite) will be added in a future update.
 
 ### WebSocket Events
 

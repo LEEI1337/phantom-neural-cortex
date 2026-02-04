@@ -35,7 +35,7 @@ class SkillRegistry:
         """
         self.skills_dir = Path(skills_dir)
         self._skills: Dict[str, Skill] = {}
-        self._skill_modules: Dict[str, any] = {}
+        self._skill_modules: Dict[str, Any] = {}
         
         logger.info(f"SkillRegistry initialized with directory: {skills_dir}")
     
