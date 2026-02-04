@@ -1,6 +1,6 @@
 """
 FastAPI Main Application
-AI Development Orchestrator Dashboard Backend
+AI Development Orchestrator Dashboard Backend - v3.0.0
 """
 
 from fastapi import FastAPI, HTTPException
@@ -8,17 +8,34 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from typing import Optional
 import socketio
+import os
+import sys
+
+# Add parent directory to path for gateway and skills imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from database import init_db
 from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration, context
 from routers.websocket import sio
 from routers.redis_manager import redis_manager
 
+# Import v3.0 features
+from gateway import GatewayServer, GatewayConfig
+from skills import SkillRegistry, SkillLoader
+
+# Global gateway and skills instances
+gateway_server = None
+skill_registry = None
+
 # Lifespan context manager for startup/shutdown events
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global gateway_server, skill_registry
+    
     # Startup
-    print("Starting PHANTOM NEURAL CORTEX UI Backend...")
+    print("=" * 60)
+    print("Starting PHANTOM NEURAL CORTEX v3.0.0")
+    print("=" * 60)
     print("Phantom Mode Engaged")
     print("Neural Cortex Active")
     init_db()
@@ -26,19 +43,63 @@ async def lifespan(app: FastAPI):
     # Connect to Redis for distributed state management
     try:
         await redis_manager.connect()
-        print("Redis connected - Distributed state management active")
+        print("✓ Redis connected - Distributed state management active")
     except Exception as e:
-        print(f"Redis connection failed (optional): {e}")
+        print(f"⚠ Redis connection failed (optional): {e}")
+    
+    # Initialize Gateway (Phase 2) ✅
+    try:
+        gateway_config = GatewayConfig.from_env()
+        gateway_server = GatewayServer(gateway_config)
+        await gateway_server.start()
+        print(f"✓ Gateway started on {gateway_config.host}:{gateway_config.port}")
+    except Exception as e:
+        print(f"⚠ Gateway initialization failed: {e}")
+    
+    # Initialize Skills System (Phase 3) ✅
+    try:
+        skills_dir = os.getenv("SKILLS_DIR", "skills/community")
+        skill_registry = SkillRegistry(skills_dir)
+        skill_loader = SkillLoader(skill_registry)
+        
+        if os.getenv("SKILLS_AUTO_LOAD", "true").lower() == "true":
+            loaded_count = await skill_loader.load_all_skills()
+            print(f"✓ Skills system initialized: {loaded_count} skills loaded")
+        else:
+            print("✓ Skills system initialized (auto-load disabled)")
+    except Exception as e:
+        print(f"⚠ Skills initialization failed: {e}")
+    
+    print("=" * 60)
+    print("v3.0 Features Active:")
+    print("  ✓ Context Window Management (Phase 1)")
+    print("  ✓ Gateway Architecture (Phase 2)")
+    print("  ✓ Skills System (Phase 3)")
+    print("=" * 60)
 
     yield
 
     # Shutdown
-    print("Shutting down...")
+    print("=" * 60)
+    print("Shutting down PHANTOM NEURAL CORTEX...")
+    print("=" * 60)
+    
+    # Stop Gateway
+    if gateway_server:
+        try:
+            await gateway_server.stop()
+            print("✓ Gateway stopped")
+        except Exception as e:
+            print(f"⚠ Gateway stop warning: {e}")
+    
+    # Disconnect Redis
     try:
         await redis_manager.disconnect()
-        print("Redis disconnected")
+        print("✓ Redis disconnected")
     except Exception as e:
-        print(f"Redis disconnect warning: {e}")
+        print(f"⚠ Redis disconnect warning: {e}")
+    
+    print("=" * 60)
 
 # Create FastAPI app with comprehensive OpenAPI documentation
 app = FastAPI(
@@ -93,7 +154,7 @@ Currently uses API keys (to be implemented). Future: OAuth2 with JWT tokens.
 - GitHub: https://github.com/phantom-neural-cortex
 - Issues: https://github.com/phantom-neural-cortex/issues
     """,
-    version="2.0.0",
+    version="3.0.0",
     terms_of_service="https://phantom-neural-cortex.dev/terms",
     contact={
         "name": "Phantom Neural Cortex Team",
@@ -243,7 +304,7 @@ async def health_check():
 
     return {
         "status": overall_status,
-        "version": "2.0.0",
+        "version": "3.0.0",
         "uptime": uptime_str,
         "uptime_seconds": int(uptime_seconds),
         "started_at": dt.fromtimestamp(STARTUP_TIME).isoformat(),
@@ -313,7 +374,7 @@ async def clear_cache(layer: Optional[str] = None):
 @app.get("/")
 async def root():
     return {
-        "message": "Phantom Neural Cortex API v2.0",
+        "message": "Phantom Neural Cortex API v3.0",
         "tagline": "The Mind Behind The Machine",
         "docs": "/docs",
         "health": "/api/health"
