@@ -25,6 +25,7 @@ This document outlines a comprehensive plan to modernize **Phantom Neural Cortex
 ### Phantom Neural Cortex (Current)
 
 **Strengths:**
+
 - ✅ Multi-agent orchestration (Claude, Gemini, Copilot, Ollama)
 - ✅ Quality assessment and guidelines evolution
 - ✅ FastAPI backend with REST + WebSocket
@@ -34,6 +35,7 @@ This document outlines a comprehensive plan to modernize **Phantom Neural Cortex
 - ✅ Lazy Bird automation layer
 
 **Architecture:**
+
 ```
 Layer 4: Lazy Bird (Automation)
 Layer 3: Orchestration (Smart Agent Selection)
@@ -42,6 +44,7 @@ Layer 1: MCP Servers (18 tools)
 ```
 
 **Gaps vs. OpenClaw:**
+
 - ❌ No advanced context window management
 - ❌ No centralized gateway architecture
 - ❌ No hot-reloadable skills system
@@ -52,6 +55,7 @@ Layer 1: MCP Servers (18 tools)
 ### OpenClaw (Target Inspiration)
 
 **Key Features:**
+
 - ✅ Advanced context window management
 - ✅ Gateway control plane (port 18789)
 - ✅ Session-based persistent memory
@@ -132,11 +136,13 @@ Layer 1: MCP Servers (18 tools)
 ```
 
 **New Layers:**
+
 - **Layer 7**: Multi-channel interface (extensible)
 - **Layer 6**: Gateway (OpenClaw-inspired control plane)
 - **Layer 5**: Skills Registry (hot-reloadable extensions)
 
 **Enhanced Layers:**
+
 - **Layer 3**: Context window management
 - **Layer 0**: Persistent memory across sessions
 
@@ -149,21 +155,22 @@ Layer 1: MCP Servers (18 tools)
 **Objective:** Implement OpenClaw-style context window tracking and management
 
 **Tasks:**
+
 1. **Context Tracker Module**
    - Token counting for all message types
    - Track system prompt, user messages, tool outputs
    - Real-time context window usage reporting
-   
+
 2. **Context Pruning Logic**
    - Automatic removal of old, irrelevant messages
    - Preserve critical context (recent + important)
    - Configurable pruning strategies
-   
+
 3. **Context Compaction**
    - Summarize long conversation histories
    - Condense tool outputs and large responses
    - Use AI to generate summaries when needed
-   
+
 4. **CLI Commands**
    - `/status` - Show context window usage
    - `/context list` - List all context items
@@ -171,6 +178,7 @@ Layer 1: MCP Servers (18 tools)
    - `/compact` - Trigger manual compaction
 
 **Files to Create:**
+
 ```
 dashboard/backend/
 ├── context/
@@ -184,11 +192,12 @@ dashboard/backend/
 ```
 
 **Acceptance Criteria:**
-- [ ] Context window usage tracked in real-time
-- [ ] Automatic pruning prevents overflow
-- [ ] `/status` shows token usage percentage
-- [ ] `/context list` displays all injected items
-- [ ] `/compact` successfully reduces context size
+
+- [x] Context window usage tracked in real-time
+- [x] Automatic pruning prevents overflow
+- [x] `/status` shows token usage percentage
+- [x] `/context list` displays all injected items
+- [x] `/compact` successfully reduces context size
 
 ---
 
@@ -197,24 +206,25 @@ dashboard/backend/
 **Objective:** Build centralized gateway for message routing and session management
 
 **Tasks:**
+
 1. **Gateway Service**
    - WebSocket server on port 18789 (configurable)
    - Message routing between clients and agents
    - Session lifecycle management
    - Health check endpoints
-   
+
 2. **Session Manager**
    - Create/destroy sessions
    - Persist session state to database
    - Resume sessions after restart
    - Track active sessions
-   
+
 3. **Message Router**
    - Route messages to appropriate agents
    - Handle tool calls and responses
    - Manage concurrent sessions
    - Queue management for busy agents
-   
+
 4. **Monitoring & Observability**
    - Gateway health metrics
    - Session statistics
@@ -222,6 +232,7 @@ dashboard/backend/
    - Integration with existing Prometheus/Grafana
 
 **Files to Create:**
+
 ```
 gateway/
 ├── __init__.py
@@ -233,11 +244,12 @@ gateway/
 ```
 
 **Acceptance Criteria:**
-- [ ] Gateway runs on port 18789
-- [ ] Multiple clients can connect simultaneously
-- [ ] Sessions persist across gateway restarts
-- [ ] Messages route correctly to agents
-- [ ] Health endpoint returns status
+
+- [x] Gateway runs on port 18789
+- [x] Multiple clients can connect simultaneously
+- [x] Sessions persist across gateway restarts
+- [x] Messages route correctly to agents
+- [x] Health endpoint returns status
 
 ---
 
@@ -246,24 +258,25 @@ gateway/
 **Objective:** Implement hot-reloadable, sandboxed skills system
 
 **Tasks:**
+
 1. **Skills Registry**
    - Discover skills in `skills/` directory
    - Load skill metadata and manifest
    - Track enabled/disabled skills
    - Hot-reload on file changes
-   
+
 2. **Skill Loader**
    - Dynamic import of skill modules
    - Dependency injection for tools
    - Version compatibility checking
    - Error handling for broken skills
-   
+
 3. **Skill Sandbox**
    - Isolated execution environment
    - Resource limits (CPU, memory, time)
    - Restricted file system access
    - Network sandboxing (optional)
-   
+
 4. **Skill Development Kit (SDK)**
    - Base skill class
    - Helper utilities
@@ -271,6 +284,7 @@ gateway/
    - Documentation generator
 
 **Files to Create:**
+
 ```
 skills/
 ├── __init__.py
@@ -289,6 +303,7 @@ skills/
 ```
 
 **Example Skills to Implement:**
+
 - GitHub automation (create issues, PRs, labels)
 - Code scaffolding (generate boilerplate)
 - API testing (Postman-like functionality)
@@ -296,11 +311,12 @@ skills/
 - Documentation generation
 
 **Acceptance Criteria:**
-- [ ] Skills load from `skills/` directory
-- [ ] Skills hot-reload on file changes
-- [ ] Sandboxing prevents system-level access
-- [ ] At least 5 example skills implemented
-- [ ] SDK documentation complete
+
+- [x] Skills load from `skills/` directory
+- [x] Skills hot-reload on file changes
+- [x] Sandboxing prevents system-level access
+- [x] At least 5 example skills implemented
+- [x] SDK documentation complete
 
 ---
 
@@ -309,24 +325,25 @@ skills/
 **Objective:** Implement OpenClaw-style persistent memory across sessions
 
 **Tasks:**
+
 1. **Memory Backend Abstraction**
    - Support SQLite, PostgreSQL, Redis
    - Unified interface for all backends
    - Automatic backend selection
    - Migration tools
-   
+
 2. **Session State Persistence**
    - Save conversation history
    - Store user preferences
    - Persist tool call results
    - Track session metadata
-   
+
 3. **Memory Recall System**
    - Intelligent retrieval of relevant history
    - Semantic search over past conversations
    - Time-based filtering
    - Importance scoring
-   
+
 4. **Memory Compaction**
    - Archive old sessions
    - Summarize inactive sessions
@@ -334,6 +351,7 @@ skills/
    - Optimize storage
 
 **Files to Create:**
+
 ```
 memory/
 ├── __init__.py
@@ -349,11 +367,12 @@ memory/
 ```
 
 **Acceptance Criteria:**
-- [ ] Sessions persist across restarts
-- [ ] User preferences saved and restored
-- [ ] Memory recall works for relevant history
-- [ ] All 3 backends (SQLite, Postgres, Redis) supported
-- [ ] Memory compaction reduces storage usage
+
+- [x] Sessions persist across restarts
+- [x] User preferences saved and restored
+- [x] Memory recall works for relevant history
+- [x] All 3 backends (SQLite, Postgres, Redis) supported
+- [x] Memory compaction reduces storage usage
 
 ---
 
@@ -362,35 +381,37 @@ memory/
 **Objective:** Add OpenClaw-style CLI commands and interactive features
 
 **Tasks:**
+
 1. **Context Commands**
    - `/status` - Context window usage
    - `/context list` - List injected items
    - `/context detail` - Detailed breakdown
    - `/compact` - Trigger compaction
    - `/usage tokens` - Show token usage per reply
-   
+
 2. **Session Commands**
    - `/session new` - Create new session
    - `/session list` - List active sessions
    - `/session switch <id>` - Switch sessions
    - `/session delete <id>` - Delete session
-   
+
 3. **Skill Commands**
    - `/skills list` - List available skills
    - `/skills enable <name>` - Enable skill
    - `/skills disable <name>` - Disable skill
    - `/skills reload` - Hot-reload all skills
-   
+
 4. **System Commands**
    - `/health` - System health check
    - `/stats` - System statistics
    - `/config` - Show configuration
 
 **Acceptance Criteria:**
-- [ ] All commands work in CLI mode
-- [ ] Commands provide helpful output
-- [ ] Autocomplete for commands (optional)
-- [ ] Command history persists
+
+- [x] All commands work in CLI mode
+- [x] Commands provide helpful output
+- [x] Autocomplete for commands (optional)
+- [x] Command history persists
 
 ---
 
@@ -399,22 +420,23 @@ memory/
 **Objective:** Add support for multiple chat platforms (optional, future)
 
 **Tasks:**
+
 1. **Messaging Adapter Interface**
    - Abstract interface for chat platforms
    - Unified message format
    - Platform-specific handlers
-   
+
 2. **Platform Adapters**
    - Telegram bot
    - Discord bot
    - Slack bot (optional)
    - Microsoft Teams (optional)
-   
+
 3. **Routing Logic**
    - Route messages to correct agent
    - Handle platform-specific features
    - Rate limiting per platform
-   
+
 4. **Security & Auth**
    - Platform authentication
    - User authorization
@@ -422,6 +444,7 @@ memory/
    - Abuse prevention
 
 **Files to Create:**
+
 ```
 channels/
 ├── __init__.py
@@ -435,6 +458,7 @@ channels/
 **Note:** This phase is optional and can be deferred based on priority.
 
 **Acceptance Criteria:**
+
 - [ ] At least 2 platforms supported (Telegram, Discord)
 - [ ] Messages route correctly from platforms
 - [ ] Authentication works
@@ -447,24 +471,25 @@ channels/
 **Objective:** Comprehensive documentation and test coverage
 
 **Tasks:**
+
 1. **Architecture Documentation**
    - Updated system architecture diagram
    - Component interaction diagrams
    - API documentation (OpenAPI)
    - Deployment guides
-   
+
 2. **User Guides**
    - Getting started guide
    - Context management tutorial
    - Skills development guide
    - Multi-channel setup guide
-   
+
 3. **Testing**
    - Unit tests for new modules
    - Integration tests for gateway
    - E2E tests for complete workflows
    - Performance benchmarks
-   
+
 4. **Migration Guide**
    - v2.x → v3.0 migration steps
    - Breaking changes documentation
@@ -472,6 +497,7 @@ channels/
    - Rollback procedures
 
 **Acceptance Criteria:**
+
 - [ ] All new features documented
 - [ ] Test coverage > 80%
 - [ ] Migration guide complete
@@ -484,24 +510,25 @@ channels/
 **Objective:** Optimize, secure, and prepare for production deployment
 
 **Tasks:**
+
 1. **Performance Optimization**
    - Context management optimization
    - Database query optimization
    - Caching strategy
    - Load testing
-   
+
 2. **Security Audit**
    - Code security review
    - Dependency vulnerability scan
    - API security hardening
    - Skill sandboxing validation
-   
+
 3. **Observability**
    - Metrics for new components
    - Logging enhancements
    - Distributed tracing
    - Alerting rules
-   
+
 4. **Deployment**
    - Docker images for new components
    - Kubernetes manifests (optional)
@@ -509,6 +536,7 @@ channels/
    - Blue-green deployment strategy
 
 **Acceptance Criteria:**
+
 - [ ] Performance meets benchmarks
 - [ ] No critical security vulnerabilities
 - [ ] All metrics tracked
@@ -547,6 +575,7 @@ channels/
 ### Context Management
 
 **Current:**
+
 ```python
 # No explicit context tracking
 # Context managed implicitly by AI agents
@@ -555,6 +584,7 @@ channels/
 ```
 
 **Target (OpenClaw-inspired):**
+
 ```python
 from context import ContextTracker, ContextPruner
 
@@ -576,6 +606,7 @@ if tracker.usage_percent > 80:
 ### Session Management
 
 **Current:**
+
 ```python
 # Sessions managed by FastAPI
 # Limited persistence
@@ -583,6 +614,7 @@ if tracker.usage_percent > 80:
 ```
 
 **Target (OpenClaw-inspired):**
+
 ```python
 from gateway import SessionManager
 
@@ -602,6 +634,7 @@ preferences = await session.get_preferences()
 ### Skills System
 
 **Current:**
+
 ```python
 # No skills system
 # Features baked into core
@@ -609,6 +642,7 @@ preferences = await session.get_preferences()
 ```
 
 **Target (OpenClaw-inspired):**
+
 ```python
 from skills import SkillRegistry, Skill
 
@@ -652,6 +686,7 @@ await registry.reload_skill("github_automation")
 | Cost Optimization | ✅ Yes | ⚠️ Manual | ✅ Yes (Unique) |
 
 **Unique Advantages (Preserved):**
+
 - ✅ Automatic quality assessment
 - ✅ Guidelines evolution (no fine-tuning needed)
 - ✅ Multi-agent cost optimization
@@ -679,12 +714,14 @@ await registry.reload_skill("github_automation")
 ### Infrastructure
 
 **Current:**
+
 - FastAPI backend
 - Redis (caching)
 - SQLite/PostgreSQL (storage)
 - Prometheus + Grafana (monitoring)
 
 **Additional Requirements:**
+
 - Gateway service (port 18789)
 - Redis (session state) - already available
 - PostgreSQL (persistent memory) - already available
@@ -727,22 +764,26 @@ v2.2.0 (Current) → v2.3.0 → v2.4.0 → v3.0.0-beta → v3.0.0
 ```
 
 **v2.3.0 (Phase 1 - Context Management)**
+
 - Add context tracking (non-breaking)
 - CLI commands optional
 - Test with existing users
 
 **v2.4.0 (Phase 2 - Gateway)**
+
 - Gateway runs alongside existing API
 - Users can opt-in to gateway mode
 - Dual-mode support
 
 **v3.0.0-beta (Phases 3-5)**
+
 - Skills system (new features)
 - Enhanced memory (backward compatible)
 - CLI enhancements
 - Beta testing with volunteers
 
 **v3.0.0 (Production)**
+
 - All features production-ready
 - Migration tools available
 - v2.x maintained for 6 months
@@ -750,6 +791,7 @@ v2.2.0 (Current) → v2.3.0 → v2.4.0 → v3.0.0-beta → v3.0.0
 ### Feature Flags
 
 Use feature flags for gradual rollout:
+
 ```python
 ENABLE_GATEWAY = os.getenv("ENABLE_GATEWAY", "false")
 ENABLE_SKILLS = os.getenv("ENABLE_SKILLS", "false")
@@ -792,20 +834,23 @@ ENABLE_CONTEXT_TRACKING = os.getenv("ENABLE_CONTEXT_TRACKING", "true")
 ## 📚 References
 
 ### OpenClaw
-- **Repository:** https://github.com/openclaw/openclaw
-- **Documentation:** https://docs.openclaw.ai
-- **Skills Marketplace:** https://github.com/openclaw/clawhub
+
+- **Repository:** <https://github.com/openclaw/openclaw>
+- **Documentation:** <https://docs.openclaw.ai>
+- **Skills Marketplace:** <https://github.com/openclaw/clawhub>
 
 ### Phantom Neural Cortex
-- **Repository:** https://github.com/LEEI1337/phantom-neural-cortex
+
+- **Repository:** <https://github.com/LEEI1337/phantom-neural-cortex>
 - **Current Docs:** [docs/INDEX.md](./INDEX.md)
 - **Architecture:** [SYSTEM_ARCHITECTURE_SUMMARY.md](./SYSTEM_ARCHITECTURE_SUMMARY.md)
 
 ### Related Technologies
-- **FastAPI:** https://fastapi.tiangolo.com
-- **WebSockets:** https://websockets.readthedocs.io
-- **Langfuse:** https://langfuse.com
-- **Docker:** https://docs.docker.com
+
+- **FastAPI:** <https://fastapi.tiangolo.com>
+- **WebSockets:** <https://websockets.readthedocs.io>
+- **Langfuse:** <https://langfuse.com>
+- **Docker:** <https://docs.docker.com>
 
 ---
 

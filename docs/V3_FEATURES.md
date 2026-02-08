@@ -2,11 +2,15 @@
 
 ## Overview
 
-Phantom Neural Cortex v3.0 introduces three major feature sets inspired by OpenClaw:
+Phantom Neural Cortex v3.5 introduces deep orchestration logic and autonomous swarm intelligence alongside OpenClaw-inspired features:
 
 1. **Advanced Context Window Management** (Phase 1) ✅
 2. **Gateway Architecture** (Phase 2) ✅  
 3. **Skills System** (Phase 3) ✅
+4. **Persistent Memory Manager** (Phase 4) ✅
+5. **Intelligent Swarm Routing** (Phase 5) ✅
+6. **Unified CLI & Visualization** (Phase 6) ✅
+7. **Sandbox Hardening** (Phase 7) 🛡️ *In Progress*
 
 ---
 
@@ -91,6 +95,7 @@ GATEWAY_STORAGE_BACKEND=redis  # Options: memory, redis
 ### WebSocket Events
 
 **Connect**: Automatic session creation
+
 ```javascript
 socket.on('connected', (data) => {
   console.log('Session ID:', data.session_id);
@@ -98,6 +103,7 @@ socket.on('connected', (data) => {
 ```
 
 **Send Message**:
+
 ```javascript
 socket.emit('message', {
   type: 'user_message',
@@ -107,6 +113,7 @@ socket.emit('message', {
 ```
 
 **Get Status**:
+
 ```javascript
 socket.emit('get_status');
 socket.on('status', (data) => {
@@ -181,6 +188,31 @@ SKILLS_SANDBOX_ENABLED=true
 
 ---
 
+## 4. Intelligent Swarm Routing
+
+Autonomous agent selection and refinement loops.
+
+### Features
+
+- **Score-Based Selection**: Intelligent engine selects best agent for task.
+- **Impact Prediction**: Simulate results before execution.
+- **Autonomous Feedback Loops**: Re-route and retry tasks if quality thresholds are not met.
+
+---
+
+## 5. Sandbox Hardening
+
+Strictly isolated skill execution.
+
+### Features
+
+- **Docker-Based Execution**: Each skill runs in a transient container.
+- **Resource Quotas**: Hard limits on CPU (0.5) and RAM (256MB).
+- **Network Isolation**: By default, skills have no outbound internet access.
+- **Secure Bridge**: Standardized communication between Host and Sandbox.
+
+---
+
 ## Quick Start
 
 ### 1. Install Dependencies
@@ -210,6 +242,7 @@ uvicorn main:app --host 0.0.0.0 --port 1336
 ### 4. Verify v3.0 Features
 
 Check startup output for:
+
 ```
 ✓ Gateway started on 0.0.0.0:18789
 ✓ Skills system initialized: X skills loaded
@@ -336,6 +369,6 @@ Want to add features or create skills?
 
 ---
 
-**Version:** 3.0.0  
-**Last Updated:** 2026-02-04  
+**Version:** 3.5.0  
+**Last Updated:** 2026-02-08  
 **Maintained by:** LEEI1337
