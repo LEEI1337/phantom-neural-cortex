@@ -16,7 +16,7 @@ from monitoring.prometheus_exporter import (
     MetricConfig,
     MetricsAggregator
 )
-from database import get_db
+from ..database import get_db
 
 router = APIRouter(prefix="/metrics", tags=["prometheus"])
 

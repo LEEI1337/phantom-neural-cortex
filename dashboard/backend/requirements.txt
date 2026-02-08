@@ -1,25 +1,25 @@
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-sqlalchemy==2.0.25
-alembic==1.13.1
-pydantic==2.5.3
-pydantic-settings==2.1.0
-python-dotenv==1.0.0
-python-socketio==5.11.1
-python-multipart==0.0.6
+fastapi==0.117.1
+uvicorn[standard]==0.30.2
+sqlalchemy==2.0.35
+alembic==1.14.0
+pydantic==2.10.8
+pydantic-settings==2.8.0
+python-dotenv==1.0.1
+python-socketio==5.12.1
+python-multipart==0.0.12
 # Async PostgreSQL driver (2.5x faster than psycopg2)
 # NOTE: On Windows, requires Microsoft Visual C++ Build Tools
 # Alternative: Use SQLite with aiosqlite (installed below)
-# asyncpg==0.29.0
+# asyncpg==0.30.0
 # SQLite async driver for development
-aiosqlite==0.19.0
+aiosqlite==0.20.0
 # Keep psycopg2 for backward compatibility during migration
-psycopg2-binary==2.9.9
-python-jose[cryptography]==3.3.0
+psycopg2-binary==2.9.10
+python-jose[cryptography]==3.4.0
 passlib[bcrypt]==1.7.4
-python-dateutil==2.8.2
-prometheus-client==0.19.0
-networkx==3.2.1
+python-dateutil==2.9.0
+prometheus-client==0.21.0
+networkx==3.3
 # Redis for state management and pub/sub
-redis>=6.4.0
-tiktoken==0.5.2
+redis>=6.5.0
+tiktoken==0.8.0

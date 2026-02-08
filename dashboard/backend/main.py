@@ -14,12 +14,12 @@ import sys
 # Add parent directory to path for gateway and skills imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from database import init_db
-from routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration, context
-from routers.websocket import sio
-from routers.redis_manager import redis_manager
+from .database import init_db, init_db_async
+from .routers import projects, tasks, metrics, config, websocket, prometheus, speckit, api_keys, swarm, templates, hrm, agents, orchestration, context
+from .routers.websocket import sio
+from .routers.redis_manager import redis_manager
 
-# Import v3.0 features
+# Import v3.0 features (from root)
 from gateway import GatewayServer, GatewayConfig
 from skills import SkillRegistry, SkillLoader
 
@@ -38,7 +38,15 @@ async def lifespan(app: FastAPI):
     print("=" * 60)
     print("Phantom Mode Engaged")
     print("Neural Cortex Active")
-    init_db()
+    
+    # Initialize database asynchronously
+    try:
+        await init_db_async()
+        print("✓ Database initialized (async)")
+    except Exception as e:
+        print(f"⚠ Database initialization failed: {e}")
+        # Fallback to sync if needed (though async is preferred)
+        init_db()
 
     # Connect to Redis for distributed state management
     try:

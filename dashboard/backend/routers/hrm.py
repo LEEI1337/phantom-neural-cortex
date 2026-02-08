@@ -12,8 +12,8 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 import uuid
 
-from database import get_async_db
-from models import (
+from ..database import get_async_db
+from ..models import (
     HRMConfig, HRMConfigHistory, HRMPreset, Project, Task,
     AgentType, TaskStatus
 )

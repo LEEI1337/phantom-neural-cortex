@@ -254,15 +254,16 @@ class SessionManager:
         """Load sessions from storage backend"""
         if self.storage_backend == "redis" and self.redis_client:
             try:
-                keys = await self.redis_client.keys("session:*")
-                for key in keys:
+                count = 0
+                async for key in self.redis_client.scan_iter("session:*"):
                     data = await self.redis_client.get(key)
                     if data:
                         session_dict = json.loads(data)
                         session = Session.from_dict(session_dict)
                         self._sessions[session.session_id] = session
+                        count += 1
                 
-                logger.info(f"Loaded {len(self._sessions)} sessions from Redis")
+                logger.info(f"Loaded {count} sessions from Redis")
             except Exception as e:
                 logger.error(f"Failed to load sessions from Redis: {e}")
     

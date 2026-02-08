@@ -7,8 +7,8 @@ Seeds initial data including HRM presets, system templates, etc.
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import SessionLocal, engine
-from models import Base, HRMPreset, Project
+from .database import SessionLocal, engine
+from .models import Base, HRMPreset, Project
 from datetime import datetime
 import json
 import uuid
@@ -361,7 +361,7 @@ async def seed_all_async(db: AsyncSession):
 
     # Convert async session to sync for existing seed functions
     # (Simplest approach - seed functions use sync queries)
-    from database import SessionLocal
+    from .database import SessionLocal
     sync_db = SessionLocal()
     try:
         seed_hrm_presets(sync_db)

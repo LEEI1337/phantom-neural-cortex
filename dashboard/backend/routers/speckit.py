@@ -20,8 +20,8 @@ from speckit.speckit_orchestrator import (
     FeatureSpec,
     SpecKitPhase
 )
-from database import get_db
-from models import Project
+from ..database import get_db
+from ..models import Project
 
 
 router = APIRouter(prefix="/speckit", tags=["speckit"])

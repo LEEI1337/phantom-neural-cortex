@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.0] - 2026-02-08
+
+### 🛡️ Enterprise Test Stabilization & Security Hardening
+
+This release focuses on infrastructure reliability, testing architecture, and security scanning for dynamic components.
+
+#### ✨ NEW FEATURES
+
+- **Skill Security Scan v1**: Implemented static code analysis for `SkillRegistry`.
+  - Prevents loading of skills containing unsafe operations (`eval`, `exec`, `os.system`, etc.).
+  - Automatic rejection of non-compliant skill modules.
+- **Enterprise Testing Strategy**: Established a robust, platform-agnostic testing architecture.
+
+#### 🔧 IMPROVEMENTS & FIXES
+
+- **Test Environment Stabilization**:
+  - Refactored entire test suite to use **In-Memory SQLite** (`sqlite:///:memory:`) with `StaticPool`.
+  - Resolved Windows-specific file locking issues (`PermissionError 32`).
+  - Optimized database initialization for Python 3.14.
+- **SQLAlchemy/aiosqlite Compatibility**:
+  - Fixed `NoSuchModuleError` by standardizing on `aiosqlite` dialect usage.
+  - Dynamically configured connection pools to avoid conflicts with SQLite.
+- **API Test Alignment**:
+  - Aligned `test_api_projects.py` with v3.0 REST schema (HTTP methods, Pydantic fields, and Enums).
+  - Resolved `422 Unprocessable Entity` errors in integration tests.
+
+#### 📚 DOCUMENTATION
+
+- `docs/incident_reports/2026-02-08-sqlalchemy-aiosqlite-resolution.md`: Detailed RCA and resolution of the test environment blocker.
+- `docs/arch/testing_strategy.md`: Official architecture document for backend testing.
+
+---
+
 ## [3.0.0] - 2026-02-04
 
 ### 🌟 Major Release - OpenClaw-Inspired Modernization
@@ -16,6 +49,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
 #### ✨ NEW FEATURES
 
 ##### Phase 1: Advanced Context Window Management ✅
+
 - **Real-Time Token Tracking**: Precise token counting with tiktoken
 - **Automatic Pruning**: Smart removal of old/low-importance messages
   - Time-based pruning (configurable age threshold)
@@ -37,6 +71,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
   - `POST /api/context/compact` - Trigger compaction
 
 ##### Phase 2: Gateway Architecture ✅
+
 - **Centralized Control Plane**: WebSocket gateway on port 18789
 - **Session Management**: Persistent sessions across restarts
   - Create/destroy sessions
@@ -54,6 +89,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
   - Automated health checks
 
 ##### Phase 3: Skills System ✅
+
 - **Hot-Reloadable Plugins**: Extensible skill architecture
   - Base Skill class for easy development
   - Dynamic skill loading/unloading
@@ -76,6 +112,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
 #### 📁 NEW FILES
 
 **Gateway Module** (`gateway/`):
+
 - `__init__.py` - Gateway package exports
 - `config.py` - Configuration management
 - `server.py` - WebSocket gateway server
@@ -84,6 +121,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
 - `health.py` - Health monitoring
 
 **Skills Module** (`skills/`):
+
 - `__init__.py` - Skills package exports
 - `base.py` - Base Skill class
 - `registry.py` - Skills registry and management
@@ -94,6 +132,7 @@ This release completes the modernization of Phantom Neural Cortex by incorporati
 #### ⚙️ CONFIGURATION
 
 **New Environment Variables**:
+
 ```bash
 # Gateway Configuration
 GATEWAY_HOST=0.0.0.0
@@ -128,6 +167,7 @@ SKILLS_MAX_MEMORY_MB=512
 #### 🏆 COMPETITIVE ADVANTAGES
 
 **vs. OpenClaw**:
+
 - ✅ All OpenClaw features (context, gateway, skills)
 - ✅ PLUS: Quality Assessment System
 - ✅ PLUS: Guidelines Evolution
@@ -138,20 +178,12 @@ SKILLS_MAX_MEMORY_MB=512
 
 ---
 
-# Changelog
-
-All notable changes to Phantom Neural Cortex will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
----
-
 ## [2.2.0] - 2025-11-10
 
 ### 🌟 Major Features
 
 #### Quality Assessment System (NEW!)
+
 - **CodeAssist-Inspired Reward/Penalty Scoring**: Real-time code quality analysis with quantified feedback
 - **Automatic Pattern Detection**: Identifies success patterns and anti-patterns across all agent outputs
 - **Multi-Language Support**: Python (AST analysis), JavaScript, TypeScript with extensible architecture
@@ -160,6 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Evolution Integration**: Quality feedback feeds directly into Guidelines Management System
 
 #### Guidelines Management System
+
 - **Automatic Evolution**: Guidelines update automatically based on error patterns and quality feedback
 - **Meta-Agent Powered**: Claude analyzes feedback and generates improved guidelines
 - **Git-Like Version Control**: Commit, rollback, diff, and history for all guideline changes
@@ -167,6 +200,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Per-Project Overrides**: Task-type and project-specific guideline customization
 
 #### Ollama Enterprise Integration
+
 - **CLI Tool Support**: Full integration with ollama-code, ollmcp, opencode, and aider
 - **MCP Server Integration**: Model Context Protocol support for skills and subagents
 - **100% Local Execution**: Complete privacy, zero API costs
@@ -178,26 +212,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✅ Production Enhancements
 
 #### Database & Migrations
+
 - **Alembic Integration**: Automated schema migrations with rollback capability
 - **Async SQLAlchemy 2.0**: 2.5x performance improvement over 1.x
 - **Migration Testing**: Automated up/down migration verification
 
 #### Security
+
 - **Fernet API Key Encryption**: All API keys encrypted at rest
 - **Secure Key Rotation**: Support for key rotation without data loss
 - **Environment Variable Validation**: Startup checks for required secrets
 
 #### Observability
+
 - **Langfuse LLM Tracing** (REQUIRED): Every prompt, response, and cost tracked
 - **Prometheus Metrics**: System health, task latency, error rates
 - **Grafana Dashboards**: Pre-configured visualization dashboards
 
 #### Reliability
+
 - **Circuit Breakers**: Automatic failure isolation for external services
 - **Exponential Backoff**: Intelligent retry logic for transient failures
 - **Timeout Management**: Per-agent timeout configuration
 
 #### Testing
+
 - **80% Coverage Target**: Comprehensive test suite with coverage tracking
 - **Integration Tests**: Full end-to-end workflow testing
 - **Mock Services**: Test environment with mocked external dependencies
@@ -205,6 +244,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 📚 Documentation
 
 #### New Documentation
+
 - `docs/GUIDELINES_MANAGEMENT_SYSTEM.md` - Complete guidelines evolution system
 - `docs/QUALITY_ASSESSMENT_SYSTEM.md` - CodeAssist-inspired quality analyzer
 - `docs/OLLAMA_ENTERPRISE_INTEGRATION.md` - Ollama CLI tools and MCP integration
@@ -216,6 +256,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/SYSTEM_ARCHITECTURE_SUMMARY.md` - High-level architecture overview
 
 #### Updated Documentation
+
 - `README.md` - Complete overhaul with v2.2.0 features
 - `docs/INDEX.md` - Updated main documentation index
 - `docs/DATA_ARCHITECTURE.md` - Added production enhancements section (v2.1.0)
@@ -223,11 +264,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🛠️ Implementation Files
 
 #### Analysis Package (NEW!)
+
 - `dashboard/backend/analysis/__init__.py` - Analysis package initialization
 - `dashboard/backend/analysis/quality_analyzer.py` - Full quality assessment implementation
 - `dashboard/backend/analysis/feedback_aggregator.py` - Quality feedback aggregation
 
 #### Features
+
 - Quality analyzer with Reward/Penalty dataclasses
 - Python AST parsing for structural analysis
 - Security vulnerability detection (SQL injection, eval/exec, credentials)
@@ -238,6 +281,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🔧 Configuration
 
 #### .gitignore Updates
+
 - Added Redis dump files (`dump.rdb`, `appendonly.aof`)
 - Added Alembic migration artifacts
 - Added Docker patterns (`docker-compose.override.yml`, volume data)
@@ -245,9 +289,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Python testing artifacts (`.pytest_cache/`, `.mypy_cache/`, `htmlcov/`)
 
 #### Environment Variables
+
 - Added Langfuse keys to `.env.example` (marked as REQUIRED)
 
 ### 🗂️ Project Organization
+
 - Created `archive/` folder for deprecated files
 - Moved `CLI_ORCHESTRATION_TEST_RESULTS.md` to archive
 - Moved `remove_emojis.py` to archive
@@ -257,6 +303,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0] - 2025-11-09
 
 ### Added
+
 - Production enhancements section in `docs/DATA_ARCHITECTURE.md`
 - Initial Langfuse integration documentation
 - Basic error handling patterns
@@ -268,6 +315,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🚀 Initial Release
 
 #### Core Features
+
 - **Multi-Agent Orchestration**: Claude, Gemini, Ollama, GitHub Copilot
 - **Intelligent Routing**: Automatic agent selection based on task type
 - **Cost Optimization**: 96% cost savings vs. Claude-only approach
@@ -276,6 +324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Project Management**: Multi-project support with isolation
 
 #### Architecture
+
 - FastAPI async backend
 - SQLAlchemy ORM with async support
 - Redis caching layer
@@ -283,6 +332,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker Compose orchestration
 
 #### Documentation
+
 - Complete API documentation
 - Agent capability matrix
 - Cost analysis
@@ -293,7 +343,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Comparison
 
 | Version | Key Feature | Status |
-|---------|------------|--------|
+| :--- | :--- | :--- |
 | 2.2.0 | Quality Assessment + Guidelines Evolution | ✅ Current |
 | 2.1.0 | Production Enhancements | ✅ Stable |
 | 2.0.0 | Initial Multi-Agent Orchestration | ✅ Stable |
@@ -305,12 +355,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### From 2.1.0 to 2.2.0
 
 1. **Install New Dependencies**:
+
    ```bash
    cd dashboard/backend
    pip install -r requirements.txt
    ```
 
 2. **Run Database Migrations**:
+
    ```bash
    alembic upgrade head
    ```
@@ -320,6 +372,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    - See `.env.example` for template
 
 4. **Optional: Configure Ollama**:
+
    ```bash
    # Install ollama-code
    npm install -g ollama-code
@@ -329,6 +382,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    ```
 
 5. **Restart Services**:
+
    ```bash
    docker-compose down
    docker-compose up -d
@@ -353,12 +407,14 @@ Follow the 2.1.0 → 2.2.0 upgrade guide, plus:
 ## Future Roadmap
 
 ### v2.3.0 (Planned)
+
 - [ ] JavaScript/TypeScript deep quality analysis
 - [ ] Custom rule engine for quality analyzer
 - [ ] ML-based pattern recognition
 - [ ] Integration with external linters (pylint, eslint)
 
 ### v3.0.0 (Planned)
+
 - [ ] Multi-language guideline support (Go, Rust, Java)
 - [ ] Distributed task execution
 - [ ] Advanced cost optimization strategies
@@ -368,4 +424,4 @@ Follow the 2.1.0 → 2.2.0 upgrade guide, plus:
 
 **Maintained by:** LEEI1337
 **License:** MIT
-**Repository:** https://github.com/LEEI1337/phantom-neural-cortex
+**Repository:** <https://github.com/LEEI1337/phantom-neural-cortex>

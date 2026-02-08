@@ -4,14 +4,36 @@
 
 We release patches for security vulnerabilities for the following versions:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| Version | Supported          | Status                              |
+| ------- | ------------------ | ----------------------------------- |
+| 3.x.x   | :white_check_mark: | Active (v3.0.0 released Feb 2026)   |
+| 2.x.x   | :white_check_mark: | Maintenance (Security patches only) |
+| < 2.0   | :x:                | End of Life                         |
+
+## AI-Specific Security (2026 Update)
+
+As an AI-driven orchestration platform, we recognize unique security challenges:
+
+### 1. Prompt Injection Defense
+
+- **Dynamic System Prompts**: We use non-deterministic boundary markers to prevent prompt leakage.
+- **Output Sanitization**: All AI-generated code is scanned by our Quality Assessment System before execution.
+- **Indirect Injection**: We monitor external data sources (GitHub, web search) for malicious instructions embedded in documents.
+
+### 2. Context Window Security
+
+- **Context Poisoning**: Mitigation strategies against long-range context poisoning are implemented in the `ContextCompactor`.
+- **Resource Exhaustion**: The `ContextTracker` prevents context-stuffing attacks that aim to spike execution costs.
+
+### 3. Skill Sandbox Execution
+
+- **Observation Mode**: Skills run in restricted environments with real-time observation.
+- **Permission Scoping**: Skills only have access to specific APIs (e.g., `github_api`) requested in their metadata.
+- **Resource Limits**: CPU/Memory/Time limits are enforced to prevent crypto-jacking or DoS.
 
 ## Reporting a Vulnerability
 
-We take the security of AI Development Orchestrator seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+We take the security of Phantom Neural Cortex seriously. If you believe you have found a security vulnerability, please report it to us as described below.
 
 ### Please DO NOT
 
@@ -22,11 +44,12 @@ We take the security of AI Development Orchestrator seriously. If you believe yo
 
 **Report security bugs privately via GitHub Security Advisories:**
 
-1. Go to https://github.com/LEEI1337/ai-dev-orchestrator/security/advisories/new
+1. Go to <https://github.com/LEEI1337/phantom-neural-cortex/security/advisories/new>
 2. Click "Report a vulnerability"
 3. Fill in the details
 
 **OR Email us directly:**
+
 - Create a new GitHub issue with title: "SECURITY: [Brief Description]"
 - Mark it as confidential
 - We will respond within 48 hours
@@ -102,7 +125,7 @@ This project orchestrates multiple AI systems and MCP servers. Key security cons
    - ✅ No shared state between tasks
    - ⚠️ Host file system access required
 
-4. **Lazy Bird Automation** (Planned - Issue #1)
+4. **Lazy Bird Automation**
    - ⚠️ Will execute AI-generated code automatically
    - ⚠️ Requires robust test validation
    - ⚠️ Needs careful permission management
@@ -142,6 +165,6 @@ We thank the following researchers for responsibly disclosing security issues:
 
 ---
 
-**Last Updated**: 2025-01-08
+**Last Updated**: 2026-02-08
 
-Thank you for helping keep AI Development Orchestrator and its users safe!
+Thank you for helping keep Phantom Neural Cortex and its users safe!

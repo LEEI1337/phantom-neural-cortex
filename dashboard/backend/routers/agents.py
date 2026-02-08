@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from typing import Optional, List, Literal
 from datetime import datetime
 from sqlalchemy.orm import Session
-from database import get_db
+from ..database import get_db
 import os
 import json
 from pathlib import Path

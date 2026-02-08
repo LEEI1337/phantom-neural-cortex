@@ -10,8 +10,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
 
-from database import get_db
-from models import Task, Project, QualitySnapshot, CostTracking, AgentType, TaskStatus
+from ..database import get_db
+from ..models import Task, Project, QualitySnapshot, CostTracking, AgentType, TaskStatus
 
 router = APIRouter()
 

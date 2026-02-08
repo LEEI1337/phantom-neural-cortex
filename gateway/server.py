@@ -10,6 +10,7 @@ import logging
 import socketio
 from typing import Optional, Dict, Any
 import json
+import uuid
 
 from .config import GatewayConfig
 from .session import SessionManager, Session
@@ -115,12 +116,31 @@ class GatewayServer:
                 if isinstance(data, str):
                     data = json.loads(data)
                 
+                # Validate message type
+                msg_type_str = data.get('type', 'user_message')
+                try:
+                    msg_type = MessageType(msg_type_str)
+                except ValueError:
+                    await self.sio.emit('error', {
+                        'error': f'Invalid message type: {msg_type_str}',
+                        'valid_types': [t.value for t in MessageType]
+                    }, to=sid)
+                    return
+
+                # Validate content size
+                content = data.get('content')
+                if content and len(str(content)) > self.config.max_message_size:
+                    await self.sio.emit('error', {
+                        'error': 'Message content exceeds maximum size limit'
+                    }, to=sid)
+                    return
+                
                 # Create message object
                 msg = Message(
-                    message_id=data.get('message_id', f"msg_{sid}"),
+                    message_id=data.get('message_id', f"msg_{sid}_{uuid.uuid4().hex[:8]}"),
                     session_id=sid,
-                    type=MessageType(data.get('type', 'user_message')),
-                    content=data.get('content'),
+                    type=msg_type,
+                    content=content,
                     metadata=data.get('metadata', {})
                 )
                 
@@ -140,7 +160,7 @@ class GatewayServer:
             except Exception as e:
                 logger.error(f"Error handling message: {e}")
                 await self.sio.emit('error', {
-                    'error': str(e)
+                    'error': f"Internal server error: {str(e)}"
                 }, to=sid)
         
         @self.sio.event

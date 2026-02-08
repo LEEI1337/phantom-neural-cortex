@@ -5,7 +5,7 @@ Discovers and manages available skills.
 """
 
 import logging
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Any
 from pathlib import Path
 import importlib
 import sys
@@ -74,6 +74,12 @@ class SkillRegistry:
             True if loaded successfully
         """
         try:
+            # Security Check: Static Analysis
+            skill_path = self.skills_dir / f"{skill_name}.py"
+            if not self._is_safe_code(skill_path):
+                logger.error(f"Security check failed for skill: {skill_name}")
+                return False
+            
             # Import skill module
             module_path = f"skills.community.{skill_name}"
             
@@ -90,6 +96,7 @@ class SkillRegistry:
                 if (isinstance(attr, type) and 
                     issubclass(attr, Skill) and 
                     attr != Skill):
+                # ... (rest of logic)
                     skill_class = attr
                     break
             
@@ -177,6 +184,7 @@ class SkillRegistry:
         
         return skills
     
+    
     async def enable_skill(self, skill_name: str) -> bool:
         """Enable skill"""
         skill = self.get_skill(skill_name)
@@ -194,3 +202,34 @@ class SkillRegistry:
         
         await skill.on_disable()
         return True
+
+    def _is_safe_code(self, path: Path) -> bool:
+        """
+        Static security analysis of skill code.
+        
+        Checks for dangerous functions like eval/exec and system calls.
+        """
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                tree = ast.parse(f.read())
+            
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call):
+                    if isinstance(node.func, ast.Name):
+                        if node.func.id in ["eval", "exec", "compile"]:
+                            logger.warning(f"SECURITY: Disallowed function '{node.func.id}' found in {path}")
+                            return False
+                    elif isinstance(node.func, ast.Attribute):
+                        if node.func.attr == "system" and isinstance(node.func.value, ast.Name) and node.func.value.id == "os":
+                            logger.warning(f"SECURITY: Disallowed 'os.system' found in {path}")
+                            return False
+                        if node.func.attr == "Popen" and isinstance(node.func.value, ast.Name) and node.func.value.id == "subprocess":
+                            # Check keywords for shell=True
+                            for keyword in node.keywords:
+                                if keyword.arg == "shell" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
+                                    logger.warning(f"SECURITY: Disallowed 'subprocess.Popen(shell=True)' found in {path}")
+                                    return False
+            return True
+        except Exception as e:
+            logger.error(f"Failed to analyze skill code {path}: {e}")
+            return False

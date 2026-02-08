@@ -34,17 +34,22 @@ logger.info(f"Database configured: {ASYNC_DATABASE_URL.split('@')[-1] if '@' in 
 # ============================================================================
 
 # Async Engine with optimized connection pool
-async_engine = create_async_engine(
-    ASYNC_DATABASE_URL,
-    echo=False,  # Set to True for SQL query logging
-    pool_size=20,  # Max connections in pool (increased for async workloads)
-    max_overflow=10,  # Additional connections beyond pool_size
-    pool_pre_ping=True,  # Verify connections before using
-    pool_recycle=3600,  # Recycle connections after 1 hour
-    connect_args={
-        "server_settings": {"application_name": "lazy-bird-dashboard"}
-    } if "postgresql" in ASYNC_DATABASE_URL else {}
-)
+# Note: pool_size/max_overflow are not supported by aiosqlite (SQLite)
+_async_engine_args = {
+    "echo": False,  # Set to True for SQL query logging
+}
+
+if "postgresql" in ASYNC_DATABASE_URL:
+    # PostgreSQL-specific pooling configuration
+    _async_engine_args.update({
+        "pool_size": 20,
+        "max_overflow": 10,
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+        "connect_args": {"server_settings": {"application_name": "lazy-bird-dashboard"}}
+    })
+
+async_engine = create_async_engine(ASYNC_DATABASE_URL, **_async_engine_args)
 
 # Async SessionLocal for dependency injection
 AsyncSessionLocal = async_sessionmaker(
@@ -89,13 +94,21 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
 # ============================================================================
 
 # Sync engine for backward compatibility during migration
-sync_engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
-    echo=False,
-    pool_size=10,  # Smaller pool for sync operations
-    max_overflow=5,
-)
+# Note: pool_size is not supported by SQLite (including in-memory)
+_sync_engine_args = {
+    "echo": False,
+}
+
+if DATABASE_URL.startswith("sqlite"):
+    _sync_engine_args["connect_args"] = {"check_same_thread": False}
+else:
+    # PostgreSQL-specific pooling
+    _sync_engine_args.update({
+        "pool_size": 10,
+        "max_overflow": 5,
+    })
+
+sync_engine = create_engine(DATABASE_URL, **_sync_engine_args)
 
 # Sync SessionLocal for legacy endpoints
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sync_engine)
@@ -143,7 +156,7 @@ async def init_db_async():
     Raises:
         Exception: If initialization or seeding fails
     """
-    from models import Base
+    from .models import Base
 
     # Create all tables
     async with async_engine.begin() as conn:
@@ -153,7 +166,7 @@ async def init_db_async():
 
     # Seed initial data
     try:
-        from seed_data import seed_all_async
+        from .seed_data import seed_all_async
         async with AsyncSessionLocal() as session:
             await seed_all_async(session)
             await session.commit()
@@ -169,13 +182,13 @@ def init_db():
     WARNING: Use init_db_async() instead for better performance.
     Only kept for backward compatibility.
     """
-    from models import Base
+    from .models import Base
     Base.metadata.create_all(bind=sync_engine)
     logger.info("Database initialized successfully (sync)")
 
     # Seed initial data
     try:
-        from seed_data import seed_all
+        from .seed_data import seed_all
         db = SessionLocal()
         seed_all(db)
         db.close()
@@ -193,7 +206,7 @@ async def reset_db_async():
     Raises:
         Exception: If reset fails
     """
-    from models import Base
+    from .models import Base
 
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -209,7 +222,7 @@ def reset_db():
     WARNING: This deletes all data! Use only in development.
     Use reset_db_async() instead for better performance.
     """
-    from models import Base
+    from .models import Base
     Base.metadata.drop_all(bind=sync_engine)
     Base.metadata.create_all(bind=sync_engine)
     logger.warning("Database reset successfully (sync) - ALL DATA DELETED")

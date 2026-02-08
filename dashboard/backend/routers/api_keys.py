@@ -14,7 +14,7 @@ import secrets
 from cryptography.fernet import Fernet
 import os
 
-from database import get_db
+from ..database import get_db
 
 router = APIRouter()
 

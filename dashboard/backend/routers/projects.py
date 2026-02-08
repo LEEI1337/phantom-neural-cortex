@@ -10,8 +10,8 @@ from pydantic import BaseModel
 from datetime import datetime
 import uuid
 
-from database import get_db
-from models import Project, ProjectType, ProjectStatus
+from ..database import get_db
+from ..models import Project, ProjectType, ProjectStatus
 
 router = APIRouter()
 

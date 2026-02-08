@@ -22,7 +22,7 @@ import asyncio
 import json
 from datetime import datetime
 
-from database import get_async_db
+from ..database import get_async_db
 from orchestration.orchestrator import (
     CLIOrchestrator,
     Task,
