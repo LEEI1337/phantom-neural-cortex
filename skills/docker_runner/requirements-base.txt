@@ -1,0 +1,6 @@
+# Base requirements for isolated skills
+httpx>=0.24.0
+pydantic>=2.0.0
+aiofiles>=23.1.0
+python-dotenv>=1.0.0
+jinja2>=3.1.0
