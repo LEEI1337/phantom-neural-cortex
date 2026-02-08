@@ -469,3 +469,48 @@ class SystemMetrics(Base):
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
+# ============================================================================
+# PHASE 4: PERSISTENT MEMORY & CONTEXT MODELS
+# ============================================================================
+
+class ContextSession(Base):
+    """Persistent storage for AI context sessions (Phase 4)"""
+    __tablename__ = "context_sessions"
+
+    id = Column(String, primary_key=True)  # session_id (uuid)
+    user_id = Column(String, nullable=True)
+    model = Column(String, nullable=False)  # claude, gemini, etc.
+    max_tokens = Column(Integer, nullable=False)
+    system_prompt_tokens = Column(Integer, default=0)
+    total_tokens = Column(Integer, default=0)
+    
+    # Complete state as JSON for easy recall
+    config = Column(JSON, nullable=True)
+    metadata_json = Column(JSON, nullable=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    items = relationship("ContextItem", back_populates="session", cascade="all, delete-orphan")
+
+
+class ContextItem(Base):
+    """Individual items in a persistent context session"""
+    __tablename__ = "context_items"
+
+    id = Column(String, primary_key=True)  # item_id
+    session_id = Column(String, ForeignKey("context_sessions.id"), nullable=False)
+    
+    type = Column(String, nullable=False)  # system, user, assistant, tool_call, tool_result
+    content = Column(String, nullable=False)
+    tokens = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    importance = Column(Float, default=1.0)
+    pinned = Column(Boolean, default=False)
+    tool_name = Column(String, nullable=True)
+    metadata_json = Column(JSON, nullable=True)
+    
+    # Relationships
+    session = relationship("ContextSession", back_populates="items")

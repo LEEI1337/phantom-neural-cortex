@@ -6,8 +6,9 @@ import { SwarmConfigPanel } from './SwarmConfigPanel'
 import { AgentConfigPanel } from './AgentConfigPanel'
 import { SystemHealthPanel } from './SystemHealthPanel'
 import { GlobalSettingsPanel } from './GlobalSettingsPanel'
+import ImpactPreviewPanel from './ImpactPreviewPanel'
 
-export type PanelMode = 'hrm' | 'swarm' | 'agent' | 'health' | 'global'
+export type PanelMode = 'hrm' | 'swarm' | 'agent' | 'health' | 'global' | 'impact'
 
 export interface ControlPanelProps {
   initialMode?: PanelMode
@@ -26,6 +27,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { id: 'hrm' as PanelMode, label: 'HRM Config', icon: '🧠' },
     { id: 'swarm' as PanelMode, label: 'Swarm', icon: '🌊' },
     { id: 'agent' as PanelMode, label: 'Agents', icon: '⚡' },
+    { id: 'impact' as PanelMode, label: 'Impact', icon: '🔮' },
     { id: 'health' as PanelMode, label: 'Health', icon: '🏥' },
     { id: 'global' as PanelMode, label: 'Settings', icon: '⚙️' }
   ]
@@ -69,6 +71,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         {mode === 'hrm' && <HRMConfigPanel projectId={projectId} />}
         {mode === 'swarm' && <SwarmConfigPanel projectId={projectId} />}
         {mode === 'agent' && <AgentConfigPanel projectId={projectId} />}
+        {mode === 'impact' && <ImpactPreviewPanel />}
         {mode === 'health' && <SystemHealthPanel />}
         {mode === 'global' && <GlobalSettingsPanel />}
       </div>

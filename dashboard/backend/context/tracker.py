@@ -17,6 +17,7 @@ from .models import (
     ModelType
 )
 from .utils import count_tokens, get_model_limit
+from memory.persistence import MemoryManager
 
 logger = logging.getLogger(__name__)
 
@@ -57,10 +58,43 @@ class ContextTracker:
             max_tokens=self.max_tokens
         )
         
+        # Persistence manager (Phase 4)
+        self.persistence = MemoryManager()
+        
         logger.info(
             f"ContextTracker initialized for session {session_id} "
             f"with model {model.value} (max: {self.max_tokens} tokens)"
         )
+
+    async def persist_state(self):
+        """Persist current session state to base storage"""
+        await self.persistence.save_context_session(
+            session_id=self.session_id,
+            model=self.model.value,
+            max_tokens=self.max_tokens,
+            system_prompt_tokens=self.context.system_prompt_tokens,
+            total_tokens=self.context.total_tokens,
+            metadata=self.context.dict().get('metadata', {})
+        )
+
+    async def load_history(self):
+        """Load conversation history from persistence (Phase 4)"""
+        try:
+            # 1. Load session metadata
+            session_data = await self.persistence.load_context_session(self.session_id)
+            if session_data:
+                self.model = ModelType(session_data.get('model', self.model.value))
+                self.max_tokens = session_data.get('max_tokens', self.max_tokens)
+                self.context.system_prompt_tokens = session_data.get('system_prompt_tokens', 0)
+                
+            # 2. Load items
+            items_data = await self.persistence.get_context_history(self.session_id)
+            if items_data:
+                self.context.items = [ContextItem(**item) for item in items_data]
+                self._recalculate_total()
+                logger.info(f"Loaded {len(items_data)} items from persistence for session {self.session_id}")
+        except Exception as e:
+            logger.error(f"Failed to load history for {self.session_id}: {e}")
     
     def add_system_prompt(
         self,
@@ -95,7 +129,23 @@ class ContextTracker:
         self.context.system_prompt_tokens += tokens
         self._recalculate_total()
         
+        # Persist (Fire and forget or await if possible)
+        # Note: In a production sync-bridged environment, we might push to a queue
+        # For Phase 4, we'll implement both sync convenience and async persistence
+        
         logger.debug(f"Added system prompt: {tokens} tokens")
+        return item
+
+    async def add_system_prompt_async(
+        self,
+        content: str,
+        pinned: bool = True,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> ContextItem:
+        """Add system prompt and persist immediately"""
+        item = self.add_system_prompt(content, pinned, metadata)
+        await self.persistence.add_context_item(self.session_id, item.id, item.dict())
+        await self.persist_state()
         return item
     
     def add_user_message(
@@ -131,6 +181,18 @@ class ContextTracker:
         
         logger.debug(f"Added user message: {tokens} tokens")
         return item
+
+    async def add_user_message_async(
+        self,
+        content: str,
+        importance: float = 1.0,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> ContextItem:
+        """Add user message and persist immediately"""
+        item = self.add_user_message(content, importance, metadata)
+        await self.persistence.add_context_item(self.session_id, item.id, item.dict())
+        await self.persist_state()
+        return item
     
     def add_assistant_message(
         self,
@@ -164,6 +226,18 @@ class ContextTracker:
         self._recalculate_total()
         
         logger.debug(f"Added assistant message: {tokens} tokens")
+        return item
+
+    async def add_assistant_message_async(
+        self,
+        content: str,
+        importance: float = 0.8,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> ContextItem:
+        """Add assistant message and persist immediately"""
+        item = self.add_assistant_message(content, importance, metadata)
+        await self.persistence.add_context_item(self.session_id, item.id, item.dict())
+        await self.persist_state()
         return item
     
     def add_tool_call(
@@ -204,6 +278,19 @@ class ContextTracker:
         
         logger.debug(f"Added tool call ({tool_name}): {tokens} tokens")
         return item
+
+    async def add_tool_call_async(
+        self,
+        content: str,
+        tool_name: str,
+        importance: float = 0.6,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> ContextItem:
+        """Add tool call and persist immediately"""
+        item = self.add_tool_call(content, tool_name, importance, metadata)
+        await self.persistence.add_context_item(self.session_id, item.id, item.dict())
+        await self.persist_state()
+        return item
     
     def add_tool_result(
         self,
@@ -242,6 +329,19 @@ class ContextTracker:
         self._recalculate_total()
         
         logger.debug(f"Added tool result ({tool_name}): {tokens} tokens")
+        return item
+
+    async def add_tool_result_async(
+        self,
+        content: str,
+        tool_name: str,
+        importance: float = 0.5,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> ContextItem:
+        """Add tool result and persist immediately"""
+        item = self.add_tool_result(content, tool_name, importance, metadata)
+        await self.persistence.add_context_item(self.session_id, item.id, item.dict())
+        await self.persist_state()
         return item
     
     def remove_item(self, item_id: str) -> bool:

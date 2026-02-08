@@ -8,8 +8,19 @@ from pydantic import BaseModel, Field
 from typing import Optional, Literal, List
 from enum import Enum
 
-router = APIRouter()
+from enum import Enum
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, delete
+from ..database import get_async_db
+from ..models import SwarmConfig as SwarmConfigModel, AgentType
+from ..swarm.orchestrator import SwarmOrchestrator, SwarmTask, SwarmResult
+from ..swarm.intelligence import IntelligenceEngine
+from ..swarm.impact import ImpactReport
 
+router = APIRouter(tags=["Swarm Orchestration"])
+
+# Global orchestrator instance
+orchestrator = SwarmOrchestrator()
 class IntelligenceMode(str, Enum):
     """AI intelligence modes"""
     SPEED = "speed"  # Fast responses, lower quality
@@ -205,12 +216,34 @@ PRESET_CONFIGS = {
 # Endpoints
 
 @router.get("/configs", response_model=List[SwarmConfig])
-async def list_swarm_configs():
+async def list_swarm_configs(db: AsyncSession = Depends(get_async_db)):
     """
     List all swarm configurations including presets.
     """
-    configs = list(PRESET_CONFIGS.values())
-    configs.extend(swarm_configs.values())
+    # 1. Start with presets
+    configs = [c.model_dump() if hasattr(c, 'model_dump') else c for c in PRESET_CONFIGS.values()]
+    
+    # 2. Add from database
+    stmt = select(SwarmConfigModel)
+    result = await db.execute(stmt)
+    db_configs = result.scalars().all()
+    
+    for db_c in db_configs:
+        # Map database model to Pydantic model
+        config_data = {
+            "name": db_c.name,
+            "description": db_c.description,
+            "parallelization": db_c.agents_config.get('parallelization', {}),
+            "intelligence": db_c.agents_config.get('intelligence', {}),
+            "feedback_loop": db_c.agents_config.get('feedback_loop', {}),
+            "cost_control": db_c.agents_config.get('cost_control', {}),
+            "agent_switching": db_c.agents_config.get('agent_switching', {}),
+            "caching": db_c.agents_config.get('caching', {}),
+            "retry": db_c.agents_config.get('retry', {}),
+            "enabled": db_c.is_active
+        }
+        configs.append(config_data)
+        
     return configs
 
 @router.get("/configs/presets", response_model=List[SwarmConfig])
@@ -221,25 +254,51 @@ async def get_preset_configs():
     return list(PRESET_CONFIGS.values())
 
 @router.post("/configs", response_model=SwarmConfig, status_code=201)
-async def create_swarm_config(config: SwarmConfig):
+async def create_swarm_config(config: SwarmConfig, db: AsyncSession = Depends(get_async_db)):
     """
-    Create a new swarm configuration.
+    Create a new swarm configuration (Persistent).
     """
-    if config.name in swarm_configs or config.name in PRESET_CONFIGS:
-        raise HTTPException(status_code=400, detail="Configuration name already exists")
+    if config.name in PRESET_CONFIGS:
+        raise HTTPException(status_code=400, detail="Configuration name conflicts with a preset")
 
-    swarm_configs[config.name] = config
+    # Check if exists in DB
+    stmt = select(SwarmConfigModel).filter(SwarmConfigModel.name == config.name)
+    result = await db.execute(stmt)
+    if result.scalar_one_or_none():
+         raise HTTPException(status_code=400, detail="Configuration name already exists in database")
+
+    # Save to DB
+    # We store the complex Pydantic structure in the agents_config JSON column
+    db_config = SwarmConfigModel(
+        name=config.name,
+        description=config.description,
+        project_id="default",  # Default or linked to a project
+        agents_config=config.model_dump(),
+        is_active=config.enabled,
+        coordination_mode="hierarchical"
+    )
+    
+    db.add(db_config)
+    await db.commit()
+    await db.refresh(db_config)
+    
     return config
 
 @router.get("/configs/{config_name}", response_model=SwarmConfig)
-async def get_swarm_config(config_name: str):
+async def get_swarm_config(config_name: str, db: AsyncSession = Depends(get_async_db)):
     """
     Get a specific swarm configuration.
     """
     if config_name in PRESET_CONFIGS:
         return PRESET_CONFIGS[config_name]
-    if config_name in swarm_configs:
-        return swarm_configs[config_name]
+        
+    stmt = select(SwarmConfigModel).filter(SwarmConfigModel.name == config_name)
+    result = await db.execute(stmt)
+    db_c = result.scalar_one_or_none()
+    
+    if db_c:
+        return SwarmConfig(**db_c.agents_config)
+        
     raise HTTPException(status_code=404, detail="Configuration not found")
 
 @router.put("/configs/{config_name}", response_model=SwarmConfig)
@@ -256,17 +315,45 @@ async def update_swarm_config(config_name: str, config: SwarmConfig):
     return config
 
 @router.delete("/configs/{config_name}", status_code=204)
-async def delete_swarm_config(config_name: str):
+async def delete_swarm_config(config_name: str, db: AsyncSession = Depends(get_async_db)):
     """
     Delete a swarm configuration.
     """
     if config_name in PRESET_CONFIGS:
         raise HTTPException(status_code=400, detail="Cannot delete preset configurations")
-    if config_name not in swarm_configs:
+        
+    stmt = delete(SwarmConfigModel).filter(SwarmConfigModel.name == config_name)
+    result = await db.execute(stmt)
+    
+    if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Configuration not found")
-
-    del swarm_configs[config_name]
+        
+    await db.commit()
     return None
+
+@router.post("/preview", response_model=ImpactReport)
+async def preview_swarm_impact(request: Dict[str, str]):
+    """
+    Get a preview of how swarm would handle a task (Phase 5 Impact Mode).
+    """
+    description = request.get("description")
+    if not description:
+        raise HTTPException(status_code=400, detail="Task description is required")
+    
+    return await orchestrator.get_impact_report(description)
+
+
+@router.post("/execute-smart", response_model=SwarmResult)
+async def execute_smart_swarm(task: SwarmTask):
+    """
+    Execute a task using Advanced Swarm Intelligent Routing (Phase 5).
+    """
+    try:
+        return await orchestrator.execute_task(task)
+    except Exception as e:
+        logger.error(f"Error in smart swarm execution: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/stats", response_model=SwarmStats)
 async def get_swarm_stats():
@@ -292,36 +379,36 @@ async def get_swarm_stats():
     )
 
 @router.post("/optimize")
-async def optimize_config(current_stats: dict):
+async def optimize_config(request: Dict[str, Any]):
     """
-    Get optimization recommendations based on current performance.
+    Get optimization recommendations using IntelligenceEngine (Phase 5).
     """
+    description = request.get("task_description", "Generic optimization request")
+    priority = request.get("priority", "balanced")
+    
+    recommendation = await orchestrator.intelligence.analyze_and_route(description, priority=priority)
+    
+    # Generate intelligent recommendations
     recommendations = []
-
-    if current_stats.get("cache_hit_rate", 0) < 0.5:
+    
+    if recommendation.estimated_cost > 0.01:
         recommendations.append({
-            "category": "caching",
-            "recommendation": "Increase cache TTL and use AGGRESSIVE caching strategy",
-            "potential_savings": "15-25% cost reduction"
+            "category": "cost",
+            "recommendation": f"Switch to {recommendation.selected_agent} for this type of task to reduce costs.",
+            "potential_savings": f"{recommendation.confidence * 100:.0f}% confidence in optimization"
         })
 
-    if current_stats.get("avg_iterations", 0) > 5:
+    if recommendation.predicted_quality < 0.8:
         recommendations.append({
-            "category": "feedback_loop",
-            "recommendation": "Enable adaptive iterations to reduce unnecessary refinement loops",
-            "potential_savings": "20-30% time reduction"
-        })
-
-    if current_stats.get("avg_quality_score", 0) < 0.8:
-        recommendations.append({
-            "category": "intelligence",
-            "recommendation": "Switch to QUALITY or EXPERT mode with latent reasoning",
+            "category": "quality",
+            "recommendation": "Task complexity is high. Enable 'expert' mode for higher reasoning depth.",
             "potential_improvement": "10-15% quality increase"
         })
 
     return {
         "recommendations": recommendations,
-        "confidence": 0.85,
+        "selected_route": recommendation.dict(),
+        "confidence": recommendation.confidence,
         "estimated_improvement": {
             "cost_reduction": 0.20,
             "time_reduction": 0.25,

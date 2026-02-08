@@ -29,23 +29,19 @@ router = APIRouter(prefix="/api/context", tags=["Context Management"])
 _context_trackers: Dict[str, ContextTracker] = {}
 
 
-def get_or_create_tracker(
+async def get_or_create_tracker(
     session_id: str,
     model: ModelType = ModelType.CLAUDE
 ) -> ContextTracker:
     """
-    Get existing tracker or create new one.
-    
-    Args:
-        session_id: Session identifier
-        model: AI model type
-        
-    Returns:
-        ContextTracker instance
+    Get existing tracker or create new one with persistent history.
     """
     if session_id not in _context_trackers:
-        _context_trackers[session_id] = ContextTracker(session_id=session_id, model=model)
-        logger.info(f"Created new context tracker for session {session_id}")
+        tracker = ContextTracker(session_id=session_id, model=model)
+        # Load history from Phase 4 persistence
+        await tracker.load_history()
+        _context_trackers[session_id] = tracker
+        logger.info(f"Initialized context tracker for session {session_id} (Persistent)")
     
     return _context_trackers[session_id]
 
@@ -90,7 +86,7 @@ async def get_status(
     
     Similar to OpenClaw's /status command.
     """
-    tracker = get_or_create_tracker(session_id, model)
+    tracker = await get_or_create_tracker(session_id, model)
     status = tracker.get_status()
     
     logger.info(
@@ -117,7 +113,7 @@ async def get_inspection(
     
     Similar to OpenClaw's /context detail command.
     """
-    tracker = get_or_create_tracker(session_id, model)
+    tracker = await get_or_create_tracker(session_id, model)
     inspector = ContextInspector(tracker)
     
     inspection = inspector.get_inspection_data()
@@ -142,10 +138,13 @@ async def prune_context(request: PruneRequest):
     2. Remove old messages
     3. Remove low-importance items
     """
-    tracker = get_or_create_tracker(request.session_id)
+    tracker = await get_or_create_tracker(request.session_id)
     pruner = ContextPruner(tracker)
     
     result = pruner.prune_to_threshold(target_percent=request.target_percent)
+    
+    # Persist pruned state
+    await tracker.persist_state()
     
     logger.info(
         f"Pruned {request.session_id}: "
@@ -168,10 +167,13 @@ async def compact_context(request: CompactRequest):
     
     Similar to OpenClaw's /compact command.
     """
-    tracker = get_or_create_tracker(request.session_id)
+    tracker = await get_or_create_tracker(request.session_id)
     compactor = ContextCompactor(tracker)
     
     result = compactor.compact()
+    
+    # Persist compacted state
+    await tracker.persist_state()
     
     logger.info(
         f"Compacted {request.session_id}: "
@@ -197,9 +199,13 @@ async def clear_context(session_id: str):
     tracker = _context_trackers[session_id]
     tracker.clear()
     
+    # Clear persistence
+    await tracker.persistence.clear_context_items(session_id)
+    await tracker.persist_state()
+    
     logger.info(f"Cleared context for {session_id}")
     
-    return {"message": "Context cleared", "session_id": session_id}
+    return {"message": "Context cleared and persisted", "session_id": session_id}
 
 
 @router.get(

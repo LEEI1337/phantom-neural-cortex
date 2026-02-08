@@ -16,6 +16,8 @@ from .config import GatewayConfig
 from .session import SessionManager, Session
 from .router import MessageRouter, Message, MessageType
 from .health import HealthMonitor, ComponentStatus
+from dashboard.backend.swarm.orchestrator import SwarmOrchestrator
+from dashboard.backend.routers.context import _context_trackers
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +64,9 @@ class GatewayServer:
         self.health_monitor = HealthMonitor(
             check_interval=self.config.health_check_interval
         )
+        
+        # Phase 6: Swarm Orchestration integration for CLI commands
+        self.orchestrator = SwarmOrchestrator()
         
         # Register Socket.IO event handlers
         self._register_handlers()
@@ -197,6 +202,74 @@ class GatewayServer:
                     'error': str(e)
                 }, to=sid)
     
+        @self.sio.event
+        async def command(sid, data):
+            """Handle CLI commands starting with / (Phase 6)"""
+            try:
+                if isinstance(data, str):
+                    data = json.loads(data)
+                
+                cmd_text = data.get('command', '').strip()
+                if not cmd_text.startswith('/'):
+                    await self.sio.emit('error', {'error': 'Invalid command format. Use /command'}, to=sid)
+                    return
+
+                parts = cmd_text.split(' ', 1)
+                cmd = parts[0].lower()
+                args = parts[1] if len(parts) > 1 else ""
+
+                if cmd == "/status":
+                    # Get general system status
+                    status = await self.health_monitor.get_health_status(self.session_manager, self.message_router)
+                    await self.sio.emit('command_result', {
+                        'command': cmd,
+                        'result': status.to_dict()
+                    }, to=sid)
+
+                elif cmd == "/swarm-status":
+                    # Get swarm stats
+                    await self.sio.emit('command_result', {
+                        'command': cmd,
+                        'result': {
+                            "active_tasks": len(self.orchestrator.active_tasks),
+                            "agents": list(self.orchestrator.intelligence.agents.keys()),
+                            "mode": "advanced_routing"
+                        }
+                    }, to=sid)
+
+                elif cmd == "/preview":
+                    if not args:
+                        await self.sio.emit('error', {'error': 'Usage: /preview <task description>'}, to=sid)
+                        return
+                    
+                    report = await self.orchestrator.get_impact_report(args)
+                    await self.sio.emit('command_result', {
+                        'command': cmd,
+                        'result': report.model_dump()
+                    }, to=sid)
+
+                elif cmd == "/context":
+                    # List context for current session
+                    tracker = _context_trackers.get(sid)
+                    if tracker:
+                        await self.sio.emit('command_result', {
+                            'command': cmd,
+                            'result': {
+                                "session_id": sid,
+                                "total_tokens": tracker.context.total_tokens,
+                                "usage_percent": (tracker.context.total_tokens / tracker.max_tokens) * 100
+                            }
+                        }, to=sid)
+                    else:
+                        await self.sio.emit('command_result', {'command': cmd, 'result': "No active context tracker for this session."}, to=sid)
+
+                else:
+                    await self.sio.emit('error', {'error': f"Unknown command: {cmd}"}, to=sid)
+
+            except Exception as e:
+                logger.error(f"Error handling command: {e}")
+                await self.sio.emit('error', {'error': str(e)}, to=sid)
+
     async def start(self):
         """Start gateway server"""
         # Start components

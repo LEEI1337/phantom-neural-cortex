@@ -24,11 +24,11 @@ import { Card } from './ui/card';
 // Custom Node Components
 const ProjectNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
   <div className="px-6 py-4 bg-gradient-to-br from-purple-900/90 to-blue-900/90 border-2 rounded-lg shadow-xl"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 280, height: 100 }}>
+    style={{ borderColor: STATUS_COLORS[data.status], width: 280, height: 100 }}>
     <div className="flex items-center justify-between mb-2">
       <h3 className="text-lg font-bold text-white">{data.label}</h3>
       <div className="w-3 h-3 rounded-full animate-pulse"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+        style={{ backgroundColor: STATUS_COLORS[data.status] }} />
     </div>
     <p className="text-xs text-gray-300">{data.description}</p>
     {data.metrics?.requests && (
@@ -39,11 +39,11 @@ const ProjectNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
 
 const HRMNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
   <div className="px-4 py-3 bg-gradient-to-br from-pink-900/80 to-purple-900/80 border-2 rounded-lg shadow-lg"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 180, height: 90 }}>
+    style={{ borderColor: STATUS_COLORS[data.status], width: 180, height: 90 }}>
     <div className="flex items-center justify-between mb-1">
       <h4 className="text-sm font-bold text-white">{data.label}</h4>
       <div className="w-2 h-2 rounded-full"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+        style={{ backgroundColor: STATUS_COLORS[data.status] }} />
     </div>
     <p className="text-xs text-gray-300 mb-2">{data.description}</p>
     {data.config && (
@@ -55,12 +55,12 @@ const HRMNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
 );
 
 const SwarmNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
-  <div className="px-4 py-3 bg-gradient-to-br from-blue-900/80 to-cyan-900/80 border-2 rounded-lg shadow-lg"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 180, height: 90 }}>
+  <div className={`px-4 py-3 bg-gradient-to-br from-blue-900/80 to-cyan-900/80 border-2 rounded-lg shadow-lg transition-all duration-500 ${data.status === 'active' ? 'animate-pulse shadow-cyan-500/50 border-cyan-400' : ''}`}
+    style={{ borderColor: data.status === 'active' ? undefined : STATUS_COLORS[data.status], width: 180, height: 90 }}>
     <div className="flex items-center justify-between mb-1">
       <h4 className="text-sm font-bold text-white">{data.label}</h4>
-      <div className="w-2 h-2 rounded-full"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+      <div className={`w-2 h-2 rounded-full ${data.status === 'active' ? 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]' : ''}`}
+        style={{ backgroundColor: data.status === 'active' ? undefined : STATUS_COLORS[data.status] }} />
     </div>
     <p className="text-xs text-gray-300 mb-2">{data.description}</p>
     {data.metrics?.requests && (
@@ -71,11 +71,11 @@ const SwarmNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
 
 const QualityNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
   <div className="px-4 py-3 bg-gradient-to-br from-purple-900/80 to-indigo-900/80 border-2 rounded-lg shadow-lg"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 180, height: 90 }}>
+    style={{ borderColor: STATUS_COLORS[data.status], width: 180, height: 90 }}>
     <div className="flex items-center justify-between mb-1">
       <h4 className="text-sm font-bold text-white">{data.label}</h4>
       <div className="w-2 h-2 rounded-full"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+        style={{ backgroundColor: STATUS_COLORS[data.status] }} />
     </div>
     <p className="text-xs text-gray-300 mb-2">{data.description}</p>
     {data.metrics?.requests && (
@@ -85,12 +85,12 @@ const QualityNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
 );
 
 const AgentNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
-  <div className="px-3 py-2 bg-gradient-to-br from-green-900/80 to-emerald-900/80 border-2 rounded-lg shadow-lg"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 140, height: 80 }}>
+  <div className={`px-3 py-2 bg-gradient-to-br from-green-900/80 to-emerald-900/80 border-2 rounded-lg shadow-lg transition-all duration-300 ${data.status === 'active' ? 'ring-2 ring-emerald-500 ring-opacity-50 scale-105' : ''}`}
+    style={{ borderColor: STATUS_COLORS[data.status], width: 140, height: 80 }}>
     <div className="flex items-center justify-between mb-1">
       <h4 className="text-xs font-bold text-white">{data.label}</h4>
-      <div className="w-2 h-2 rounded-full"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+      <div className={`w-2 h-2 rounded-full ${data.status === 'active' ? 'animate-ping' : ''}`}
+        style={{ backgroundColor: STATUS_COLORS[data.status] }} />
     </div>
     {data.metrics && (
       <div className="text-xs text-emerald-300">
@@ -103,11 +103,11 @@ const AgentNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
 
 const InfrastructureNode: React.FC<{ data: SwarmNodeData }> = ({ data }) => (
   <div className="px-3 py-2 bg-gradient-to-br from-orange-900/80 to-amber-900/80 border-2 rounded-lg shadow-lg"
-       style={{ borderColor: STATUS_COLORS[data.status], width: 160, height: 80 }}>
+    style={{ borderColor: STATUS_COLORS[data.status], width: 160, height: 80 }}>
     <div className="flex items-center justify-between mb-1">
       <h4 className="text-xs font-bold text-white">{data.label}</h4>
       <div className="w-2 h-2 rounded-full"
-           style={{ backgroundColor: STATUS_COLORS[data.status] }} />
+        style={{ backgroundColor: STATUS_COLORS[data.status] }} />
     </div>
     <p className="text-xs text-gray-300 mb-1">{data.description}</p>
     {data.metrics && (
