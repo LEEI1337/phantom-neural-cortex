@@ -1,0 +1,7 @@
+[submodule "submodules/nss"]
+	path = submodules/nss
+	url = https://github.com/LEEI1337/NSS-v3.1.1.git
+
+[submodule "submodules/voice-gateway"]
+	path = submodules/voice-gateway
+	url = https://github.com/LEEI1337/echo_log.git

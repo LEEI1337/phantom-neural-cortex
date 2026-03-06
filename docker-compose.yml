@@ -59,6 +59,71 @@ services:
       - prometheus
     restart: unless-stopped
 
+  # PNC Gateway — Central Control Plane
+  pnc-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: phantom-pnc-gateway
+    environment:
+      - GATEWAY_HOST=0.0.0.0
+      - GATEWAY_PORT=18789
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://phantom:phantom_db_pass_CHANGEME@postgres:5432/phantom_cortex
+      - OLLAMA_URL=http://10.40.10.90:11434
+      - ECHOLOG_URL=http://10.40.10.82:8085
+      - NSS_GATEWAY_URL=http://nss-gateway:11337
+      - NSS_GUARDIAN_URL=http://nss-guardian:11338
+      - NSS_GOVERNANCE_URL=http://nss-governance:11339
+    ports:
+      - "18789:18789"
+    volumes:
+      - ./config:/app/config
+      - ./killswitch_audit.log:/app/killswitch_audit.log
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  # NSS Cognitive Gateway — PII Redaction, STEER
+  nss-gateway:
+    build:
+      context: ./submodules/nss
+      dockerfile: docker/Dockerfile.gateway
+    container_name: phantom-nss-gateway
+    environment:
+      - NSS_PORT=11337
+      - OLLAMA_URL=http://10.40.10.90:11434
+    ports:
+      - "11337:11337"
+    restart: unless-stopped
+
+  # NSS Guardian Shield — MARS, SENTINEL, VIGIL, SHIELD
+  nss-guardian:
+    build:
+      context: ./submodules/nss
+      dockerfile: docker/Dockerfile.guardian
+    container_name: phantom-nss-guardian
+    environment:
+      - NSS_PORT=11338
+      - OLLAMA_URL=http://10.40.10.90:11434
+    ports:
+      - "11338:11338"
+    restart: unless-stopped
+
+  # NSS Governance Plane — Policy Engine, Privacy Budget, DPIA
+  nss-governance:
+    build:
+      context: ./submodules/nss
+      dockerfile: docker/Dockerfile.governance
+    container_name: phantom-nss-governance
+    environment:
+      - NSS_PORT=11339
+      - OLLAMA_URL=http://10.40.10.90:11434
+    ports:
+      - "11339:11339"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:

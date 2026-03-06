@@ -1,0 +1,52 @@
+agent:
+  name: "lisa01"
+  role: "Infrastructure Specialist"
+  description: "Docker, Server, Monitoring, Backups"
+
+llm:
+  planner: "opus-4.6"
+  executor: "mistral-small3.2"
+  fallback:
+    - "llama3.1:8b"
+  local_only: false
+  ollama_url: "http://10.40.10.90:11434"
+
+communication:
+  mattermost:
+    token_vault_path: "lisa01/mattermost/MM_TOKEN"
+    channels:
+      - "echo_log"
+      - "infra-alerts"
+    home_channel: "infra-alerts"
+    url: "http://10.40.10.83:8065"
+
+security:
+  nss_enabled: true
+  mars_threshold: 0.7
+  approval_level: "RISKY"
+  killswitch_owners:
+    - "joe"
+  nss_gateway_url: "http://localhost:11337"
+  nss_guardian_url: "http://localhost:11338"
+  nss_governance_url: "http://localhost:11339"
+
+tools:
+  allowed:
+    - "docker_mcp"
+    - "file"
+    - "system"
+    - "knowledge"
+    - "http_health_check"
+    - "get_docker_status"
+    - "service_logs"
+  blocked:
+    - "cli_bridges"
+
+memory:
+  rag_enabled: true
+  persist_learnings: true
+  context_max_tokens: 8192
+
+rules_path: "./rules/"
+skills_path: "./skills/"
+echoLog_url: "http://10.40.10.82:8085"

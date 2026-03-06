@@ -25,9 +25,24 @@ Phantom Neural Cortex v3.5 introduces deep orchestration logic and predictive an
 - **Real-Time Swarm Dashboard**: Visualizing agent activity and feedback loops.
 - **Gateway Server**: Centralized control plane on port 18789.
 
+### Phantom Agent System (Phase 8)
+
+| Document | Description | Status |
+|----------|-------------|--------|
+| [Phantom Agent System](PHANTOM-AGENT-SYSTEM.md) | Vollstaendige technische Dokumentation | IMPLEMENTED |
+| [Phantom Agent API](api/PHANTOM-AGENT-API.md) | REST API Reference (Agent Mgmt + Killswitch) | IMPLEMENTED |
+| [AGENT.yaml Schema](../config/schema.py) | Pydantic-validiertes Agent Config Format | IMPLEMENTED |
+
+**Neue Komponenten:**
+- **HRM Controller** (`hrm/`): Hierarchical Reasoning — Cloud plant, Ollama fuehrt aus
+- **Integration Layer** (`integrations/`): NSS + echo_log + Mattermost Clients
+- **Killswitch** (`killswitch/`): 3-Wege Notaus (Terminal + MM + API)
+- **Kommandozentrale** (`kommandozentrale/`): Go TUI mit Bubble Tea
+- **Agent Config** (`config/templates/`): 3 vordefinierte Rollen
+
 ---
 
-## 📚 Core Documentation
+## Core Documentation
 
 ### 🆕 Intelligence & Swarm (Phases 4-6)
 
@@ -56,14 +71,26 @@ Phantom Neural Cortex v3.5 introduces deep orchestration logic and predictive an
 
 ## 🔄 Version History
 
-### v3.5.0 (2026-02-08) - **Current**
+### v4.0.0 (2026-03-07) - **Current**
 
 **Major Features:**
 
-- 🧠 **Intelligent Swarm Routing**: Multi-agent orchestration with autonomous feedback loops.
-- 🔮 **Impact Prediction**: Simulate task outcomes before spending tokens.
-- 🐚 **Unified CLI**: Premium terminal experience via `cli.py`.
-- 🛡️ **Sandbox Hardening**: Initial Docker implementation for restricted execution.
+- **Phantom Agent System**: Unified AI employee (PNC + NSS + echo_log + MM)
+- **HRM Controller**: Hierarchical Reasoning — Cloud LLMs plan, Ollama executes
+- **NSS Integration**: 6-Layer Security in every task pipeline
+- **3-Way Killswitch**: Terminal (Ctrl+K), Mattermost (/killswitch), REST API
+- **Agent Config**: AGENT.yaml with Pydantic validation + 3 role templates
+- **Go TUI**: Bubble Tea terminal with live agent monitoring
+- **Docker Compose**: Full microservice stack (PNC + 3x NSS + infra)
+
+### v3.5.0 (2026-02-08)
+
+**Major Features:**
+
+- Intelligent Swarm Routing: Multi-agent orchestration with autonomous feedback loops.
+- Impact Prediction: Simulate task outcomes before spending tokens.
+- Unified CLI: Premium terminal experience via `cli.py`.
+- Sandbox Hardening: Initial Docker implementation for restricted execution.
 
 ### v3.0.0 (2026-02-04)
 

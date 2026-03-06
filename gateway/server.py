@@ -67,7 +67,10 @@ class GatewayServer:
         
         # Phase 6: Swarm Orchestration integration for CLI commands
         self.orchestrator = SwarmOrchestrator()
-        
+
+        # Agent registry for Phantom Agent System
+        self._agents: Dict[str, Any] = {}
+
         # Register Socket.IO event handlers
         self._register_handlers()
         
@@ -270,6 +273,11 @@ class GatewayServer:
                 logger.error(f"Error handling command: {e}")
                 await self.sio.emit('error', {'error': str(e)}, to=sid)
 
+    def register_agent(self, agent):
+        """Register a PhantomAgent with the gateway."""
+        self._agents[agent.name] = agent
+        logger.info(f"Registered agent: {agent.name} ({agent.role})")
+
     async def start(self):
         """Start gateway server"""
         # Start components
@@ -294,13 +302,62 @@ class GatewayServer:
     def get_asgi_app(self):
         """Get ASGI application for deployment"""
         from fastapi import FastAPI
-        
+        from pydantic import BaseModel
+        from killswitch.api import killswitch_router
+
         app = FastAPI(title="Phantom Neural Cortex Gateway")
-        
-        # Mount Socket.IO
-        socket_app = socketio.ASGIApp(self.sio, app)
-        
-        # Add REST endpoints
+
+        # Include killswitch API
+        app.include_router(killswitch_router)
+
+        # -- Agent management endpoints --
+
+        class TaskRequest(BaseModel):
+            task: str
+            context: dict = None
+
+        @app.post("/agent/{agent_name}/task")
+        async def submit_agent_task(agent_name: str, req: TaskRequest):
+            """Submit a task to a specific agent."""
+            agent = self._agents.get(agent_name)
+            if not agent:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=404, detail=f"Agent {agent_name} not found")
+            result = await agent.handle_task(req.task, context=req.context)
+            return result
+
+        @app.get("/agent/{agent_name}/status")
+        async def agent_status(agent_name: str):
+            """Get agent status."""
+            agent = self._agents.get(agent_name)
+            if not agent:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=404, detail=f"Agent {agent_name} not found")
+            return {
+                "name": agent.name,
+                "role": agent.role,
+                "killed": agent.killswitch.is_killed,
+                "task_count": agent._task_count,
+                "planner_model": agent.config.llm.planner,
+                "executor_model": agent.config.llm.executor,
+            }
+
+        @app.get("/agents")
+        async def list_agents():
+            """List all registered agents."""
+            return {
+                "agents": {
+                    name: {
+                        "role": a.role,
+                        "killed": a.killswitch.is_killed,
+                        "task_count": a._task_count,
+                    }
+                    for name, a in self._agents.items()
+                }
+            }
+
+        # -- Existing endpoints --
+
         @app.get("/health")
         async def health_check():
             """Health check endpoint"""
@@ -309,7 +366,7 @@ class GatewayServer:
                 self.message_router
             )
             return health_status.to_dict()
-        
+
         @app.get("/sessions")
         async def list_sessions():
             """List active sessions"""
@@ -318,13 +375,15 @@ class GatewayServer:
                 'sessions': [s.to_dict() for s in sessions],
                 'count': len(sessions)
             }
-        
+
         @app.post("/sessions/{session_id}/close")
         async def close_session(session_id: str):
             """Close session"""
             success = await self.session_manager.close_session(session_id)
             return {'success': success}
-        
+
+        # Mount Socket.IO
+        socket_app = socketio.ASGIApp(self.sio, app)
         return socket_app
 
 
