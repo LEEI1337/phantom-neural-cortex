@@ -109,6 +109,6 @@ Phantom Neural Cortex v3.5 introduces deep orchestration logic and predictive an
 
 ---
 
-**Maintained by:** LEEI1337
+**Maintained by:** [LEEI1337](https://github.com/LEEI1337) / [AI Engineering](https://www.ai-engineering.at)
 **License:** MIT
-**Last Updated:** 2026-02-08
+**Last Updated:** 2026-03-07

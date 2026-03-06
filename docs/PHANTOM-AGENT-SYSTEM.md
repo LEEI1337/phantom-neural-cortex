@@ -1,7 +1,7 @@
 # Phantom Agent System — Technische Dokumentation
 
 > **Version:** 1.0.0 | **Datum:** 2026-03-07 | **Status:** Implementiert
-> **Repo:** `phantom-neural-cortex` | **Autor:** AI Engineering
+> **Repo:** `LEEI1337/phantom-neural-cortex` | **Autor:** LEEI1337 / AI Engineering
 
 ---
 

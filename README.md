@@ -238,6 +238,6 @@ phantom-neural-cortex/
 
 ---
 
-**Maintained by:** AI Engineering AT
+**Maintained by:** [LEEI1337](https://github.com/LEEI1337) / [AI Engineering](https://www.ai-engineering.at)
 **Version:** 4.0.0
 **Last Updated:** March 2026
