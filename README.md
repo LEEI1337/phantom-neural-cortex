@@ -1,111 +1,243 @@
-# 👻🧠 Phantom Neural Cortex v3.5 ✨ SMART SWARM EDITION
+# Phantom Neural Cortex v4.0 — Phantom Agent System
 
-> Enterprise-Grade Multi-Agent Orchestration with Autonomous Swarm Intelligence
+> Deployable AI Employee — PNC + NSS + echo_log + Mattermost unified
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.5.0-brightgreen.svg)](CHANGELOG.md)
-[![Status](https://img.shields.io/badge/Phase_7-Active-blue.svg)](memory-bank/progress.md)
+[![Version](https://img.shields.io/badge/version-4.0.0-brightgreen.svg)](CHANGELOG.md)
 
-**A powerful AI orchestration platform featuring Intelligent Swarm Routing, Autonomous Feedback Loops, and Containerized Sandbox Execution.**
+**A unified AI agent system that combines orchestration (PNC), security (NSS), tool execution (echo_log), and team communication (Mattermost) into a single deployable AI employee.**
 
-## 🚀 **The Evolution of v3.5** 🎯
+## What's New in v4.0 — Phantom Agent System
 
-We have surpassed the original modernization goals, integrating advanced orchestration logic that takes multi-agent systems to the next level.
+v4.0 integrates four production systems into one agent that can plan, execute, communicate, and be controlled:
 
-### ✅ **Core v3.x Features:**
+### Core v4.0 Features
 
-- **Intelligent Swarm Routing (Phase 5)** ✅ - Score-based agent selection (IntelligenceEngine).
-- **Impact Prediction (Dry Run)** ✅ - Simulate cost, quality, and speed before execution.
-- **Autonomous Feedback Loops** ✅ - Automatic re-routing and refinement if quality thresholds aren't met.
-- **Advanced CLI & Dashboard (Phase 6)** ✅ - Interactive Socket.IO CLI and real-time swarm visualization.
-- **Persistent Multi-Backend Memory (Phase 4)** ✅ - SQL (Postgres/SQLite) + Redis for long-term session recall.
-- **Sandbox Hardening (Phase 7 - ACTIVE)** 🛡️ - Transitioning to Docker-based isolated execution.
+- **HRM Controller** — Cloud LLMs plan (Opus/Codex), local models execute (Ollama)
+- **NSS Security** — 6-layer defense in every task pipeline (SENTINEL, MARS, VIGIL, SHIELD)
+- **echo_log Integration** — 42 tools, RAG memory, 4-phase reasoning via HTTP
+- **Mattermost Bridge** — Real-time WebSocket communication (Jak Bot pattern)
+- **3-Way Killswitch** — Terminal (Ctrl+K), Mattermost (`/killswitch`), REST API
+- **AGENT.yaml Config** — Pydantic-validated agent configuration with role templates
+- **Go TUI Terminal** — Bubble Tea Kommandozentrale with live agent monitoring
+- **DSGVO + EU AI Act** — Compliance via NSS (PII redaction, privacy budget, audit trail)
+
+### Previous Features (v3.x)
+
+- **Intelligent Swarm Routing (Phase 5)** — Score-based agent selection (IntelligenceEngine)
+- **Impact Prediction (Dry Run)** — Simulate cost, quality, and speed before execution
+- **Autonomous Feedback Loops** — Automatic re-routing if quality thresholds aren't met
+- **Advanced CLI & Dashboard (Phase 6)** — Interactive Socket.IO CLI
+- **Persistent Multi-Backend Memory (Phase 4)** — SQL + Redis
+- **Sandbox Hardening (Phase 7)** — Docker-based isolated execution
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-```mermaid
-graph TD
-    A[Client: CLI / Dashboard] -->|WebSocket/REST| B[Gateway Server :18789]
-    B --> C[Swarm Orchestrator]
-    C --> D[Intelligence Engine]
-    D -->|Impact Predictor| E[Dry Run Analysis]
-    C --> F[Agent Swarm]
-    F -->|Claude 3.5| G[Security/Arch]
-    F -->|Gemini 2.0| H[Bulk/Logic]
-    F -->|Ollama| I[Local/Private]
-    F --> J[Feedback Loop]
-    J -->|Re-route if low quality| C
-    C --> K[Memory Manager]
-    K --> L[(PostgreSQL / Redis)]
+```
+Task -> PhantomAgent.handle_task()
+         |
+         1. Killswitch Check
+         2. NSS SENTINEL (Injection Defense)
+         3. NSS MARS (Risk Scoring)
+         4. HRM Router (Complexity Assessment)
+         |                    |
+     HIGH (>= 0.6)       LOW (< 0.6)
+         |                    |
+     Planner              echo_log
+     (Cloud LLM)          /chat API
+     -> Plan Steps        (42 Tools)
+     -> Executor
+     (Ollama)
+         |
+     Feedback Loop
+     (on failure -> refine plan)
+         |
+     MM Notification
+```
+
+### Service Architecture
+
+```
+PNC Gateway :18789     -- Orchestration + Agent Management + Killswitch
+NSS Gateway :11337     -- PII Redaction, STEER
+NSS Guardian :11338    -- MARS, SENTINEL, VIGIL, SHIELD
+NSS Governance :11339  -- Policy Engine, Privacy Budget, DPIA
+echo_log VG :8085      -- 42 Tools, RAG, Reasoning
+Ollama :11434          -- Local LLM Inference (GPU)
+Mattermost :8065       -- Team Communication
 ```
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
+
+### Deploy an Agent (5 minutes)
 
 ```bash
-# 1. Clone repository
+# 1. Clone
 git clone https://github.com/LEEI1337/phantom-neural-cortex
 cd phantom-neural-cortex
+pip install -r requirements.txt
 
-# 2. Start Gateway & Backend
-docker-compose up -d redis postgres
-# Start the Gateway Server
-python -m gateway.server
+# 2. Interactive Setup
+./agent-setup.sh
+# -> Creates agents/<name>/AGENT.yaml
 
-# 3. Launch the CLI Client
+# 3. Start Agent with Gateway
+python run_agent.py --config agents/lisa01/AGENT.yaml --gateway
+# -> Gateway on :18789, Agent listening on Mattermost
+```
+
+### Docker Compose (Full Stack)
+
+```bash
+docker compose up -d
+# Starts: PNC Gateway, 3x NSS, PostgreSQL, Redis, Prometheus, Grafana
+```
+
+### Submit a Task
+
+```bash
+curl -X POST http://localhost:18789/agent/lisa01/task \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Check all docker services and report unhealthy ones"}'
+```
+
+### TUI Terminal (Kommandozentrale)
+
+```bash
+cd kommandozentrale
+go mod tidy && go build -o phantom-tui ./cmd/
+./phantom-tui --pnc http://localhost:18789
+# Ctrl+K = Killswitch | r = Revive | j/k = Navigate | q = Quit
+```
+
+### Legacy CLI
+
+```bash
 python cli.py
-
-# 4. View the Dashboard
-cd dashboard/frontend
-npm run dev
+# /status, /swarm-status, /preview <task>, /context
 ```
 
 ---
 
-## 🔧 New Key Components
+## Key Components
 
-### 🧠 Swarm Intelligence
+### PhantomAgent (`agent.py`)
 
-The `IntelligenceEngine` analyzes task complexity and selects the optimal agent based on quality, speed, and cost requirements. No more hard-coded routing.
+The unified agent class. Load from AGENT.yaml, start, handle tasks, stop:
 
-### 🔮 Impact Prediction
+```python
+agent = PhantomAgent.from_config("config/templates/lisa01.yaml")
+await agent.start()     # Connect MM, register killswitch
+result = await agent.handle_task("Deploy new monitoring stack")
+await agent.stop()
+```
 
-Before any tokens are spent, the `ImpactPredictor` provides a simulated report showing expected results across different priority profiles (Balanced, Quality, Speed, Cost).
+### HRM Controller (`hrm/`)
 
-### 🖥️ Interactive CLI
+Hierarchical Reasoning Model — routes by complexity:
 
-A premium command-line interface for real-time interaction:
+| Complexity | Score | Model | Path |
+|-----------|-------|-------|------|
+| HIGH | >= 0.6 | Cloud LLM (Opus) | Planner -> Steps -> Executor |
+| MEDIUM | >= 0.35 | Ollama | Direct via echo_log |
+| LOW | < 0.35 | Ollama | Direct via echo_log |
 
-- `/status`: System health and agent overview.
-- `/swarm-status`: Active tasks and swarm configuration.
-- `/preview <task>`: Run a dry-run impact simulation.
-- `/context`: Monitor token usage and compaction status.
+### Killswitch (`killswitch/`)
+
+3-way emergency stop with SHA-256 tamper-evident audit trail:
+
+- **Terminal**: Ctrl+K in TUI
+- **Mattermost**: `/killswitch lisa01`
+- **REST API**: `POST /killswitch/agent/lisa01/kill`
+
+### AGENT.yaml (`config/`)
+
+```yaml
+agent:
+  name: "lisa01"
+  role: "Infrastructure Specialist"
+llm:
+  planner: "opus-4.6"
+  executor: "mistral-small3.2"
+  local_only: false
+security:
+  nss_enabled: true
+  approval_level: "RISKY"
+  killswitch_owners: ["joe"]
+```
+
+Templates: `lisa01` (Infra), `jim01` (DevOps), `john01` (Research)
+
+### NSS Security (via `integrations/nss_client.py`)
+
+Every task passes through:
+1. SENTINEL — Injection detection
+2. MARS — Risk scoring (Tier 0-3)
+3. VIGIL — Tool safety (before each step)
+
+Graceful degradation: if NSS is offline, defaults to SAFE.
 
 ---
 
-## 📈 Roadmap
+## Project Structure
 
-- [x] **Phase 1-3**: Base OpenClaw Modernization (Context, Gateway, Skills)
-- [x] **Phase 4**: Persistent Memory (SQL/Redis Integration)
-- [x] **Phase 5**: Advanced Swarm Routing & Impact Prediction
-- [x] **Phase 6**: CLI & Dashboard Enhancement (Visualizing the Swarm)
-- [ ] **Phase 7**: Sandbox Hardening (Docker Isolation) - *In Progress*
-- [ ] **Phase 8**: Multi-Channel Support (Telegram, Discord Bridges)
+```
+phantom-neural-cortex/
+├── agent.py                    # PhantomAgent main class
+├── run_agent.py                # CLI entry point
+├── agent-setup.sh              # Interactive agent setup
+├── hrm/                        # HRM Controller
+│   ├── router.py               # Complexity assessment
+│   ├── planner.py              # Cloud LLM planning
+│   └── executor.py             # Ollama execution
+├── integrations/               # Service clients
+│   ├── nss_client.py           # NSS (3 services)
+│   ├── echoLog_client.py       # echo_log VG
+│   └── mm_bridge.py            # Mattermost WebSocket
+├── killswitch/                 # Emergency stop
+│   ├── handler.py              # Kill logic + audit
+│   └── api.py                  # REST + MM webhook
+├── config/                     # Agent configuration
+│   ├── schema.py               # AGENT.yaml schema
+│   └── templates/              # Role templates
+├── kommandozentrale/           # Go TUI Terminal
+│   ├── cmd/main.go
+│   └── internal/tui/app.go
+├── gateway/                    # PNC Gateway (existing)
+├── dashboard/                  # Dashboard (existing)
+├── memory/                     # Memory backends (existing)
+├── skills/                     # Skills system (existing)
+├── docker-compose.yml          # Full stack
+└── docs/
+    ├── PHANTOM-AGENT-SYSTEM.md # Full technical docs
+    └── api/PHANTOM-AGENT-API.md
+```
 
----
+## Roadmap
 
-## 📄 Documentation
+- [x] **Phase 1-3**: Base OpenClaw Modernization
+- [x] **Phase 4**: Persistent Memory (SQL/Redis)
+- [x] **Phase 5**: Swarm Routing & Impact Prediction
+- [x] **Phase 6**: CLI & Dashboard
+- [x] **Phase 7**: Sandbox Hardening
+- [x] **Phase 8**: Phantom Agent System (PNC + NSS + echo_log + MM)
+- [ ] **Phase 9**: Phantom Link (encrypted agent-to-agent communication)
+- [ ] **Phase 10**: Training Pipeline integration (bake knowledge into models)
 
-- [Sandbox Hardening Architecture](docs/architecture/SANDBOX_HARDENING.md)
-- [Swarm Orchestration Logic](dashboard/backend/swarm/README.md)
-- [Context Management](docs/CONTEXT_MANAGEMENT.md)
+## Documentation
+
+- [Phantom Agent System (Full)](docs/PHANTOM-AGENT-SYSTEM.md)
+- [API Reference](docs/api/PHANTOM-AGENT-API.md)
 - [System Architecture](docs/SYSTEM_ARCHITECTURE_SUMMARY.md)
+- [Context Management](docs/CONTEXT_MANAGEMENT.md)
+- [Sandbox Hardening](docs/architecture/SANDBOX_HARDENING.md)
 
 ---
 
-**Maintained by:** LEEI1337
-**Version:** 3.5.0
-**Last Updated:** Feb 2026
+**Maintained by:** AI Engineering AT
+**Version:** 4.0.0
+**Last Updated:** March 2026
